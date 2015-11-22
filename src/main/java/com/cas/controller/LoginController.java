@@ -26,15 +26,15 @@ public class LoginController {
 		return model;
 	}
 
-	@RequestMapping(value = "/login", method = RequestMethod.POST)
+	@RequestMapping(value = "/performlogin", method = RequestMethod.POST)
 	public ModelAndView performLogin(HttpServletRequest request, HttpServletResponse response,
 			@ModelAttribute("user") User user) {
 		ModelAndView model = null;
 		try {
-			boolean isValidUser = loginDelegate.isValidUser(user.getUsername(), user.getPassword());
+			boolean isValidUser = loginDelegate.isValidUser(user.getEmailId(), user.getPassword());
 			if (isValidUser) {
 				System.out.println("User Login Successful");
-				request.setAttribute("loggedInUser", user.getUsername());
+				request.setAttribute("loggedInUser", user.getEmailId());
 				model = new ModelAndView("welcomepage");
 			} else {
 				model = new ModelAndView("loginpage");

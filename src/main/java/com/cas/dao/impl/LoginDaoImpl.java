@@ -20,10 +20,10 @@ public class LoginDaoImpl implements LoginDao {
 		this.dataSource = dataSource;
 	}
 
-	public boolean isValidUser(String username, String password) throws SQLException {
-		String query = "Select count(1) from user where username = ? and password = ?";
+	public boolean isValidUser(String emailId, String password) throws SQLException {
+		String query = "Select count(1) from user where user_email_id = ? and user_password = ?";
 		PreparedStatement pstmt = dataSource.getConnection().prepareStatement(query);
-		pstmt.setString(1, username);
+		pstmt.setString(1, emailId);
 		pstmt.setString(2, password);
 		ResultSet resultSet = pstmt.executeQuery();
 		if (resultSet.next())

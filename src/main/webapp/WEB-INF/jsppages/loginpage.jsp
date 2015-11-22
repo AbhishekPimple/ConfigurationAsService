@@ -8,13 +8,15 @@
 	</head>
 	<body>
 		<h2>${message}</h2>
-		<form:form id="loginForm" method="post" action="login" modelAttribute="user">
+		<form:form id="loginForm" method="post" action="performlogin" modelAttribute="user">
 
-			<form:label path="username">Username</form:label>
-			<form:input id="username" name="username" path="username" /><br>
+			<form:label path="emailId">Email Id</form:label>
+			<form:input id="emailId" name="emailId" path="emailId" /><br>
 			<form:label path="username">Password</form:label>
 			<form:password id="password" name="password" path="password" /><br>
-			<input type="submit" value="Submit" />
+			<br> <a href="register" > New User?</a> <br> 
+			<br>
+			<input type="submit" value="Log In" />
 		</form:form>
 	</body>
 </html>

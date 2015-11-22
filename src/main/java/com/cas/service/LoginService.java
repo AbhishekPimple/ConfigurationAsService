@@ -4,6 +4,6 @@ import java.sql.SQLException;
 
 public interface LoginService {
 	
-	public boolean isValidUser(String username, String password) throws SQLException;
+	public boolean isValidUser(String emailId, String password) throws SQLException;
 	
 }

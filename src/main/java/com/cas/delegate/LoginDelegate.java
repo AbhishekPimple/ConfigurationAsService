@@ -18,8 +18,8 @@ public class LoginDelegate
 		this.loginService = loginService;
 	}
 
-	public boolean isValidUser(String username, String password) throws SQLException
+	public boolean isValidUser(String emailId, String password) throws SQLException
 	{
-	    return loginService.isValidUser(username, password);
+	    return loginService.isValidUser(emailId, password);
 	}
 }

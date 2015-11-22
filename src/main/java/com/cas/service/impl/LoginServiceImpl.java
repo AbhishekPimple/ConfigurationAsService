@@ -20,9 +20,9 @@ public class LoginServiceImpl implements LoginService {
 		this.loginDao = loginDao;
 	}
 
-	public boolean isValidUser(String username, String password) throws SQLException
+	public boolean isValidUser(String emailId, String password) throws SQLException
 	{
-		return loginDao.isValidUser(username, password);
+		return loginDao.isValidUser(emailId, password);
 	}
 
 }
