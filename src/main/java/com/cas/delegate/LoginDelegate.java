@@ -2,6 +2,7 @@ package com.cas.delegate;
 
 import java.sql.SQLException;
 
+import com.cas.model.User;
 import com.cas.service.LoginService;
 
 public class LoginDelegate
@@ -18,7 +19,7 @@ public class LoginDelegate
 		this.loginService = loginService;
 	}
 
-	public boolean isValidUser(String emailId, String password) throws SQLException
+	public User isValidUser(String emailId, String password) throws SQLException
 	{
 	    return loginService.isValidUser(emailId, password);
 	}

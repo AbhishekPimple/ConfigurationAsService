@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import javax.sql.DataSource;
 
 import com.cas.dao.LoginDao;
+import com.cas.model.User;
 
 public class LoginDaoImpl implements LoginDao {
 
@@ -20,16 +21,22 @@ public class LoginDaoImpl implements LoginDao {
 		this.dataSource = dataSource;
 	}
 
-	public boolean isValidUser(String emailId, String password) throws SQLException {
-		String query = "Select count(1) from user where user_email_id = ? and user_password = ?";
+	public User isValidUser(String emailId, String password) throws SQLException {
+		String query = "Select * from user where user_email_id = ? and user_password = ?";
+		User user = null;
 		PreparedStatement pstmt = dataSource.getConnection().prepareStatement(query);
 		pstmt.setString(1, emailId);
 		pstmt.setString(2, password);
 		ResultSet resultSet = pstmt.executeQuery();
-		if (resultSet.next())
-			return (resultSet.getInt(1) > 0);
-		else
-			return false;
+		if (resultSet.next()){
+			user = new User();
+			user.setEmailId(resultSet.getString("user_email_id"));
+			user.setUsername(resultSet.getString("user_name"));
+			return user;
+		}	
+		
+		return user;
+			
 	}
 
 }

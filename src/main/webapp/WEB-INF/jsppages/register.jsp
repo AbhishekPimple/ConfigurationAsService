@@ -1,23 +1,37 @@
-<%@include file="springtabinclude.jsp"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-		<title>Register</title>
-	</head>
-	<body>
-		<h2>${message}</h2>
-		<form:form id="registerForm" modelAttribute="newuser" method="post" action="performregister">
-			<form:label path="emailId">Email ID</form:label>
-			<form:input id="emailID" name="emailId" path="emailId" /><br>
-			<form:label path="username">Username</form:label>
-			<form:input id="username" name="username" path="username" /><br>
-			<form:label path="username">Password</form:label>
-			<form:password id="password" name="password" path="password" /><br>
-			<form:label path="confirmPassword">Confirm Password</form:label>
-			<form:password id="confirmPassword" name="confirmPassword" path="confirmPassword" /><br>
-			<input type="submit" value="Register" />
+<%@include file="springtabinclude.jsp"%>
+
+<%@taglib prefix="welcome" tagdir="/WEB-INF/tags"%>
+
+<welcome:header />
+		<a href="login" >Login Page</a>
+	
+		<h3 align="center">Registration Page</h3>
+		<h4>${message}</h4>
+		
+		<form:form id="registerForm" action="performregister" method="POST" modelAttribute="user">
+						<ul class="fieldlist">
+							
+							<li>
+								<label for="emailid">Email ID</label> 
+								<form:input id="emailid" type="text" class="k-textbox" style="width: 100%;" path="emailId"/>
+							</li>
+							<li>
+								<label for="username">Username</label> 
+								<form:input id="username" type="text" class="k-textbox" style="width: 100%;" path="username"/>
+							</li>
+							<li>
+								<label for="password">Password</label> 
+								<form:input id="password" type="password" class="k-textbox" style="width: 100%;" path="password"/>
+							</li>
+							<li>
+								<label for="confirmpassword">Confirm Password</label> 
+								<input id="confirmpassword" type="password" class="k-textbox" style="width: 100%;" />
+							</li>
+							<li>
+								<input type="submit" class="k-button k-primary" value="Register" />
+							</li>
+						</ul>
 		</form:form>
-	</body>
-</html>
+
+<welcome:footer />

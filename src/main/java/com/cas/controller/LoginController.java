@@ -31,10 +31,10 @@ public class LoginController {
 			@ModelAttribute("user") User user) {
 		ModelAndView model = null;
 		try {
-			boolean isValidUser = loginDelegate.isValidUser(user.getEmailId(), user.getPassword());
-			if (isValidUser) {
+			User returnedUser = loginDelegate.isValidUser(user.getEmailId(), user.getPassword());
+			if (returnedUser != null) {
 				System.out.println("User Login Successful");
-				request.setAttribute("loggedInUser", user.getEmailId());
+				request.setAttribute("loggedInUser", returnedUser.getUsername());
 				model = new ModelAndView("welcomepage");
 			} else {
 				model = new ModelAndView("loginpage");

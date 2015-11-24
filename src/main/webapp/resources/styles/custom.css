@@ -1,0 +1,50 @@
+html {
+	font-size: 14px;
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+.servertab, .filestab, .projecttab, .workbenchtab {
+	display: block;
+	margin: 30px auto 10px;
+	width: 64px;
+	height: 8px;
+}
+
+#tabstrip h2 {
+	font-weight: lighter;
+	font-size: 5em;
+	line-height: 1;
+	padding: 0 0 0 30px;
+	margin: 0;
+}
+
+#tabstrip h2 span {
+	background: none;
+	padding-left: 5px;
+	font-size: .3em;
+	vertical-align: top;
+}
+
+#tabstrip p {
+	margin: 0;
+	padding: 0;
+}
+
+.fieldlist {
+	margin: 0 0 -2em;
+	padding: 0;
+}
+
+.fieldlist li {
+	list-style: none;
+	padding-bottom: 2em;
+}
+
+.fieldlist label {
+	display: block;
+	padding-bottom: 1em;
+	font-weight: bold;
+	text-transform: uppercase;
+	font-size: 12px;
+	color: #444;
+}

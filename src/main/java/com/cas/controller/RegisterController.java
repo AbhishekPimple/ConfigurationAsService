@@ -22,23 +22,24 @@ public class RegisterController {
 	@RequestMapping(value = "/register", method = RequestMethod.GET)
 	public ModelAndView displayRegistrationPage(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView model = new ModelAndView("register");
-		NewUser newuser = new NewUser();
-		model.addObject("newuser", newuser);
+		User user = new User();
+		model.addObject("user", user);
 		return model;
 	}
 
 	@RequestMapping(value = "/performregister", method = RequestMethod.POST)
 	public ModelAndView performRegistration(HttpServletRequest request, HttpServletResponse response,
-			@ModelAttribute("newuser") NewUser newUser) {
+			@ModelAttribute("user") User User) {
 		ModelAndView model = null;
 		try {
 			
-			boolean isUserExists = registerDelegate.register(newUser.getEmailId(), newUser.getUsername(), newUser.getPassword());
+			boolean isUserExists = registerDelegate.register(User.getEmailId(), User.getUsername(), User.getPassword());
 			if (!isUserExists) {
 				System.out.println("User Registration Successful");
 				User user = new User();
-				user.setEmailId(newUser.getEmailId());
-				model = new ModelAndView("loginpage");
+				user.setEmailId(user.getEmailId());
+				model = new ModelAndView("register");
+				request.setAttribute("message", "Succesfully registered!");
 				model.addObject("user", user);
 				
 			} else {

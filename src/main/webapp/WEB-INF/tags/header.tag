@@ -1,0 +1,18 @@
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<html>
+    <head>
+        <title>CAS</title>
+		
+		<link href="<c:url value='/resources/styles/kendo.common-material.min.css'/>" rel="stylesheet" />
+		<link href="<c:url value='/resources/styles/kendo.material.min.css'/>" rel="stylesheet" />
+		<link href="<c:url value='/resources/styles/custom.css'/>" rel="stylesheet" />
+		
+		<script src="<c:url value='/resources/js/jquery.min.js' />"></script>
+		<script src="<c:url value='/resources/js/kendo.all.min.js' />"></script>
+		
+		<script src="<c:url value='/resources/shared/js/prettify.js'/>"></script>
+    </head>
+    <body>
+    		<h3 align="left">Welcome to Configuration as Service</h3>
+    		
+
