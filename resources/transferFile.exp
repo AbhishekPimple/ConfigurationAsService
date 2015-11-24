@@ -1,0 +1,24 @@
+#!/usr/bin/expect -f
+
+set timeout 20
+set ip [lindex $argv 0]
+set user [lindex $argv 1]
+set password [lindex $argv 2]
+set filepath [lindex $argv 3]
+set destination_dir [lindex $argv 4]
+
+# connect via scp
+spawn scp "$user@$ip:$filepath" $destination_dir
+
+expect {
+  -re ".*es.*o.*" {
+    exp_send "yes\r"
+    exp_continue
+  }
+  -re ".*sword.*" {
+    exp_send "$password\r"
+  }
+}
+
+interact
+
