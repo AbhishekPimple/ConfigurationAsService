@@ -3,6 +3,7 @@ package com.cas.service.impl;
 import java.sql.SQLException;
 
 import com.cas.dao.LoginDao;
+import com.cas.model.User;
 import com.cas.service.LoginService;
 
 
@@ -20,7 +21,7 @@ public class LoginServiceImpl implements LoginService {
 		this.loginDao = loginDao;
 	}
 
-	public boolean isValidUser(String emailId, String password) throws SQLException
+	public User isValidUser(String emailId, String password) throws SQLException
 	{
 		return loginDao.isValidUser(emailId, password);
 	}

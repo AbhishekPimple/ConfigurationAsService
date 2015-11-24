@@ -1,22 +1,29 @@
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+	pageEncoding="ISO-8859-1"%>
 <%@include file="springtabinclude.jsp"%>
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-		<title>Login</title>
-	</head>
-	<body>
-		<h2>${message}</h2>
-		<form:form id="loginForm" method="post" action="performlogin" modelAttribute="user">
 
-			<form:label path="emailId">Email Id</form:label>
-			<form:input id="emailId" name="emailId" path="emailId" /><br>
-			<form:label path="username">Password</form:label>
-			<form:password id="password" name="password" path="password" /><br>
-			<br> <a href="register" > New User?</a> <br> 
-			<br>
-			<input type="submit" value="Log In" />
+<%@taglib prefix="welcome" tagdir="/WEB-INF/tags"%>
+
+<welcome:header />
+		<h2>${message}</h2>
+		
+		<form:form id="loginForm" action="performlogin" method="POST" modelAttribute="user">
+						<ul class="fieldlist">
+							
+							<li>
+								<label for="emailid">Email ID</label> 
+								<form:input id="emailid" type="text" class="k-textbox" style="width: 100%;" path="emailId"/>
+							</li>
+							<li>
+								<label for="password">Password</label> 
+								<form:input id="password" type="password" class="k-textbox" style="width: 100%;" path="password"/>
+							</li>
+							<li>
+								<a href="register" > New User?</a>
+							</li>
+							<li>
+								<input type="submit" class="k-button k-primary" value="Log In" />
+							</li>
+						</ul>
 		</form:form>
-	</body>
-</html>
+<welcome:footer />
