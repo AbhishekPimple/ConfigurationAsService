@@ -1,24 +1,42 @@
 #!/usr/bin/expect -f
 
-set timeout 20
-set ip [lindex $argv 0]
-set user [lindex $argv 1]
+set timeout 8 
+
+set user [lindex $argv 0]
+set ip [lindex $argv 1]
 set password [lindex $argv 2]
-set filepath [lindex $argv 3]
-set destination_dir [lindex $argv 4]
+set cmd [lindex $argv 3]
+set filepath [lindex $argv 4]
+set destination_dir [lindex $argv 5]
 
-# connect via scp
-spawn scp "$user@$ip:$filepath" $destination_dir
+set prompt "#|>|\\$"
+log_user 0
 
-expect {
-  -re ".*es.*o.*" {
-    exp_send "yes\r"
-    exp_continue
-  }
-  -re ".*sword.*" {
-    exp_send "$password\r"
-  }
+switch -glob $cmd {
+ssh { spawn "$cmd" "$user@$ip" }                                                
+scp { spawn "$cmd" "$user@$ip:$filepath" $destination_dir }                                              
+default {puts "Error in switch";exit 0}
 }
 
-interact
+#spawn "$cmd" "$user@$ip"
 
+expect {
+   eof     {puts "Connection rejected by the host"; exit 0}
+   timeout {puts "Unable to access the host"; exit 0;}
+
+   -re ".*es.*o.*" {
+      exp_send "yes\r"
+      exp_continue
+   }
+   -re ".*sword.*" 
+}
+
+send "$password\r"
+
+expect {
+   timeout {puts "Unable to access the host.Wrong Password."; exit 0;}
+   -re ".*No such.*" { puts "File does not exist."; exit 0;  }
+   -re ".*Is a directory.*" { puts "Destination directory doesn't exist."; exit 0; } 
+   -re $prompt
+}
+exit 1;
