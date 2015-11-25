@@ -10,11 +10,12 @@ set filepath [lindex $argv 4]
 set destination_dir [lindex $argv 5]
 
 set prompt "#|>|\\$"
-log_user 0
+#log_user 0
 
 switch -glob $cmd {
 ssh { spawn "$cmd" "$user@$ip" }                                                
-scp { spawn "$cmd" "$user@$ip:$filepath" $destination_dir }                                              
+pull { spawn scp "$user@$ip:$filepath" $destination_dir }                                              
+push { spawn scp $filepath "$user@$ip:$destination_dir" }
 default {puts "Error in switch";exit 0}
 }
 
