@@ -13,6 +13,8 @@
 	</bean>
 	<bean id="registerController" class="com.cas.controller.RegisterController">
 	</bean>
+	<bean id="fileController" class="com.cas.controller.FileController">
+	</bean>
 	
 	
 	<!-- Delegate Beans -->
@@ -22,6 +24,9 @@
 	<bean id="registerDelegate" class="com.cas.delegate.RegisterDelegate">
 		<property name="registerService" ref="registerService"></property>
 	</bean>
+	<bean id="fileDelegate" class="com.cas.delegate.FileDelegate">
+		<property name="fileService" ref="fileService"></property>
+	</bean>
 	
 	<!-- Service Beans -->
 	<bean id="loginService" class="com.cas.service.impl.LoginServiceImpl">
@@ -30,7 +35,9 @@
 	<bean id="registerService" class="com.cas.service.impl.RegisterServiceImpl">
 		<property name="registerDao" ref="registerDao"></property>
 	</bean>
-
+	<bean id="fileService" class="com.cas.service.impl.FileServiceImpl">
+	</bean>
+	
 	<!-- DAO Beans -->
 	<bean name="loginDao" class="com.cas.dao.impl.LoginDaoImpl">
 		<property name="dataSource" ref="dataSource"></property>
