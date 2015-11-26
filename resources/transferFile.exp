@@ -8,22 +8,23 @@ set password [lindex $argv 2]
 set cmd [lindex $argv 3]
 set filepath [lindex $argv 4]
 set destination_dir [lindex $argv 5]
+match_max 100000
 
 set prompt "#|>|\\$"
 log_user 0
 
 switch -glob $cmd {
-ssh { spawn "$cmd" "$user@$ip" }                                                
+ssh { spawn "$cmd" "$user@$ip" }                                               
+getModTime { spawn ssh "$user@$ip" } 
 pull { spawn scp "$user@$ip:$filepath" $destination_dir }                                              
 push { spawn scp $filepath "$user@$ip:$destination_dir" }
+restart { spawn ssh "$user@$ip" }
 default {puts "Error in switch";exit 0}
 }
 
-#spawn "$cmd" "$user@$ip"
-
 expect {
-   eof     {puts "Connection rejected by the host"; exit 0}
-   timeout {puts "Unable to access the host"; exit 0;}
+   eof     {puts "ERROR:Connection rejected by the host"; exit 0}
+   timeout {puts "ERROR:Unable to access the host"; exit 0;}
 
    -re ".*es.*o.*" {
       exp_send "yes\r"
@@ -35,9 +36,31 @@ expect {
 send "$password\r"
 
 expect {
-   timeout {puts "Unable to access the host.Wrong Password."; exit 0;}
-   -re ".*No such.*" { puts "File does not exist."; exit 0;  }
-   -re ".*Is a directory.*" { puts "Destination directory doesn't exist."; exit 0; } 
+   timeout {puts "ERROR:Unable to access the host.Wrong Password."; exit 0;}
+   -re ".*No such.*" { puts "ERROR:File does not exist."; exit 0;  }
+   -re ".*Is a directory.*" { puts "ERROR:Destination directory doesn't exist."; exit 0; } 
    -re $prompt
 }
+
+if { $cmd == "getModTime" } {
+   exp_send "stat $filepath | grep Modify\r"
+   expect {
+          -re ".*No such.*" { puts "ERROR:File does not exist."; exit 0;  }
+          -re $prompt {puts "$expect_out(buffer)"; exit 1;}  
+   }
+
+exit 1;
+}
+
+if { $cmd == "restart" } {
+   set timeout 2;
+   exp_send "$filepath\r"
+   expect {
+          timeout {exit 1;}
+   }
+
+exit 1;
+}
+
+
 exit 1;

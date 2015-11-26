@@ -6,7 +6,22 @@ password=$3;
 cmd=$4;
 filepath=$5;
 dest_dir=$6;
-expect transferFile.exp $user $ip $password $cmd $filepath $dest_dir
+#echo "$user $ip $password $cmd $filepath"
+
+if [ "$cmd" = "pull" ]
+then
+    expect transferFile.exp $user $ip $password getModTime "$filepath" &
+    my_pid=$!
+fi
+
+expect transferFile.exp $user $ip $password $cmd "$filepath" $dest_dir
 retval=$?
-echo "Expect's return value : $retval"; # Printing returned value from Expect
+echo "Return value :$retval"; # Printing returned value from Expect
+
+if [ "$cmd" = "pull" ]
+then
+    wait $my_pid
+    my_status=$?
+    echo "Return value :getModTime :$my_status"
+fi
 exit $retval;
