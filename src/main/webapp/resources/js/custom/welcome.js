@@ -16,17 +16,20 @@ $(document).ready(
 						workbenchId: workbencId
 				};
 				
-				console.log(jsonString);
+				console.log(JSON.stringify(jsonString));
 				$.ajax({
 				    url: "project",
 				    type: 'POST',
 				    dataType: 'json',
-				    contentType: 'application/json',
-				    data: jsonString,
+				    headers: { 
+				    	'Content-Type': 'application/json' 
+				    },
+				    data: JSON.stringify(jsonString),
 				    beforeSend: function() {
-				      console.log("Before", jsonString);  
+				      console.log("Before", JSON.stringify(jsonString));  
 				    },
 				    success: function (result) {
+				    	alert("Project has been created successfullu");
 				        console.log("data", result);
 				    },
 				    error: function () {
