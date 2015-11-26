@@ -5,13 +5,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.cas.delegate.ProjectDelegate;
-import com.cas.delegate.RegisterDelegate;
 import com.cas.model.Project;
 
 @Controller
@@ -28,29 +28,29 @@ public class ProjectController {
 	}
 
 	@RequestMapping(value = "/project", method = RequestMethod.POST)
-	public ModelAndView createProject(HttpServletRequest request, HttpServletResponse response,
-			@ModelAttribute("project") Project project) {
-		ModelAndView model = null;
+	public String createProject(@ModelAttribute(value="project") Project project, BindingResult result) {
+		
 		try {
-			
-			boolean isProjectExists = projectDelegate.createProject(project);
-			if (!isProjectExists) {
-				System.out.println("Project creation Successful");
-				/*User user = new User();
-				user.setEmailId(user.getEmailId());
-				model = new ModelAndView("register");
-				request.setAttribute("message", "Succesfully registered!");
-				model.addObject("user", user);*/
-				
-			} else {
-				model = new ModelAndView("register");
-				request.setAttribute("message", "You have already registered!");
+			if(!result.hasErrors()){
+				Project newProject = new Project();
+				newProject = projectDelegate.createProject(project);
+				if (newProject != null) {
+					System.out.println("Project is created Successfully");
+					return "success";
+				} else {
+					
+				}
+			}else{
+				return "fail";
 			}
+			
+			
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		return null;
 
-		return model;
+		
 	}
 }

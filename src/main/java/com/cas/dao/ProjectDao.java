@@ -1,5 +1,7 @@
 package com.cas.dao;
 
-public interface ProjectDao {
+import com.cas.model.Project;
 
+public interface ProjectDao {
+	public Project createProject(Project project);
 }

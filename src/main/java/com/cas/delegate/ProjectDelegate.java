@@ -14,7 +14,7 @@ public class ProjectDelegate {
 		this.projectService = projectService;
 	}
 	
-	public boolean createProject(Project project){
+	public Project createProject(Project project){
 		return projectService.createProject(project);
 	};
 }
