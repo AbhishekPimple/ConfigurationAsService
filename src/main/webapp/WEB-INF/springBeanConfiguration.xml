@@ -15,6 +15,8 @@
 	</bean>
 	<bean id="fileController" class="com.cas.controller.FileController">
 	</bean>
+	<bean id="projectController" class="com.cas.controller.ProjectController">
+	</bean>
 	
 	
 	<!-- Delegate Beans -->
@@ -27,6 +29,9 @@
 	<bean id="fileDelegate" class="com.cas.delegate.FileDelegate">
 		<property name="fileService" ref="fileService"></property>
 	</bean>
+	<bean id="projectDelegate" class="com.cas.delegate.ProjectDelegate">
+		<property name="projectService" ref="projectService"></property>
+	</bean>
 	
 	<!-- Service Beans -->
 	<bean id="loginService" class="com.cas.service.impl.LoginServiceImpl">
@@ -37,6 +42,8 @@
 	</bean>
 	<bean id="fileService" class="com.cas.service.impl.FileServiceImpl">
 	</bean>
+	<bean id="projectService" class="com.cas.service.impl.ProjectServiceImpl">
+	</bean>
 	
 	<!-- DAO Beans -->
 	<bean name="loginDao" class="com.cas.dao.impl.LoginDaoImpl">
@@ -46,8 +53,10 @@
 	<bean name="registerDao" class="com.cas.dao.impl.RegisterDaoImpl">
 		<property name="dataSource" ref="dataSource"></property>
 	</bean>
-	
-	
+	<!-- <bean name="projectDao" class="com.cas.dao.impl.ProjectDaoImpl">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+ -->	
 	
 	<!-- Main Data source bean -->
 	<bean id="dataSource"

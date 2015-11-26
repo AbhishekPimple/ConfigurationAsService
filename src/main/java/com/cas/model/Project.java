@@ -21,7 +21,7 @@ public class Project {
 	public String getWorkbenchId() {
 		return workbenchId;
 	}
-	public void setWorkbenchId(String workbenchId) {
+	public void setWorkbenchId(String workbenchId) {	
 		this.workbenchId = workbenchId;
 	}
 	
