@@ -10,6 +10,21 @@ html {
 	height: 8px;
 }
 
+#savefile {
+	position: fixed;
+	bottom: 0px;
+	left: 0px;
+	margin: 0;
+	padding: 0;
+}
+
+/* #myprofile {
+	position: fixed;
+	left: 0px;
+	margin: 0;
+	padding: 0;
+} */
+
 #tabstrip h2 {
 	font-weight: lighter;
 	font-size: 5em;
@@ -48,3 +63,11 @@ html {
 	font-size: 12px;
 	color: #444;
 }
+
+.a.logout {
+    color: #2da1c1;
+    font-size: small;
+    text-decoration: none;
+    float: right;
+}
+
