@@ -1,13 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
-
+	
 <%@taglib prefix="welcome" tagdir="/WEB-INF/tags"%>
 <%@include file="springtabinclude.jsp"%>
 <welcome:header />
 
 <h3 align="left">Welcome ${loggedInUser}</h3>
 
-<!-- 	<a class="logout" href="logout">Log Out</a> -->
+<a class="logout" href="logout">Log Out</a>
 
 <div id="example">
 	<div class="demo-section k-content">
@@ -116,126 +116,50 @@
 			<div>
 				<span class="projecttab">&nbsp;</span>
 				<div class="project">
-					<form:form id="project_form" action="project" method="POST" modelAttribute="project">
+					
 						<ul class="fieldlist">
 							<li>
 								<label for="selectworkbench">Select Workbench</label> 
-								<form:input id="selectworkbench" value="1" style="width: 100%;" path="workbenchId"/>
+								<input id="selectworkbench" value="1" style="width: 100%;"/>
 							</li>
 							<li>
 								<label for="name">Project Name</label> 
-								<form:input id="projectname" type="text" class="k-textbox" style="width: 100%;" path="projectName"/>
+								<input id="projectname" type="text" class="k-textbox" style="width: 100%;"/>
 							</li>
 							<li>
 								<label for="description">Project Description</label>
-								<form:textarea id="projectdescription" class="k-textbox" style="width: 100%;" path="projectDesc" />
+								<textarea id="projectdescription" class="k-textbox" style="width: 100%;" > </textarea>
 							</li>
 							<li>
-								<input type="submit" class="k-button k-primary" value="Create Project">
+								<input type="button" id="createprojectbutton" class="k-button k-primary" value="Create Project">
 							</li>
 						</ul>
-					</form:form>
+					
 				</div>
 			</div>
 			<div>
 				<span class="workbenchtab">&nbsp;</span>
 				<div class="workbench">
-					<form id="workbench_form" action="workbench" method="POST">
+					
 						<ul class="fieldlist">
 							<li>
 								<label for="name">Workbench Name</label> 
-								<input id="name" type="text" class="k-textbox" style="width: 100%;" />
+								<input id="workbenchname" type="text" class="k-textbox" style="width: 100%;" />
 							</li>
 							<li>
 								<label for="description">Workbench Description</label>
-								<textarea id="description" class="k-textbox" style="width: 100%;"></textarea>
+								<textarea id="workbenchdescription" class="k-textbox" style="width: 100%;"></textarea>
 							</li>
 							<li>
-								<input type="submit" class="k-button k-primary" value="Create Workbench">
+								<input type="button" class="k-button k-primary" value="Create Workbench">
 							</li>
 						</ul>
-					</form>
+					
 				</div>
 			</div>
 		</div>
 	</div>
 
-
-	<script>
-                $(document).ready(function() {
-                	
-                	$("#getfile").click(function(){
-                		window.open("getfile", null, null, null);
-                	});
-                	var workbenches = [
-                                { text: "DEV", value: "1" },
-                                { text: "Staging", value: "2" },
-                                { text: "Production", value: "3" }
-                            ];
-                    
-                	var projects = [
-                                       { text: "SOLR", value: "1" },
-                                       { text: "File Sharing", value: "2" },
-                                       { text: "CAS", value: "3" }
-                                   ];
-                	
-                	var servers = [
-                	  {
-                	    name: "Server 1",
-                	    id: "1",
-                	    checked: "true"
-                	  },
-                	  {
-                  	    name: "Server 2",
-                  	    id: "2",
-                  	    checked: "false"
-                  	  },
-                	  {
-                  	    name: "Server 3",
-                  	    id: "3",
-                  	    checked: "true"
-                  	  }
-                	];
-                	$("#tabstrip").kendoTabStrip({
-                        animation:  {
-                            open: {
-                                effects: "fadeIn"
-                            }
-                        }
-                    });
-                    
-                    $("#selectworkbench").kendoDropDownList({
-                        dataTextField: "text",
-                        dataValueField: "value",
-                        dataSource: workbenches,
-                        indexselectworkbench: 0,
-                        change: onChangeWorkbench
-                    });
-                    
-                    $("#selectproject").kendoDropDownList({
-                        dataTextField: "text",
-                        dataValueField: "value",
-                        dataSource: projects,
-                        index: 0,
-                        change: onChangeProject
-                    });
-                    
-                    function onChangeWorkbench() {
-                        var value = $("#selectworkbench").val();
-                    };
-                    function onChangeProject() {
-                        var value = $("#selectproject").val();
-                    };
-                    
-                    
-                    $.each(servers, function () {
-                        $("#servercheckboxes").append($("<p>").text(this.name).prepend(
-                            $("<input>").attr('type', 'checkbox').val(this.id)
-                               .prop('checked', this.checked)
-                        ));
-                    });
-                });
-            </script>
 </div>
 
 

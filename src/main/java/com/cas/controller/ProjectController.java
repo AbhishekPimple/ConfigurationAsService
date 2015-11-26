@@ -1,17 +1,24 @@
 package com.cas.controller;
 
+import java.io.IOException;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.cas.delegate.ProjectDelegate;
-import com.cas.delegate.RegisterDelegate;
 import com.cas.model.Project;
 
 @Controller
@@ -19,7 +26,7 @@ public class ProjectController {
 	@Autowired
 	private ProjectDelegate projectDelegate;
 
-	@RequestMapping(value = "/getproject", method = RequestMethod.GET)
+	@RequestMapping(value = "/getprojects", method = RequestMethod.GET)
 	public ModelAndView getProjectInfo(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView model = new ModelAndView("welcomepage");
 		Project project = new Project();
@@ -27,30 +34,24 @@ public class ProjectController {
 		return model;
 	}
 
-	@RequestMapping(value = "/project", method = RequestMethod.POST)
-	public ModelAndView createProject(HttpServletRequest request, HttpServletResponse response,
-			@ModelAttribute("project") Project project) {
-		ModelAndView model = null;
+	@RequestMapping(value = "/project", method = RequestMethod.POST, headers = {"Content-type=application/json"})
+	public @ResponseBody Project createProject(@RequestBody String projectJson) throws JsonParseException, JsonMappingException, IOException {
+
+		Project project = new ObjectMapper().readValue(projectJson, Project.class);
+		
 		try {
-			
-			boolean isProjectExists = projectDelegate.createProject(project);
-			if (!isProjectExists) {
-				System.out.println("Project creation Successful");
-				/*User user = new User();
-				user.setEmailId(user.getEmailId());
-				model = new ModelAndView("register");
-				request.setAttribute("message", "Succesfully registered!");
-				model.addObject("user", user);*/
-				
+
+			if (projectDelegate.createProject(project) != null) {
+				System.out.println("Project is created Successfully");
+				return project;
 			} else {
-				model = new ModelAndView("register");
-				request.setAttribute("message", "You have already registered!");
+				return null;
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		return null;
 
-		return model;
 	}
 }
