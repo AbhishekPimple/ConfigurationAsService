@@ -2,20 +2,39 @@
 	pageEncoding="ISO-8859-1"%>
 
 <%@taglib prefix="welcome" tagdir="/WEB-INF/tags"%>
+<%@include file="springtabinclude.jsp"%>
 <welcome:header />
 
 <h3 align="left">Welcome ${loggedInUser}</h3>
 
+<!-- 	<a class="logout" href="logout">Log Out</a> -->
 
 <div id="example">
 	<div class="demo-section k-content">
 		<div id="tabstrip">
 			<ul>
-				<li class="k-state-active">Server</li>
+				<li class="k-state-active">My Profile</li>
+				<li>Server</li>
 				<li>Config Files</li>
 				<li>Project</li>
 				<li>Workbench</li>
 			</ul>
+			<div>
+				<span class="myprofiletab">&nbsp;</span>
+				<div class="myprofile">
+					<form id="profile_form" action="getfile" method="GET" >
+						<ul class="fieldlist">
+							<li>
+								<label for="name">File ID</label> 
+								<input id="fileid" name="fileid" type="text" class="k-textbox" style="width: 100%;" />
+							</li>
+							<li>
+								<input type="button" id="getfile" class="k-button k-primary" value="Get File">
+							</li>
+						</ul>
+					</form>
+				</div>
+			</div>
 			<div>
 				<span class="servertab">&nbsp;</span>
 				<div class="server">
@@ -97,25 +116,25 @@
 			<div>
 				<span class="projecttab">&nbsp;</span>
 				<div class="project">
-					<form id="project_form" action="project" method="POST">
+					<form:form id="project_form" action="project" method="POST" modelAttribute="project">
 						<ul class="fieldlist">
 							<li>
 								<label for="selectworkbench">Select Workbench</label> 
-								<input id="selectworkbench" value="1" style="width: 100%;" />
+								<form:input id="selectworkbench" value="1" style="width: 100%;" path="workbenchId"/>
 							</li>
 							<li>
 								<label for="name">Project Name</label> 
-								<input id="projectname" type="text" class="k-textbox" style="width: 100%;" />
+								<form:input id="projectname" type="text" class="k-textbox" style="width: 100%;" path="projectName"/>
 							</li>
 							<li>
 								<label for="description">Project Description</label>
-								<textarea id="projectdescription" class="k-textbox" style="width: 100%;"></textarea>
+								<form:textarea id="projectdescription" class="k-textbox" style="width: 100%;" path="projectDesc" />
 							</li>
 							<li>
 								<input type="submit" class="k-button k-primary" value="Create Project">
 							</li>
 						</ul>
-					</form>
+					</form:form>
 				</div>
 			</div>
 			<div>
@@ -144,6 +163,10 @@
 
 	<script>
                 $(document).ready(function() {
+                	
+                	$("#getfile").click(function(){
+                		window.open("getfile", null, null, null);
+                	});
                 	var workbenches = [
                                 { text: "DEV", value: "1" },
                                 { text: "Staging", value: "2" },
