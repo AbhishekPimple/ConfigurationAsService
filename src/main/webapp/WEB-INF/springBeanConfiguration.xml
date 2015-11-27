@@ -17,6 +17,10 @@
 	</bean>
 	<bean id="projectController" class="com.cas.controller.ProjectController">
 	</bean>
+	<bean id="workbenchController" class="com.cas.controller.WorkbenchController">
+	</bean>
+	<bean id="serverController" class="com.cas.controller.ServerController">
+	</bean>
 	
 	<!-- Delegate Beans -->
 	<bean id="loginDelegate" class="com.cas.delegate.LoginDelegate">
@@ -31,6 +35,13 @@
 	<bean id="projectDelegate" class="com.cas.delegate.ProjectDelegate">
 		<property name="projectService" ref="projectService"></property>
 	</bean>
+	<bean id="workbenchDelegate" class="com.cas.delegate.WorkbenchDelegate">
+		<property name="workbenchService" ref="workbenchService"></property>
+	</bean>
+	<bean id="serverDelegate" class="com.cas.delegate.ServerDelegate">
+		<property name="serverService" ref="serverService"></property>
+	</bean>
+	
 	
 	<!-- Service Beans -->
 	<bean id="loginService" class="com.cas.service.impl.LoginServiceImpl">
@@ -40,10 +51,18 @@
 		<property name="registerDao" ref="registerDao"></property>
 	</bean>
 	<bean id="fileService" class="com.cas.service.impl.FileServiceImpl">
+		<property name="fileDao" ref="fileDao"></property>
 	</bean>
 	<bean id="projectService" class="com.cas.service.impl.ProjectServiceImpl">
 		<property name="projectDao" ref="projectDao"></property>
 	</bean>
+	<bean id="workbenchService" class="com.cas.service.impl.WorkbenchServiceImpl">
+		<property name="workbenchDao" ref="workbenchDao"></property>
+	</bean>
+	<bean id="serverService" class="com.cas.service.impl.ServerServiceImpl">
+		<property name="serverDao" ref="serverDao"></property>
+	</bean>
+	
 		
 	<!-- DAO Beans -->
 	<bean name="loginDao" class="com.cas.dao.impl.LoginDaoImpl">
@@ -55,6 +74,18 @@
 	</bean>
 	
 	<bean name="projectDao" class="com.cas.dao.impl.ProjectDaoImpl">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+	
+	<bean name="workbenchDao" class="com.cas.dao.impl.WorkbenchDaoImpl">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+	
+	<bean name="serverDao" class="com.cas.dao.impl.ServerDaoImpl">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+	
+	<bean name="fileDao" class="com.cas.dao.impl.FileDaoImpl">
 		<property name="dataSource" ref="dataSource"></property>
 	</bean>
 	

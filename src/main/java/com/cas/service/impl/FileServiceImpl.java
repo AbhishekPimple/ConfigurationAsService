@@ -8,9 +8,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import com.cas.dao.FileDao;
 import com.cas.service.FileService;
 
 public class FileServiceImpl implements FileService {
+	FileDao fileDao;
+	
+
+	public FileDao getFileDao() {
+		return fileDao;
+	}
+
+	public void setFileDao(FileDao fileDao) {
+		this.fileDao = fileDao;
+	}
 
 	public List<String> getFile(int fileId) {
 		// TODO Auto-generated method stub
@@ -60,6 +71,11 @@ public class FileServiceImpl implements FileService {
 		//Execute required script.
 		
 		
+	}
+
+	public com.cas.model.File addFile(com.cas.model.File file) {
+		// TODO Auto-generated method stub
+		return fileDao.addFile(file);
 	}
 
 }

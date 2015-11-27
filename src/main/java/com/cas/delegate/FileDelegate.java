@@ -2,6 +2,7 @@ package com.cas.delegate;
 
 import java.util.List;
 
+import com.cas.model.File;
 import com.cas.service.FileService;
 
 public class FileDelegate {
@@ -28,5 +29,11 @@ public class FileDelegate {
 	
 	public void saveFile(int fileId){
 		fileService.saveFile(fileId);
+	}
+
+
+
+	public File addFile(File file) {
+		return fileService.addFile(file);
 	}
 }

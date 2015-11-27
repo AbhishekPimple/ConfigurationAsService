@@ -45,7 +45,7 @@
 								<input id="selectproject" value="1" style="width: 100%;" />
 							</li>
 							<li>
-								<label for="name">Server Name</label> 
+								<label for="name">Server Name*</label> 
 								<input id="servername" type="text" class="k-textbox" style="width: 100%;" />
 							</li>
 							<li>
@@ -53,15 +53,15 @@
 								<textarea id="serverdescription" class="k-textbox" style="width: 100%;"></textarea>
 							</li>
 							<li>
-								<label for="hostnameip">Hostname/IP address</label> 
+								<label for="hostnameip">Hostname/IP address*</label> 
 								<input id="hostnameip" type="text" class="k-textbox" style="width: 100%;" />
 							</li>
 							<li>
-								<label for="username">Username</label> 
+								<label for="username">Username*</label> 
 								<input id="username" type="text" class="k-textbox" style="width: 100%;" />
 							</li>
 							<li>
-								<label for="password">Password</label> 
+								<label for="password">Password*</label> 
 								<input id="password" type="password" class="k-textbox" style="width: 100%;" />
 							</li>
 							<li>
@@ -69,15 +69,15 @@
 								<input id="servertype" type="text" class="k-textbox" style="width: 100%;" />
 							</li>
 							<li>
-								<label for="keypair">Key Pair</label> 
-								<input id="keypair" type="text" class="k-textbox" style="width: 100%;" />
+								<label for="logfilepath">Server Log File Path</label> 
+								<input id="logfilepath" type="text" class="k-textbox" style="width: 100%;" />
 							</li>
 							<li>
 								<label for="restartCommand">Restart Command</label> 
 								<input id="restartCommand" type="text" class="k-textbox" style="width: 100%;" />
 							</li>
-							<li>
-								<input type="button" class="k-button k-primary" value="Test Connection">
+							<li>	
+								<input type="button" id="createserverbutton" class="k-button k-primary" value="Add Server">
 							</li>
 						</ul>
 					</form>
@@ -86,7 +86,7 @@
 			<div>
 				<span class="filestab">&nbsp;</span>
 				<div class="files">
-					<form id="files_form" action="configfile" method="POST">
+					
 						<ul class="fieldlist">
 							<li>
 								<label for="selectservers">Select Servers</label> 
@@ -103,14 +103,14 @@
 								<textarea id="filedescription" class="k-textbox" style="width: 100%;"></textarea>
 							</li>
 							<li>
-								<label for="filepath">File Path</label>
+								<label for="filepath">File Path*</label>
 								<textarea id="filepath" class="k-textbox" style="width: 100%;"></textarea>
 							</li>
 							<li>
-								<input type="submit" class="k-button k-primary" value="Test File">
+								<input type="submit" id="addfilebutton" class="k-button k-primary" value="Add File">
 							</li>
 						</ul>
-					</form>
+					
 				</div>
 			</div>
 			<div>
@@ -123,7 +123,7 @@
 								<input id="selectworkbench" value="1" style="width: 100%;"/>
 							</li>
 							<li>
-								<label for="name">Project Name</label> 
+								<label for="name">Project Name*</label> 
 								<input id="projectname" type="text" class="k-textbox" style="width: 100%;"/>
 							</li>
 							<li>
@@ -143,7 +143,7 @@
 					
 						<ul class="fieldlist">
 							<li>
-								<label for="name">Workbench Name</label> 
+								<label for="name">Workbench Name*</label> 
 								<input id="workbenchname" type="text" class="k-textbox" style="width: 100%;" />
 							</li>
 							<li>
@@ -151,7 +151,7 @@
 								<textarea id="workbenchdescription" class="k-textbox" style="width: 100%;"></textarea>
 							</li>
 							<li>
-								<input type="button" class="k-button k-primary" value="Create Workbench">
+								<input type="button" id="createworkbenchbutton" class="k-button k-primary" value="Create Workbench">
 							</li>
 						</ul>
 					
