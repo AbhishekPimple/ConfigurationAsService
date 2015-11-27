@@ -23,6 +23,7 @@ import com.sun.org.apache.xerces.internal.impl.xpath.regex.ParseException;
 public class FileServiceImpl implements FileService {
 	FileDao fileDao;
 
+
 	public FileDao getFileDao() {
 		return fileDao;
 	}
@@ -243,6 +244,11 @@ public class FileServiceImpl implements FileService {
 		}
 
 		return isModified;
+	}
+
+	public com.cas.model.File addFile(com.cas.model.File file) {
+		// TODO Auto-generated method stub
+		return fileDao.addFile(file);
 	}
 
 }

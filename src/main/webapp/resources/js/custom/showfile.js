@@ -2,7 +2,7 @@ $(document).ready(function() {
 	/* console.log($("#filecontent").text()) */
 	var servers = [ {
 		text : "Server 1",
-		value : "4"
+		value : "6"
 	}, {
 		text : "Server 2",
 		value : "2"

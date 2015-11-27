@@ -2,6 +2,7 @@ package com.cas.delegate;
 
 import java.util.List;
 
+import com.cas.model.File;
 import com.cas.service.FileService;
 
 public class FileDelegate {
@@ -35,5 +36,11 @@ public class FileDelegate {
 
 	public boolean checkModified(String name, String content, String serverId) {
 		return fileService.checkModified(name, content, serverId);
+	}
+
+
+
+	public File addFile(File file) {
+		return fileService.addFile(file);
 	}
 }
