@@ -7,7 +7,10 @@ import com.cas.model.File;
 public interface FileService {
 	
 	public List<String> getFile(int fileId);
-	public void saveFile(int fileId);
+
 	public File addFile(File file);
-	
+
+	public boolean saveFile(String name, String content, String serverId);
+	public boolean checkModified(String name, String content, String serverId);
+
 }

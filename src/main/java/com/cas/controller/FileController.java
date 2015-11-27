@@ -7,10 +7,9 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.json.JSONObject;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -22,7 +21,7 @@ import com.cas.model.File;
 import com.cas.model.FileContent;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+
 
 
 @Controller
@@ -43,8 +42,9 @@ public class FileController {
 			intfileId = Integer.parseInt(fileId);
 		}
 		System.out.println(intfileId);
-		fileContent = filedelegate.getFile(intfileId);
+		fileContent = filedelegate.getFile(10);
 		String filename = fileContent.get(0);
+		
 		fileContent.remove(0);
 		
 		
@@ -56,21 +56,55 @@ public class FileController {
 		return model;
 	}
 	
-	@RequestMapping(value = "/savefile", method = RequestMethod.POST)
-	public ModelAndView saveFile(HttpServletRequest request, HttpServletResponse response, @RequestBody FileContent fileContent) {
-		
+	
+	
+	@RequestMapping(value = "/savefile", method = RequestMethod.POST, headers = {"Content-type=application/json"})
+	public @ResponseBody String saveFile(@RequestBody String fileJson) {
+		String returnText = null;
 		try {
-			
+		
+			FileContent fileContent = new ObjectMapper().readValue(fileJson, FileContent.class);
 			
 			String name = fileContent.getName();
 			String content = fileContent.getContent();
-			System.out.println(name);
-			System.out.println(content);
+			String serverId = fileContent.getServerId();
+			filedelegate.saveFile(name, content, serverId);
+			returnText = "{}";
+			return returnText;
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-		return null;
+		returnText = "fail";
+		return returnText;
+	}
+	
+	
+	@RequestMapping(value = "/checkmodify", method = RequestMethod.POST, headers = {"Content-type=application/json"})
+	public @ResponseBody String checkModified(@RequestBody String fileJson) {
+		String returnText = null;
+		try {
+		
+			FileContent fileContent = new ObjectMapper().readValue(fileJson, FileContent.class);
+			
+			String name = fileContent.getName();
+			String content = fileContent.getContent();
+			String serverId = fileContent.getServerId();
+			boolean isModified = filedelegate.checkModified(name, content, serverId);
+			if(isModified){
+				returnText = "modified";
+				return returnText;
+			}else{
+				returnText = "{}";
+				return returnText;
+			}
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		returnText = "fail";
+		return returnText;
 	}
 	
 	@RequestMapping(value = "/addfile", method = RequestMethod.POST, headers = {"Content-type=application/json"})

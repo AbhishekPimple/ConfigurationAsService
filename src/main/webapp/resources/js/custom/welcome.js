@@ -98,6 +98,7 @@ $(document).ready(
 					});
 
 				}
+
 			});
 
 			function servervalidateFields() {
@@ -152,7 +153,7 @@ $(document).ready(
 							console.log("Before", JSON.stringify(jsonString));  
 						},
 						success: function (result) {
-							alert("Server has been created successfullu");
+							alert("Server has been created successfully");
 							console.log("data", result);
 						},
 						error: function () {
@@ -241,7 +242,7 @@ $(document).ready(
 
 			var servers = [ {
 				name : "Server 1",
-				id : "1",
+				id : "6",
 				checked : "true"
 			}, {
 				name : "Server 2",

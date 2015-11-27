@@ -73,6 +73,10 @@
 		<property name="dataSource" ref="dataSource"></property>
 	</bean>
 	
+	<bean name="fileDao" class="com.cas.dao.impl.FileDaoImpl">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+	
 	<bean name="projectDao" class="com.cas.dao.impl.ProjectDaoImpl">
 		<property name="dataSource" ref="dataSource"></property>
 	</bean>
@@ -82,10 +86,6 @@
 	</bean>
 	
 	<bean name="serverDao" class="com.cas.dao.impl.ServerDaoImpl">
-		<property name="dataSource" ref="dataSource"></property>
-	</bean>
-	
-	<bean name="fileDao" class="com.cas.dao.impl.FileDaoImpl">
 		<property name="dataSource" ref="dataSource"></property>
 	</bean>
 	

@@ -7,11 +7,7 @@
 <welcome:header />
 <h2>${message}</h2>
 <script>
-function validateEmail(email) 
-{
-    var re = /\S+@\S+\.\S+/;
-    return re.test(email);
-}
+
 function validateForm() {
     var emailid = document.forms["loginForm"]["emailid"].value;
 	var password = document.forms["loginForm"]["password"].value;

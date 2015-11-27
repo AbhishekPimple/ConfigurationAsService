@@ -1,8 +1,27 @@
 package com.cas.model;
 
-public class FileContent {
+import java.io.Serializable;
+
+public class FileContent implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	String name;
 	String content;
+	String serverId;
+	
+	public FileContent(){
+		
+	}
+	
+	public String getServerId() {
+		return serverId;
+	}
+	public void setServerId(String serverId) {
+		this.serverId = serverId;
+	}
+
 	public FileContent(String name, String content){
 		this.name = name;
 		this.content = content;
