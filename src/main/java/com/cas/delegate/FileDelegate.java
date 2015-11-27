@@ -26,7 +26,14 @@ public class FileDelegate {
 		
 	}
 	
-	public void saveFile(String name, String content, String serverId){
-		fileService.saveFile(name, content, serverId);
+	public boolean saveFile(String name, String content, String serverId){
+		return fileService.saveFile(name, content, serverId);
+	}
+	
+
+
+
+	public boolean checkModified(String name, String content, String serverId) {
+		return fileService.checkModified(name, content, serverId);
 	}
 }

@@ -40,8 +40,8 @@ public class FileController {
 			intfileId = Integer.parseInt(fileId);
 		}
 		System.out.println(intfileId);
-		fileContent = filedelegate.getFile(1);
-		String filename = Integer.toString(intfileId)+"_"+fileContent.get(0);
+		fileContent = filedelegate.getFile(6);
+		String filename = fileContent.get(0);
 		
 		fileContent.remove(0);
 		
@@ -53,6 +53,8 @@ public class FileController {
 		
 		return model;
 	}
+	
+	
 	
 	@RequestMapping(value = "/savefile", method = RequestMethod.POST, headers = {"Content-type=application/json"})
 	public @ResponseBody String saveFile(@RequestBody String fileJson) {
@@ -67,6 +69,35 @@ public class FileController {
 			filedelegate.saveFile(name, content, serverId);
 			returnText = "{}";
 			return returnText;
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		returnText = "fail";
+		return returnText;
+	}
+	
+	
+	@RequestMapping(value = "/checkmodify", method = RequestMethod.POST, headers = {"Content-type=application/json"})
+	public @ResponseBody String checkModified(@RequestBody String fileJson) {
+		String returnText = null;
+		try {
+		
+			FileContent fileContent = new ObjectMapper().readValue(fileJson, FileContent.class);
+			
+			String name = fileContent.getName();
+			String content = fileContent.getContent();
+			String serverId = fileContent.getServerId();
+			boolean isModified = filedelegate.checkModified(name, content, serverId);
+			if(isModified){
+				returnText = "modified";
+				return returnText;
+			}else{
+				returnText = "{}";
+				return returnText;
+			}
+			
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
