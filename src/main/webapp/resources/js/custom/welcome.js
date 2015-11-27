@@ -29,8 +29,9 @@ $(document).ready(
 				      console.log("Before", JSON.stringify(jsonString));  
 				    },
 				    success: function (result) {
-				    	alert("Project has been created successfullu");
-				        console.log("data", result);
+				    	alert("Project has been created successfully");
+				    	location.reload();
+				    	console.log("data", result);
 				    },
 				    error: function () {
 				        alert("error");

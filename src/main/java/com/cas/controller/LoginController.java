@@ -41,7 +41,7 @@ public class LoginController {
 				model = new ModelAndView("loginpage");
 				model.addObject("user", user);
 				request.setAttribute("message", "Invalid credentials!");
-				return "redirect:/login";
+				return "redirect:/";
 			}
 
 		} catch (Exception e) {

@@ -26,7 +26,7 @@ public class FileDelegate {
 		
 	}
 	
-	public void saveFile(int fileId){
-		fileService.saveFile(fileId);
+	public void saveFile(String name, String content, String serverId){
+		fileService.saveFile(name, content, serverId);
 	}
 }

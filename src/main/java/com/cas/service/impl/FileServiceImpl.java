@@ -2,43 +2,70 @@ package com.cas.service.impl;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.net.URISyntaxException;
-import java.net.URL;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
+import com.cas.dao.FileDao;
 import com.cas.service.FileService;
 
 public class FileServiceImpl implements FileService {
+	FileDao fileDao;
+	
+	
+	public FileDao getFileDao() {
+		return fileDao;
+	}
+
+	public void setFileDao(FileDao fileDao) {
+		this.fileDao = fileDao;
+	}
 
 	public List<String> getFile(int fileId) {
 		// TODO Auto-generated method stub
 		List<String> fileContent = new ArrayList<String>();
+		Map<String, String> fileData = new HashMap<String, String>();
+		String propertyHome = System.getenv("PROPERTY_HOME");
 
-		// find file name from fileId
-		String baseFileName = "tempfile.log";
+		String baseFileName = null;
+		try {
+			fileData = fileDao.getFileData(fileId);
+			baseFileName = fileId+"_"+fileData.get("filename");
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
 		
-		URL filename = this.getClass().getClassLoader().getResource("temp/"+baseFileName); // Currently
-																							// hard
-																							// coding
-																							// it
-		System.out.println();
+		/*   sh launchExpect.sh parag ubuntu.local root pull /home/parag/abc.txt /home/prasad/CAS/   */
+		
+		
+		
+		Map<String, String> serverData = fileDao.getServerData(fileId);
+	
+		String filename = propertyHome+baseFileName;
 
 		fileContent.add(baseFileName);
 		Scanner s = null;
 
 		try {
-			s = new Scanner(new File(filename.toURI()));
+			File myfile = new File(filename);
+			/*File myfile = new File(filename.toURI());*/
+			s = new Scanner(myfile);
 			while (s.hasNextLine()) {
 				fileContent.add(s.nextLine());
 			}
+			
+			
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (URISyntaxException e) {
+		}/* catch (URISyntaxException e) {
 
-		} finally {
+		}*/ finally {
 			if (s != null) {
 				s.close();
 			}
@@ -50,16 +77,31 @@ public class FileServiceImpl implements FileService {
 
 	}
 
-	public void saveFile(int fileId) {
+	public void saveFile(String name, String content, String serverId) {
 		// TODO Auto-generated method stub
-		
-		//Compute filename from fileId
-		
-		//Find which servers to send this file to.
-		
-		//Execute required script.
-		
-		
+		String propertyHome = System.getenv("PROPERTY_HOME");
+		content = content.replaceAll("<br><br>", "\n");
+		content = content.replaceAll("<div>", "");
+		content = content.replaceAll("</div>", "");
+		content = content.replaceAll("<br>", "\n");
+		System.out.println("filecontent is :"+content);
+		String filename = propertyHome+name; 
+		try {
+			File thisFile = new File(filename);
+			FileWriter fileWriter = new FileWriter(thisFile, false);
+			fileWriter.write(content);
+			fileWriter.close();
+			System.out.println("File Saved");
+			
+			
+			//Scp file to required server
+			/*Map<String, String> serverData = fileDao.getServerData(name, Integer.parseInt(serverId));*/
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}catch(IOException io){
+			io.printStackTrace();
+		}
 	}
 
 }

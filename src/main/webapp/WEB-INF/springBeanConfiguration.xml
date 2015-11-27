@@ -40,6 +40,7 @@
 		<property name="registerDao" ref="registerDao"></property>
 	</bean>
 	<bean id="fileService" class="com.cas.service.impl.FileServiceImpl">
+		<property name="fileDao" ref="fileDao"></property>
 	</bean>
 	<bean id="projectService" class="com.cas.service.impl.ProjectServiceImpl">
 		<property name="projectDao" ref="projectDao"></property>
@@ -51,6 +52,10 @@
 	</bean>
 	
 	<bean name="registerDao" class="com.cas.dao.impl.RegisterDaoImpl">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+	
+	<bean name="fileDao" class="com.cas.dao.impl.FileDaoImpl">
 		<property name="dataSource" ref="dataSource"></property>
 	</bean>
 	

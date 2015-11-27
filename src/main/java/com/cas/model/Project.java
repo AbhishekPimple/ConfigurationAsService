@@ -13,6 +13,10 @@ public class Project implements Serializable{
 	String projectDesc;
 	String workbenchId;
 	
+	
+	public Project(){
+		
+	}
 	public String getProjectName() {
 		return projectName;
 	}
