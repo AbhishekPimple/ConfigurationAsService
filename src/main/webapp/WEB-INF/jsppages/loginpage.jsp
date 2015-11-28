@@ -21,6 +21,10 @@ function validateForm() {
        alert("Please add correct email address.");
        return false;
     }
+    if(password.length > 30 || emailid.length > 30) {
+    	alert("Some of the fields are too long");
+    	return false;
+    }
 }
 
 </script>
@@ -28,10 +32,10 @@ function validateForm() {
 	modelAttribute="user">
 	<ul class="fieldlist">
 
-		<li><label for="emailid">Email ID</label> <form:input
+		<li><label for="emailid">Email ID*</label> <form:input
 				id="emailid" type="text" class="k-textbox" style="width: 100%;"
 				path="emailId" /></li>
-		<li><label for="password">Password</label> <form:input
+		<li><label for="password">Password*</label> <form:input
 				id="password" type="password" class="k-textbox" style="width: 100%;"
 				path="password" /></li>
 		<li><a href="register"> New User?</a></li>
