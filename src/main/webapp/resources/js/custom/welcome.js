@@ -78,7 +78,11 @@ $(document).ready(
 					alert("Please fill all mandatory fields.");
 					return false;
 				}
-				else
+				if (projectName > 30) {
+			    	alert("Some of the fields are too long");
+			    	return false;
+				}
+				
 					return true;
 			}
 			$("#createprojectbutton").click(function() {
@@ -125,7 +129,11 @@ $(document).ready(
 					alert("Please fill all mandatory fields.");
 					return false;
 				}
-				else
+				if (workbenchName > 30) {
+			    	alert("Some of the fields are too long");
+			    	return false;
+				}
+				
 					return true;
 			}
 
@@ -173,12 +181,19 @@ $(document).ready(
 				var hostIP = $("#hostnameip").val();
 				var username = $("#username").val();
 				var password = $("#password").val();
+				var serverType = $("#servertype").val();
+				var logFilePath = $("#logfilepath").val();
+				var restartCmd = $("#restartCommand").val();
 
 				if (serverName == null || serverName == "" || hostIP == null || hostIP == "" || username == null || username == "" || password == null || password == "") {
 					alert("Please fill all mandatory fields.");
 					return false;
 				}
-				else
+				if (serverName > 30 || hostIP > 30 || username > 30 || password > 30 || serverType > 30 || logFilePath > 30 || restartCmd > 100) {
+			    	alert("Some of the fields are too long");
+			    	return false;
+				}
+				
 					return true;
 			}
 
@@ -233,11 +248,16 @@ $(document).ready(
 			function filevalidateFields() {
 
 				var filePath = $("#filepath").val();
+				var fileName = $("#filename").val();
 				if (filePath == null || filePath == "") {
 					alert("Please fill all mandatory fields.");
 					return false;
 				}
-				else
+				if (fileName > 30) {
+			    	alert("Some of the fields are too long");
+			    	return false;
+				}
+				
 					return true;
 			}
 
