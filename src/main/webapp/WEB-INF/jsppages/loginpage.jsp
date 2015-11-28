@@ -4,28 +4,27 @@
 
 <%@taglib prefix="welcome" tagdir="/WEB-INF/tags"%>
 
-<welcome:header />
+<welcome:loginheader />
 <h2>${message}</h2>
 <script>
+	function validateForm() {
+		var emailid = document.forms["loginForm"]["emailid"].value;
+		var password = document.forms["loginForm"]["password"].value;
+		if (emailid == null || emailid == "" || password == null
+				|| password == "") {
+			alert("Please fill all mandatory fields.");
+			return false;
+		}
 
-function validateForm() {
-    var emailid = document.forms["loginForm"]["emailid"].value;
-	var password = document.forms["loginForm"]["password"].value;
-    if (emailid == null || emailid == "" || password == null || password == "") {
-        alert("Please fill all mandatory fields.");
-        return false;
-    }
-    
-    var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
-    if(!re.test(emailid))  {
-       alert("Please add correct email address.");
-       return false;
-    }
-}
-
+		var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+		if (!re.test(emailid)) {
+			alert("Please add correct email address.");
+			return false;
+		}
+	}
 </script>
-<form:form id="loginForm" action="performlogin" onsubmit="return validateForm()" method="POST"
-	modelAttribute="user">
+<form:form id="loginForm" action="performlogin"
+	onsubmit="return validateForm()" method="POST" modelAttribute="user">
 	<ul class="fieldlist">
 
 		<li><label for="emailid">Email ID</label> <form:input
@@ -39,4 +38,5 @@ function validateForm() {
 			value="Log In" /></li>
 	</ul>
 </form:form>
+
 <welcome:footer />
