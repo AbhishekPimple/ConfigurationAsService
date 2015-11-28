@@ -32,7 +32,6 @@ public class WelcomeController {
 		String emailId = user.getEmailId();
 		JSONObject profile=null;
 		try {
-
 			profile = treeViewDelegate.populate(emailId);
 
 		} catch (Exception e) {

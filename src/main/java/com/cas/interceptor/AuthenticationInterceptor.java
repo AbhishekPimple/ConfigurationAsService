@@ -11,8 +11,8 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 	
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
-		System.out.println("In interceptor pre Handle");
-		if (!request.getRequestURI().equals("/ConfigAsService/") && !request.getRequestURI().equals("/ConfigAsService/performlogin")) {
+		/*System.out.println("In interceptor pre Handle");*/
+		if (!request.getRequestURI().equals("/ConfigAsService/") && !request.getRequestURI().equals("/ConfigAsService/performlogin") && !request.getRequestURI().equals("/ConfigAsService/register")) {
 			User user = (User) request.getSession().getAttribute("LOGGEDIN_USER");
 			if (user == null) {
 				response.sendRedirect("/ConfigAsService/");

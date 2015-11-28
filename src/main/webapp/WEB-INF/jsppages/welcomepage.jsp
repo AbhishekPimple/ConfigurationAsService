@@ -14,59 +14,6 @@
 <div style="float: left; width: 20%;">
 	<h3 align="left">Welcome</h3>
 	<div id="treeview-left"></div>
-<!-- 	<script>
-		// Reference to this script:http://stackoverflow.com/questions/22856073/kendo-tree-view-populate-using-json
-		// Your Json Data
-		
-
-		$(document).ready(function() {
-
-			$(document).bind("contextmenu", function(e) {
-				return false;
-			});
-
-			var inlineDefault = new kendo.data.HierarchicalDataSource({
-				data : testArray,
-				schema : {
-					model : {
-						children : "Items"
-					}
-				}
-			});
-
-			var tree = $("#treeview-left").kendoTreeView({
-				dataSource : inlineDefault,
-				dataTextField : "ItemName",
-
-				select : function(event) {
-					var $item = $(event.node);
-					alert("node: " + JSON.stringify(tree.dataItem(event.node)));
-				}
-			}).data("kendoTreeView");
-
-			var selectedNode = tree.select();
-			alert( selectedNode)
-			/* $("#disableNode").click(function() {
-                
-
-                treeview.enable(selectedNode, false);
-            }); */
-			
-			/* var $selected = $('#selected');
-			var $treePath = $selected.parentsUntil($tree, "li");
-			alert($selected);
-			var treeView = $tree.data('kendoTreeView');
-
-			
-
-			// Gotta make both calls...
-			treeView.select($selected);
-			treeView.trigger('select', {
-				node : $selected
-			}); */
-
-		});
-	</script> -->
 </div>
 
 <div style="float: left; width: 80%;">
@@ -94,6 +41,7 @@
 						</form>
 					</div>
 				</div>
+
 				<div>
 					<span class="servertab">&nbsp;</span>
 					<div class="server">
@@ -158,6 +106,7 @@
 					<div class="project">
 
 						<ul class="fieldlist">
+
 							<li><label for="selectworkbench">Select Workbench</label> <input
 								id="selectworkbench" value="1" style="width: 100%;" /></li>
 							<li><label for="name">Project Name</label> <input
@@ -168,6 +117,7 @@
 							</li>
 							<li><input type="button" id="createprojectbutton"
 								class="k-button k-primary" value="Create Project"></li>
+
 						</ul>
 
 					</div>
@@ -177,6 +127,7 @@
 					<div class="workbench">
 
 						<ul class="fieldlist">
+
 							<li><label for="name">Workbench Name</label> <input
 								id="workbenchname" type="text" class="k-textbox"
 								style="width: 100%;" /></li>

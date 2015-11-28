@@ -29,14 +29,14 @@ public class TreeViewDaoImpl implements TreeViewDao{
 	}
 
 	public JSONObject populate(String emailId) throws SQLException {
-		// TODO Auto-generated method stub
+		
 		int userID = 0;
 		String workbenchID = null;
 		String workbenchName = null;
 		PreparedStatement pstmt;
 		ResultSet resultSet;
 		List<String> workbenchIDList = new ArrayList<String>();
-		//Map<Integer,FileMap> ServerMap = new HashMap();
+
 		Map<String,Map<String,String>> workbenchMap = new HashMap(); 
 
 		String user = "Select user_id from user where user_email_id = ?";
@@ -50,10 +50,10 @@ public class TreeViewDaoImpl implements TreeViewDao{
 		while(resultSet.next()){
 			userID =  resultSet.getInt("user_id");
 		}
-		
+
 		//get list of workbenches 
 		JSONObject profile = new JSONObject();
-		
+
 		JSONArray workbenches;
 		pstmt = dataSource.getConnection().prepareStatement(workbench);
 		pstmt.setString(1, String.valueOf(userID));
@@ -74,8 +74,6 @@ public class TreeViewDaoImpl implements TreeViewDao{
 		}
 		profile.put("Profile", workbenches);
 
-
-
 		//get project from workbenchesID
 		Map<String,String> tempProjectMap;
 		JSONObject jsonProjectTemp;
@@ -87,8 +85,6 @@ public class TreeViewDaoImpl implements TreeViewDao{
 			pstmt.setString(1, tempWorkbenchID);
 			resultSet = pstmt.executeQuery();
 			tempProjectMap = new HashMap();
-
-
 			objecttemp = profile.getJSONArray("Profile");
 			int location = 0;
 			JSONArray jsonProjectTempArray = new JSONArray();
@@ -96,7 +92,7 @@ public class TreeViewDaoImpl implements TreeViewDao{
 			for(int i = 0 ;i<objecttemp.length();i++){
 				JSONObject tempjs = (JSONObject) objecttemp.get(i);
 				if(tempjs.get("id").equals(tempWorkbenchID)){
-				//if(tempjs.get("WorkbenchID").equals(tempWorkbenchID)){
+					//if(tempjs.get("WorkbenchID").equals(tempWorkbenchID)){
 					location = i;
 				}
 			}
@@ -111,8 +107,6 @@ public class TreeViewDaoImpl implements TreeViewDao{
 				jsonProjectTemp.put("items", new JSONArray());
 				//jsonProjectTemp.put("Servers", new JSONArray());
 				jsonProjectTempArray.put(jsonProjectTemp);
-
-
 			}
 			JSONObject tempjs = (JSONObject) objecttemp.get(location);
 			tempjs.put("items", jsonProjectTempArray);
@@ -120,16 +114,13 @@ public class TreeViewDaoImpl implements TreeViewDao{
 			tempJsArray.put(jsonProjectTemp);
 			tempjs.put(key, value)*/
 			objecttemp.put(location, tempjs);
-
 			workbenchMap.put(tempWorkbenchID, tempProjectMap);
 		}
 
-		System.out.println("here again "+ objecttemp);
 		profile.put("Profile", objecttemp);
-		System.out.println("here again "+ profile);
-
 
 		//get 	server from project
+
 		Map<String,Map<String,String>> projectMap = new HashMap();
 		Map<String,String> tempServerMap;
 		String serverID,serverName;
@@ -182,8 +173,6 @@ public class TreeViewDaoImpl implements TreeViewDao{
 			}
 		}
 
-		System.out.println("chutiyagiri "+ objecttemp.toString());
-
 
 		//get config from server
 		Map<String,Map<String,String>> serverMap = new HashMap();
@@ -198,7 +187,7 @@ public class TreeViewDaoImpl implements TreeViewDao{
 			pstmt.setString(1, tempServerID);
 			resultSet = pstmt.executeQuery();
 			tempServerMap = new HashMap();
-					
+
 			jsonConfigTempArray = new JSONArray();
 
 			int locationi=0,locationj=0,locationk=0;
@@ -231,7 +220,7 @@ public class TreeViewDaoImpl implements TreeViewDao{
 				jsonConfigTempArray.put(jsonConfigTemp);
 
 			}	
-			
+
 			JSONObject tempjs = (JSONObject) objecttemp.get(locationi);
 			//JSONArray tempjsArr = tempjs.getJSONArray("Projects");
 			JSONArray tempjsArr = tempjs.getJSONArray("items");
@@ -249,18 +238,9 @@ public class TreeViewDaoImpl implements TreeViewDao{
 			//tempjs.put("Projects", tempjsArr);
 			objecttemp.put(locationi,tempjs);
 			serverMap.put(tempServerID, tempServerMap);
-			
-			
-			//	serverMapJson.put(tempServerID, )
 		}
-		System.out.println("final json is " + objecttemp.toString());
 		
 		profile.put("Profile", objecttemp);
-		System.out.println("final profile  is " + profile.toString());
-		System.out.println(workbenchIDList.toString());
-		System.out.println("Workbench has project "+workbenchMap.toString());
-		System.out.println("Project has server "+projectMap.toString());
-		System.out.println("Server has config files "+ serverMap.toString());
 		
 		JSONObject UserProfile = new JSONObject();
 		UserProfile.put("UserProfile", new JSONArray() );
@@ -270,37 +250,7 @@ public class TreeViewDaoImpl implements TreeViewDao{
 		uid.put("Profile", objecttemp);
 		Root.put(uid);
 		UserProfile.put("UserProfile", Root);
-
-		/*for(Map.Entry<String,Map<String,String>> iter : serverMap.entrySet() ){
-			if(!iter.getValue().isEmpty()){
-				for(Map.Entry<String, String> iter1: iter.getValue().entrySet()){
-					tempJson.put(iter1.getKey(),iter1.getValue());
-					System.out.println(tempJson.toString());
-					configFileArray.put(tempJson);
-				}
-
-			}
-		}
-		System.out.println(configFileArray.toString());
-		 */
-		/*JSONArray jsonFilesObject = new JSONArray();
-		JSONObject tempJson = new JSONObject();
-		for(Map.Entry<String,Map<String,String>> iter : serverMap.entrySet() ){
-			if(!iter.getValue().isEmpty()){
-				tempJson.put(iter.getKey(),iter.getValue());
-			}
-			jsonFilesObject.put(tempJson);
-		}
-
-		JSONObject jsonServerObject = new JSONObject();
-		jsonServerObject.put("Files",jsonFilesObject);
-		System.out.println(jsonServerObject.toString());
-		 */		
-		/*for(Map.Entry<String,Map<String,String>> iter : projectMap.entrySet() ){
-			jsonServerObject.p
-		}*/
+		
 		return UserProfile;
-
-
 	}
 }

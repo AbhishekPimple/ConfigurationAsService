@@ -18,32 +18,24 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.cas.delegate.ProjectDelegate;
-import com.cas.model.Project;
+import com.cas.delegate.ServerDelegate;
+import com.cas.model.Server;
 
 @Controller
-public class ProjectController {
+public class ServerController {
 	@Autowired
-	private ProjectDelegate projectDelegate;
+	private ServerDelegate serverDelegate;
 
-	@RequestMapping(value = "/getprojects", method = RequestMethod.GET)
-	public ModelAndView getProjectInfo(HttpServletRequest request, HttpServletResponse response) {
-		ModelAndView model = new ModelAndView("welcomepage");
-		Project project = new Project();
-		model.addObject("project", project);
-		return model;
-	}
+	@RequestMapping(value = "/server", method = RequestMethod.POST, headers = {"Content-type=application/json"})
+	public @ResponseBody Server createServer(@RequestBody String serverJson) throws JsonParseException, JsonMappingException, IOException {
 
-	@RequestMapping(value = "/project", method = RequestMethod.POST, headers = {"Content-type=application/json"})
-	public @ResponseBody Project createProject(@RequestBody String projectJson) throws JsonParseException, JsonMappingException, IOException {
+		Server server = new ObjectMapper().readValue(serverJson, Server.class);
 
-		Project project = new ObjectMapper().readValue(projectJson, Project.class);
-		
 		try {
 
-			if (projectDelegate.createProject(project) != null) {
-				System.out.println("Project is created Successfully");
-				return project;
+			if (serverDelegate.createServer(server) != null) {
+				System.out.println("Server is created Successfully");
+				return server;
 			} else {
 				return null;
 			}
