@@ -5,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -116,18 +115,6 @@ public class FileDaoImpl implements FileDao{
 			fileData.put("password", resultSet1.getString("server_password"));
 		}
 		
-		java.util.Date date = new Date();
-		Timestamp timestamp = new Timestamp(date.getTime());
-		
-
-		String insertTableSQL = "INSERT INTO fileoperations"
-				+ "(config_id, retrieved_at) VALUES"
-				+ "(?,?) ON DUPLICATE KEY UPDATE retrieved_at=values(retrieved_at)";
-		PreparedStatement preparedStatement = dataSource.getConnection().prepareStatement(insertTableSQL);
-		preparedStatement.setInt(1, fileId);
-		preparedStatement.setTimestamp(2, timestamp);;
-		preparedStatement .executeUpdate();
-		
 		
 		return fileData;
 	}
@@ -154,6 +141,9 @@ public class FileDaoImpl implements FileDao{
 				serverData.put("username", resultSet1.getString("server_username"));
 				serverData.put("hostname", resultSet1.getString("server_ipaddress"));
 				serverData.put("password", resultSet1.getString("server_password"));
+				String serverRestartCommand = "\"" + resultSet1.getString("server_restart_cmd") + "\"";
+				//serverRestartCommand = serverRestartCommand.replaceAll(" ", "\\\\\\\\ ");
+				serverData.put("restartcommand", serverRestartCommand);
 			}	
 		}catch(SQLException e){
 			e.printStackTrace();
@@ -178,6 +168,24 @@ public class FileDaoImpl implements FileDao{
 			e.printStackTrace();
 		}
 		return tStamp;
+	}
+
+	public void insertFileTimeStamp(Timestamp timestamp, int fileId) {
+		
+		
+		try {
+			String insertTableSQL = "INSERT INTO fileoperations"
+					+ "(config_id, retrieved_at) VALUES"
+					+ "(?,?) ON DUPLICATE KEY UPDATE retrieved_at=values(retrieved_at)";
+			PreparedStatement preparedStatement = dataSource.getConnection().prepareStatement(insertTableSQL);
+			preparedStatement.setInt(1, fileId);
+			preparedStatement.setTimestamp(2, timestamp);;
+			preparedStatement .executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 
 

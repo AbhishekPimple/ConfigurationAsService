@@ -42,7 +42,7 @@ public class FileController {
 			intfileId = Integer.parseInt(fileId);
 		}
 		System.out.println(intfileId);
-		fileContent = filedelegate.getFile(10);
+		fileContent = filedelegate.getFile(6);
 		String filename = fileContent.get(0);
 		
 		fileContent.remove(0);
@@ -68,7 +68,8 @@ public class FileController {
 			String name = fileContent.getName();
 			String content = fileContent.getContent();
 			String serverId = fileContent.getServerId();
-			filedelegate.saveFile(name, content, serverId);
+			String isRestart = fileContent.getIsRestart();
+			filedelegate.saveFile(name, content, serverId, isRestart);
 			returnText = "{}";
 			return returnText;
 			

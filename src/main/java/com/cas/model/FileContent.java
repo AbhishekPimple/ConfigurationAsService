@@ -10,11 +10,22 @@ public class FileContent implements Serializable{
 	String name;
 	String content;
 	String serverId;
+	String isRestart;
 	
 	public FileContent(){
 		
 	}
 	
+	
+	public String getIsRestart() {
+		return isRestart;
+	}
+
+	public void setIsRestart(String isRestart) {
+		this.isRestart = isRestart;
+	}
+
+
 	public String getServerId() {
 		return serverId;
 	}
