@@ -10,7 +10,7 @@ public interface FileService {
 
 	public File addFile(File file);
 
-	public boolean saveFile(String name, String content, String serverId);
+	public boolean saveFile(String name, String content, String serverId, String isRestart);
 	public boolean checkModified(String name, String content, String serverId);
 
 }

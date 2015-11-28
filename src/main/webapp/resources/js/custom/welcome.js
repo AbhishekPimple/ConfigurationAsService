@@ -242,7 +242,7 @@ $(document).ready(
 
 			var servers = [ {
 				name : "Server 1",
-				id : "6",
+				id : "1",
 				checked : "true"
 			}, {
 				name : "Server 2",

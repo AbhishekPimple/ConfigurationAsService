@@ -27,8 +27,8 @@ public class FileDelegate {
 		
 	}
 	
-	public boolean saveFile(String name, String content, String serverId){
-		return fileService.saveFile(name, content, serverId);
+	public boolean saveFile(String name, String content, String serverId, String isRestart){
+		return fileService.saveFile(name, content, serverId, isRestart);
 	}
 	
 

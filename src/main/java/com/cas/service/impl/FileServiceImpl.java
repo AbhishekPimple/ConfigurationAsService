@@ -51,10 +51,11 @@ public class FileServiceImpl implements FileService {
 		 * sh launchExpect.sh parag ubuntu.local root pull /home/parag/abc.txt
 		 * /home/prasad/CAS/
 		 */
+		Timestamp filetimestamp;
 
 		try {
 
-			String cmd = "sh " + scriptHome + "launchExpect.sh" + " " + fileData.get("username") + " "
+			String cmd = "sh " + scriptHome + "launchExpect.sh" + " " +scriptHome+" "+fileData.get("username") + " "
 					+ fileData.get("hostname") + " " + fileData.get("password") + " pull" + " "
 					+ fileData.get("configfilepath") + " " + propertyHome;
 
@@ -68,7 +69,21 @@ public class FileServiceImpl implements FileService {
 			System.out.println("Exit Value is : " + p.exitValue());
 
 			while (r.ready()) {
-				System.out.println(r.readLine());
+				String readLine = r.readLine();
+				if (readLine.startsWith("Modify: ")) {
+					
+					
+					try {
+						SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+						Date parsedDate = dateFormat.parse(readLine.substring(8, 27));
+						filetimestamp = new java.sql.Timestamp(parsedDate.getTime());
+						fileDao.insertFileTimeStamp(filetimestamp, fileId);
+
+					} catch (java.text.ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
 			}
 			while (r2.ready()) {
 				System.out.println(r2.readLine());
@@ -107,7 +122,7 @@ public class FileServiceImpl implements FileService {
 
 	}
 
-	public boolean saveFile(String name, String content, String serverId) {
+	public boolean saveFile(String name, String content, String serverId, String isRestart) {
 		// TODO Auto-generated method stub
 		String propertyHome = System.getenv("PROPERTY_HOME");
 		String scriptHome = System.getenv("SCRIPT_HOME");
@@ -142,10 +157,10 @@ public class FileServiceImpl implements FileService {
 			} catch (IOException io) {
 				io.printStackTrace();
 			}
-			Map<String, String> serverData = fileDao.getServerData(fileId, Integer.parseInt(serverId));
-			String remotePath = serverData.get("remotefilepath");
-			remotePath = remotePath.substring(0, remotePath.lastIndexOf("/") + 1);
-				String cmd = "sh " + scriptHome + "launchExpect.sh" + " " + serverData.get("username") + " "
+				Map<String, String> serverData = fileDao.getServerData(fileId, Integer.parseInt(serverId));
+				String remotePath = serverData.get("remotefilepath");
+				remotePath = remotePath.substring(0, remotePath.lastIndexOf("/") + 1);
+				String cmd = "sh " + scriptHome + "launchExpect.sh" + " " + scriptHome+" "+serverData.get("username") + " "
 						+ serverData.get("hostname") + " " + serverData.get("password") + " push" + " " + propertyHome
 						+ oldFileName + " " + remotePath;
 
@@ -169,6 +184,32 @@ public class FileServiceImpl implements FileService {
 					System.out.println(r2.readLine());
 				}
 				System.out.println("File Saved");
+				
+				if(isRestart.equals("true")){
+					String restartCommand = "sh " + scriptHome + "launchExpect.sh" + " " + scriptHome+" "+serverData.get("username") + " "
+							+ serverData.get("hostname") + " " + serverData.get("password") + " restart "+serverData.get("restartcommand");
+					System.out.println("final restart command is " + restartCommand);
+					Process processRestart = Runtime.getRuntime().exec(restartCommand);
+					processRestart.waitFor();
+
+					BufferedReader iStream = new BufferedReader(new InputStreamReader(processRestart.getInputStream()));
+					BufferedReader eStream = new BufferedReader(new InputStreamReader(processRestart.getErrorStream()));
+					System.out.println("Output stream: " + processRestart.getOutputStream().toString());
+					System.out.println("Exit Value is : " + processRestart.exitValue());
+
+					while (iStream.ready()) {
+
+						System.out.println("Success!!!!!!!");
+						System.out.println(iStream.readLine());
+					}
+					while (eStream.ready()) {
+
+						System.out.println("Error !!!!!!");
+						System.out.println(eStream.readLine());
+					}
+					System.out.println("Server restarted");
+				
+				}
 				return false;
 
 		} catch (Throwable t) {
@@ -214,7 +255,7 @@ public class FileServiceImpl implements FileService {
 
 			String remotePathCheck = serverData.get("remotefilepath");
 
-			String checkCommand = "sh " + scriptHome + "launchExpect.sh" + " " + serverData.get("username") + " "
+			String checkCommand = "sh " + scriptHome + "launchExpect.sh" + " " + scriptHome+" "+serverData.get("username") + " "
 					+ serverData.get("hostname") + " " + serverData.get("password") + " getModTime" + " "
 					+ remotePathCheck;
 

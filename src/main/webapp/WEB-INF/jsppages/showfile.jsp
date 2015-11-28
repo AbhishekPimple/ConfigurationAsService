@@ -18,6 +18,7 @@
 	<div id="filecontent" contenteditable="true"><c:if test="${not empty filecontent}"><c:forEach var="listValue" items="${filecontent}">${listValue}<br></c:forEach></c:if></div>
 	<div id="savefile">
 		<input type="button" class="k-button k-primary" id="savebutton" value="Save File"/>
+		<input type="button" class="k-button k-primary" id="saveandrestartbutton" value="Save File and Restart Server"/>
 		<label for="selectserver">Select Server</label> 
 		<input id="selectserver" value="1" style="width: 100%;"/>
 	</div>
