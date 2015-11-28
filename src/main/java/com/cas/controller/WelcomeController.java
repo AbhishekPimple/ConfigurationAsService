@@ -37,7 +37,11 @@ public class WelcomeController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		System.out.println(profile.toString());
-		return profile.toString();
+		String profileString = null;
+		if(profile != null){
+			profileString = profile.toString();
+		}
+		System.out.println("My Profile is :"+profileString);
+		return profileString;
 	}
 }
