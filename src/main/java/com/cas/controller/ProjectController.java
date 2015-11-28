@@ -30,6 +30,7 @@ public class ProjectController {
 	public ModelAndView getProjectInfo(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView model = new ModelAndView("welcomepage");
 		Project project = new Project();
+
 		model.addObject("project", project);
 		return model;
 	}

@@ -1,4 +1,3 @@
-
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 
@@ -135,7 +134,7 @@
 									id="workbenchdescription" class="k-textbox"
 									style="width: 100%;"></textarea></li>
 							<li><input type="button" class="k-button k-primary"
-								value="Create Workbench"></li>
+								id="createworkbenchbutton" value="Create Workbench"></li>
 						</ul>
 
 					</div>

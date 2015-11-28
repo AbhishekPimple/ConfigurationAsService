@@ -8,11 +8,14 @@ import org.springframework.web.servlet.ModelAndView;
 import com.cas.model.User;
 
 public class AuthenticationInterceptor implements HandlerInterceptor {
-	
+
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
-		/*System.out.println("In interceptor pre Handle");*/
-		if (!request.getRequestURI().equals("/ConfigAsService/") && !request.getRequestURI().equals("/ConfigAsService/performlogin") && !request.getRequestURI().equals("/ConfigAsService/register")) {
+		/* System.out.println("In interceptor pre Handle"); */
+		if (!request.getRequestURI().equals("/ConfigAsService/")
+				&& !request.getRequestURI().equals("/ConfigAsService/performlogin")
+				&& !request.getRequestURI().equals("/ConfigAsService/register")
+				&& !request.getRequestURI().equals("/ConfigAsService/performregister")) {
 			User user = (User) request.getSession().getAttribute("LOGGEDIN_USER");
 			if (user == null) {
 				response.sendRedirect("/ConfigAsService/");
@@ -24,7 +27,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
 			ModelAndView modelAndView) throws Exception {
-		
+
 	}
 
 	public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)

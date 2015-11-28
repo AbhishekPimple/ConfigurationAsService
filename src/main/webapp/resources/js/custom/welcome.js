@@ -1,6 +1,3 @@
-
-
-
 $(document).ready(
 		function() {
 
@@ -15,9 +12,7 @@ $(document).ready(
 				async: false,
 				dataType: "json",
 				success: function (result) {
-					console.log("nexus",result);
 					treeViewdata = result;
-
 				},
 				error: function (e) {
 					console.log(e);
@@ -26,7 +21,15 @@ $(document).ready(
 			});
 
 			console.log("After ajax call, treeview is ", treeViewdata);
-
+			var profilearr = treeViewdata.UserProfile[0].Profile;
+			console.log(profilearr[0]);
+			//var profiledata = $.parseJSON(profilearr[0]);
+			
+			$.each(profilearr[0], function(i, item) {
+			    console.log(item);
+			    console.log(item.id);
+			});
+			
 			var testArray = new Array();
 			var testObject = new Object();
 			testObject.id=treeViewdata.UserProfile[0].userid;
@@ -47,20 +50,20 @@ $(document).ready(
 				dataSource : inlineDefault,
 				dataTextField : "id",
 				select : function(event) {
-					console.log("here");
+					//console.log("here");
 					var parent=null,parentparent=null;
 					var child = tree.dataItem(event.node);
-					console.log("child",child);
+					//console.log("child",child);
 
 					if(!(child.parentNode() == undefined)){
 						parent = child.parentNode();
 						parentparent = parent.parentNode();
 					}
-					console.log("child", child);
-					console.log("parent", parent);
-					console.log("parentparent", parentparent);
-					alert("check");
-					alert("node: " + JSON.stringify(child)+ "\nparent: "+ JSON.stringify(parent)+ "\nparentparent: "+ JSON.stringify(parentparent) /* + " parent:" +JSON.stringify(tree.dataItem(event.node)).parent()*/);
+					//console.log("child", child);
+					//console.log("parent", parent);
+					//console.log("parentparent", parentparent);
+					//alert("check");
+					//alert("node: " + JSON.stringify(child)+ "\nparent: "+ JSON.stringify(parent)+ "\nparentparent: "+ JSON.stringify(parentparent) /* + " parent:" +JSON.stringify(tree.dataItem(event.node)).parent()*/);
 				}
 			}).data("kendoTreeView");
 			

@@ -3,7 +3,7 @@
 
 <%@taglib prefix="welcome" tagdir="/WEB-INF/tags"%>
 
-<welcome:header />
+<welcome:loginheader />
 		<a href="/ConfigAsService" >Login Page</a>
 	
 		<h3 align="center">Registration Page</h3>

@@ -187,11 +187,16 @@ public class FileServiceImpl implements FileService {
 				
 				if(isRestart.equals("true")){
 					String restartCommand = "sh " + scriptHome + "launchExpect.sh" + " " + scriptHome+" "+serverData.get("username") + " "
-							+ serverData.get("hostname") + " " + serverData.get("password") + " restart "+serverData.get("restartcommand");
+							+ serverData.get("hostname") + " " + serverData.get("password") + " restart ";
 					System.out.println("final restart command is " + restartCommand);
-					Process processRestart = Runtime.getRuntime().exec(restartCommand);
+					
+					Process processRestart = new ProcessBuilder(restartCommand, serverData.get("restartcommand")).start();//Runtime.getRuntime().exec(new String[]{restartCommand, serverData.get("restartcommand")});
 					processRestart.waitFor();
 
+					
+					/*Process processRestart = Runtime.getRuntime().exec(new String[]{restartCommand, serverData.get("restartcommand")});
+					processRestart.waitFor();
+*/
 					BufferedReader iStream = new BufferedReader(new InputStreamReader(processRestart.getInputStream()));
 					BufferedReader eStream = new BufferedReader(new InputStreamReader(processRestart.getErrorStream()));
 					System.out.println("Output stream: " + processRestart.getOutputStream().toString());
