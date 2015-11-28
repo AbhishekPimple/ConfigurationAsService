@@ -18,16 +18,16 @@ public class LoginController {
 	@Autowired
 	private LoginDelegate loginDelegate;
 
-	@RequestMapping(value = "/login", method = RequestMethod.GET)
+	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public ModelAndView displayLogin(HttpServletRequest request, HttpServletResponse response) {
-		ModelAndView model = new ModelAndView("welcomepage");
+		ModelAndView model = new ModelAndView("loginpage");
 		User user = new User();
 		model.addObject("user", user);
 		return model;
 	}
 
 	@RequestMapping(value = "/performlogin", method = RequestMethod.POST)
-	public ModelAndView performLogin(HttpServletRequest request, HttpServletResponse response,
+	public String performLogin(HttpServletRequest request, HttpServletResponse response,
 			@ModelAttribute("user") User user) {
 		ModelAndView model = null;
 		try {
@@ -35,17 +35,19 @@ public class LoginController {
 			if (returnedUser != null) {
 				System.out.println("User Login Successful");
 				request.setAttribute("loggedInUser", returnedUser.getUsername());
-				model = new ModelAndView("welcomepage");
+				request.getSession().setAttribute("LOGGEDIN_USER", user);
+				return "redirect:/welcome";
 			} else {
 				model = new ModelAndView("loginpage");
 				model.addObject("user", user);
 				request.setAttribute("message", "Invalid credentials!");
+				return "redirect:/login";
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		return "redirect:/";
 
-		return model;
 	}
 }

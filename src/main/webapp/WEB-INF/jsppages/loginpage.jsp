@@ -4,7 +4,7 @@
 
 <%@taglib prefix="welcome" tagdir="/WEB-INF/tags"%>
 
-<welcome:header />
+<welcome:loginheader />
 		<h2>${message}</h2>
 		
 		<form:form id="loginForm" action="performlogin" method="POST" modelAttribute="user">

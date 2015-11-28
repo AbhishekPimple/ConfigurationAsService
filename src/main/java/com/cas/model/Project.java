@@ -1,7 +1,14 @@
 package com.cas.model;
 
-public class Project {
+import java.io.Serializable;
+
+public class Project implements Serializable{
 	
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	String projectName;
 	String projectDesc;
 	String workbenchId;

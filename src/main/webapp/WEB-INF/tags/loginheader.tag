@@ -8,7 +8,6 @@
 		<link href="<c:url value='/resources/styles/custom.css'/>" rel="stylesheet" />
 		
 		<script src="<c:url value='/resources/js/jquery.min.js' />"></script>
-		<script src="<c:url value='/resources/js/custom/welcome.js' />"></script>
 		<script src="<c:url value='/resources/js/kendo.all.min.js' />"></script>
 		
 		<script src="<c:url value='/resources/shared/js/prettify.js'/>"></script>

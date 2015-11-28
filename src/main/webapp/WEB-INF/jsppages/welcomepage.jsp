@@ -1,56 +1,74 @@
+
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 
 <%@taglib prefix="welcome" tagdir="/WEB-INF/tags"%>
 <%@taglib prefix="kendo" uri="http://www.kendoui.com/jsp/tags"%>
 <%@include file="springtabinclude.jsp"%>
-
 <welcome:header />
 
 <h3 align="left">Welcome ${loggedInUser}</h3>
 
-<!-- 	<a class="logout" href="logout">Log Out</a> -->
+<a class="logout" href="logout">Log Out</a>
 
 <div style="float: left; width: 20%;">
+	<h3 align="left">Welcome</h3>
+	<div id="treeview-left"></div>
+<!-- 	<script>
+		// Reference to this script:http://stackoverflow.com/questions/22856073/kendo-tree-view-populate-using-json
+		// Your Json Data
+		
 
-	<kendo:treeView name="treeview">
-		<kendo:treeView-items>
-			<kendo:treeView-item text="My Web Site" spriteCssClass="folder"
-				expanded="true">
-				<kendo:treeView-items>
-					<kendo:treeView-item text="images" spriteCssClass="folder"
-						expanded="true">
-						<kendo:treeView-items>
-							<kendo:treeView-item text="logo.png" spriteCssClass="image" />
-							<kendo:treeView-item text="body-back.png" spriteCssClass="image" />
-							<kendo:treeView-item text="my-photo.jpg" spriteCssClass="image" />
-						</kendo:treeView-items>
-					</kendo:treeView-item>
-					<kendo:treeView-item text="resources" spriteCssClass="folder"
-						expanded="true">
-						<kendo:treeView-items>
-							<kendo:treeView-item text="pdf" spriteCssClass="folder"
-								expanded="true">
-								<kendo:treeView-items>
-									<kendo:treeView-item text="brochure.pdf" spriteCssClass="pdf" />
-									<kendo:treeView-item text="prices.pdf" spriteCssClass="pdf" />
-								</kendo:treeView-items>
-							</kendo:treeView-item>
-							<kendo:treeView-item text="zip" spriteCssClass="folder" />
-						</kendo:treeView-items>
-					</kendo:treeView-item>
-					<kendo:treeView-item text="about.html" spriteCssClass="html" />
-					<kendo:treeView-item text="contacts.html" spriteCssClass="html" />
-					<kendo:treeView-item text="index.html" spriteCssClass="html" />
-					<kendo:treeView-item text="portfolio.html" spriteCssClass="html" />
-				</kendo:treeView-items>
-			</kendo:treeView-item>
-		</kendo:treeView-items>
-	</kendo:treeView>
+		$(document).ready(function() {
 
+			$(document).bind("contextmenu", function(e) {
+				return false;
+			});
 
+			var inlineDefault = new kendo.data.HierarchicalDataSource({
+				data : testArray,
+				schema : {
+					model : {
+						children : "Items"
+					}
+				}
+			});
 
+			var tree = $("#treeview-left").kendoTreeView({
+				dataSource : inlineDefault,
+				dataTextField : "ItemName",
+
+				select : function(event) {
+					var $item = $(event.node);
+					alert("node: " + JSON.stringify(tree.dataItem(event.node)));
+				}
+			}).data("kendoTreeView");
+
+			var selectedNode = tree.select();
+			alert( selectedNode)
+			/* $("#disableNode").click(function() {
+                
+
+                treeview.enable(selectedNode, false);
+            }); */
+			
+			/* var $selected = $('#selected');
+			var $treePath = $selected.parentsUntil($tree, "li");
+			alert($selected);
+			var treeView = $tree.data('kendoTreeView');
+
+			
+
+			// Gotta make both calls...
+			treeView.select($selected);
+			treeView.trigger('select', {
+				node : $selected
+			}); */
+
+		});
+	</script> -->
 </div>
+
 <div style="float: left; width: 80%;">
 	<div id="example">
 		<div class="demo-section k-content">
@@ -127,7 +145,7 @@
 										id="filedescription" class="k-textbox" style="width: 100%;"></textarea>
 								</li>
 								<li><label for="filepath">File Path</label> <textarea
-										id="filepath" class="k-textbox"="width: 100%;"></textarea>
+										id="filepath" class="k-textbox" style="width: 100%;"></textarea>
 								</li>
 								<li><input type="submit" class="k-button k-primary"
 									value="Test File"></li>
@@ -138,127 +156,44 @@
 				<div>
 					<span class="projecttab">&nbsp;</span>
 					<div class="project">
-						<form:form id="project_form" action="project" method="POST"
-							modelAttribute="project">
-							<ul class="fieldlist">
-								<li><label for="selectworkbench">Select Workbench</label> <form:input
-										id="selectworkbench" value="1" style="width: 100%;"
-										path="workbenchId" /></li>
-								<li><label for="name">Project Name</label> <form:input
-										id="projectname" type="text" class="k-textbox"
-										style="width: 100%;" path="projectName" /></li>
-								<li><label for="description">Project Description</label> <form:textarea
-										id="projectdescription" class="k-textbox" style="width: 100%;"
-										path="projectDesc" /></li>
-								<li><input type="submit" class="k-button k-primary"
-									value="Create Project"></li>
-							</ul>
-						</form:form>
+
+						<ul class="fieldlist">
+							<li><label for="selectworkbench">Select Workbench</label> <input
+								id="selectworkbench" value="1" style="width: 100%;" /></li>
+							<li><label for="name">Project Name</label> <input
+								id="projectname" type="text" class="k-textbox"
+								style="width: 100%;" /></li>
+							<li><label for="description">Project Description</label> <textarea
+									id="projectdescription" class="k-textbox" style="width: 100%;"> </textarea>
+							</li>
+							<li><input type="button" id="createprojectbutton"
+								class="k-button k-primary" value="Create Project"></li>
+						</ul>
+
 					</div>
 				</div>
 				<div>
 					<span class="workbenchtab">&nbsp;</span>
 					<div class="workbench">
-						<form id="workbench_form" action="workbench" method="POST">
-							<ul class="fieldlist">
-								<li><label for="name">Workbench Name</label> <input
-									id="name" type="text" class="k-textbox" style="width: 100%;" />
-								</li>
-								<li><label for="description">Workbench Description</label>
-									<textarea id="description" class="k-textbox"
-										style="width: 100%;"></textarea></li>
-								<li><input type="submit" class="k-button k-primary"
-									value="Create Workbench"></li>
-							</ul>
-						</form>
+
+						<ul class="fieldlist">
+							<li><label for="name">Workbench Name</label> <input
+								id="workbenchname" type="text" class="k-textbox"
+								style="width: 100%;" /></li>
+							<li><label for="description">Workbench Description</label> <textarea
+									id="workbenchdescription" class="k-textbox"
+									style="width: 100%;"></textarea></li>
+							<li><input type="button" class="k-button k-primary"
+								value="Create Workbench"></li>
+						</ul>
+
 					</div>
 				</div>
 			</div>
 		</div>
 
-
-		<script>
-                $(document).ready(function() {
-                	
-                	$("#getfile").click(function(){
-                		window.open("getfile", null, null, null);
-                	});
-                	var workbenches = [
-                                { text: "DEV", value: "1" },
-                                { text: "Staging", value: "2" },
-                                { text: "Production", value: "3" }
-                            ];
-                    
-                	var projects = [
-                                       { text: "SOLR", value: "1" },
-                                       { text: "File Sharing", value: "2" },
-                                       { text: "CAS", value: "3" }
-                                   ];
-                	
-                	var servers = [
-                	  {
-                	    name: "Server 1",
-                	    id: "1",
-                	    checked: "true"
-                	  },
-                	  {
-                  	    name: "Server 2",
-                  	    id: "2",
-                  	    checked: "false"
-                  	  },
-                	  {
-                  	    name: "Server 3",
-                  	    id: "3",
-                  	    checked: "true"
-                  	  }
-                	];
-                	$("#tabstrip").kendoTabStrip({
-                        animation:  {
-                            open: {
-                                effects: "fadeIn"
-                            }
-                        }
-                    });
-                    
-                    $("#selectworkbench").kendoDropDownList({
-                        dataTextField: "text",
-                        dataValueField: "value",
-                        dataSource: workbenches,
-                        indexselectworkbench: 0,
-                        change: onChangeWorkbench
-                    });
-                    
-                    $("#selectproject").kendoDropDownList({
-                        dataTextField: "text",
-                        dataValueField: "value",
-                        dataSource: projects,
-                        index: 0,
-                        change: onChangeProject
-                    });
-                    
-                    function onChangeWorkbench() {
-                        var value = $("#selectworkbench").val();
-                    };
-                    function onChangeProject() {
-                        var value = $("#selectproject").val();
-                    };
-                    
-                    
-                    $.each(servers, function () {
-                        $("#servercheckboxes").append($("<p>").text(this.name).prepend(
-                            $("<input>").attr('type', 'checkbox').val(this.id)
-                               .prop('checked', this.checked)
-                        ));
-                    });
-                });
-            </script>
 	</div>
 </div>
-
-
-
-
-
 
 
 <welcome:footer />
