@@ -11,7 +11,7 @@
 <a class="logout" href="logout">Log Out</a>
 
 <div style="float: left; width: 20%;">
-	<h3 align="left">Welcome</h3>
+	<h3 align="left">My Profile</h3>
 	<div id="treeview-left"></div>
 </div>
 

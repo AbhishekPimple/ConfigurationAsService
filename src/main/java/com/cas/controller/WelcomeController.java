@@ -41,7 +41,6 @@ public class WelcomeController {
 		if(profile != null){
 			profileString = profile.toString();
 		}
-		System.out.println("My Profile is :"+profileString);
 		return profileString;
 	}
 }

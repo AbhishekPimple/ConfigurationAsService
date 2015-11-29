@@ -43,7 +43,6 @@ public class ProjectController {
 		try {
 
 			if (projectDelegate.createProject(project) != null) {
-				System.out.println("Project is created Successfully");
 				return project;
 			} else {
 				return null;

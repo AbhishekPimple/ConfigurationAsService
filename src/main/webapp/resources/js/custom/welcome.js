@@ -22,13 +22,9 @@ $(document).ready(
 
 			console.log("After ajax call, treeview is ", treeViewdata);
 			var profilearr = treeViewdata.UserProfile[0].Profile;
-			console.log(profilearr[0]);
+			console.log(profilearr);
 			//var profiledata = $.parseJSON(profilearr[0]);
 
-			$.each(profilearr[0], function(i, item) {
-				console.log(item);
-				console.log(item.id);
-			});
 
 			var itemsArray = new Array();
 			var testObject = new Object();
@@ -115,11 +111,11 @@ $(document).ready(
 				if(m<projectMapSize-1){
 					projectData += "{ \"text\" : "+"\""+i+"\""+", \"value\" : "+"\""+projectMap[i]+"\""+"},";
 				}else{
-					projectData += "{ \"text\" : "+"\""+i+"\""+", \"value\" : "+"\""+projectMap[i]+"\""+"}]";
+					projectData += "{ \"text\" : "+"\""+i+"\""+", \"value\" : "+"\""+projectMap[i]+"\""+"}";
 				}
 				m++;
 			}
-
+			projectData +="]"; 
 			console.log("project data ", projectData);
 			
 			var serverMap = new Object();
@@ -152,10 +148,11 @@ $(document).ready(
 				if(j<size-1){
 					serverData += "{ \"name\" : "+"\""+ i +"\""+", \"id\" : "+"\""+ serverMap[i]+"\""+", \"checked\" : "+"\""+"false"+"\""+ "},";
 				}else{
-					serverData += "{ \"name\" : "+"\""+ i +"\""+", \"id\" : "+"\""+ serverMap[i]+"\""+", \"checked\" : "+"\""+"true"+"\""+ "}]";
+					serverData += "{ \"name\" : "+"\""+ i +"\""+", \"id\" : "+"\""+ serverMap[i]+"\""+", \"checked\" : "+"\""+"true"+"\""+ "}";
 				}
 				j++;
 			}
+			serverData+="]";
 			console.log("server data ", serverData);
 
 			$("#getfile").click(function() {

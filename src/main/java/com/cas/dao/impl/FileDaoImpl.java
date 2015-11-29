@@ -28,7 +28,7 @@ public class FileDaoImpl implements FileDao{
     }
 
 	public File addFile(File file) {
-		// TODO Auto-generated method stub
+		 
 		boolean isFileExists = false;
 		PreparedStatement pstmt = null;
 		ResultSet resultSet = null;
@@ -71,7 +71,6 @@ public class FileDaoImpl implements FileDao{
 					try {
 						resultSet.close();
 					} catch (SQLException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
@@ -120,7 +119,7 @@ public class FileDaoImpl implements FileDao{
 	}
 
 	public Map<String, String> getServerData(int fileId, int serverId){
-		// TODO Auto-generated method stub
+		 
 		
 		Map<String, String> serverData = new HashMap<String, String>();
 		
@@ -142,7 +141,6 @@ public class FileDaoImpl implements FileDao{
 				serverData.put("hostname", resultSet1.getString("server_ipaddress"));
 				serverData.put("password", resultSet1.getString("server_password"));
 				String serverRestartCommand = "\"" + resultSet1.getString("server_restart_cmd") + "\"";
-				//serverRestartCommand = serverRestartCommand.replaceAll(" ", "\\\\\\\\ ");
 				serverData.put("restartcommand", serverRestartCommand);
 			}	
 		}catch(SQLException e){
@@ -182,7 +180,6 @@ public class FileDaoImpl implements FileDao{
 			preparedStatement.setTimestamp(2, timestamp);;
 			preparedStatement .executeUpdate();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

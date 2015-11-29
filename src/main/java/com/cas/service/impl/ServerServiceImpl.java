@@ -16,7 +16,7 @@ public class ServerServiceImpl implements ServerService{
 	}
    
 	public Server createServer(Server server) {
-		// TODO Auto-generated method stub
+		 
 		return serverDao.createServer(server);
 	}
 

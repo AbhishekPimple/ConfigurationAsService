@@ -41,7 +41,6 @@ public class FileController {
 		if(fileId != null){
 			intfileId = Integer.parseInt(fileId);
 		}
-		System.out.println(intfileId);
 		fileContent = filedelegate.getFile(6);
 		String filename = fileContent.get(0);
 		
@@ -116,7 +115,6 @@ public class FileController {
 		try {
 
 			if (filedelegate.addFile(file) != null) {
-				System.out.println("File is addd Successfully");
 				return file;
 			} else {
 				return null;
