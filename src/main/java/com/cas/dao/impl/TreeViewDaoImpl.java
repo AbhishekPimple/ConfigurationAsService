@@ -87,11 +87,13 @@ public class TreeViewDaoImpl implements TreeViewDao{
 			resultSet = pstmt.executeQuery();
 			tempProjectMap = new HashMap();
 			objecttemp = profile.getJSONArray("Profile");
-			int location = 0;
+			int location = -1;
 			JSONArray jsonProjectTempArray = new JSONArray();
+			System.out.println(objecttemp.toString());
 			for(int i = 0 ;i<objecttemp.length();i++){
 				JSONObject tempjs = (JSONObject) objecttemp.get(i);
-				if(tempjs.get("id").equals(tempWorkbenchID)){
+				if(tempjs.get("workbenchid").equals(tempWorkbenchID)){
+					//if(tempjs.get("WorkbenchID").equals(tempWorkbenchID)){
 					location = i;
 				}
 			}
@@ -107,16 +109,19 @@ public class TreeViewDaoImpl implements TreeViewDao{
 				//jsonProjectTemp.put("Servers", new JSONArray());
 				jsonProjectTempArray.put(jsonProjectTemp);
 			}
-			JSONObject tempjs = (JSONObject) objecttemp.get(location);
-			tempjs.put("items", jsonProjectTempArray);
-			/*JSONArray tempJsArray = tempjs.getJSONArray("Projects");
-			tempJsArray.put(jsonProjectTemp);
-			tempjs.put(key, value)*/
-			objecttemp.put(location, tempjs);
+			if(location>-1){
+				JSONObject tempjs = (JSONObject) objecttemp.get(location);
+				tempjs.put("items", jsonProjectTempArray);
+				/*JSONArray tempJsArray = tempjs.getJSONArray("Projects");
+				tempJsArray.put(jsonProjectTemp);
+				tempjs.put(key, value)*/
+				objecttemp.put(location, tempjs);
+			}
 			workbenchMap.put(tempWorkbenchID, tempProjectMap);
 		}
 
 		profile.put("Profile", objecttemp);
+		System.out.println(profile.toString());
 
 		//get 	server from project
 
@@ -147,6 +152,8 @@ public class TreeViewDaoImpl implements TreeViewDao{
 						}
 					}
 				}
+
+				System.out.println("after loop :location i and location j " + locationi +" "+ locationj);
 				while(resultSet.next()){
 					jsonServerTemp = new JSONObject();
 					serverID = String.valueOf(resultSet.getInt("server_id"));
@@ -157,17 +164,25 @@ public class TreeViewDaoImpl implements TreeViewDao{
 					tempServerMap.put(serverID, serverName);
 					jsonServerTempArray.put(jsonServerTemp);
 				}	
+				System.out.println("location i and location j " + locationi +" "+ locationj);
+				if(locationi>-1){
 
-				if(locationi>-1 && locationj >-1){
 					JSONObject tempjs = (JSONObject) objecttemp.get(locationi);
+					//JSONArray tempjsArr = tempjs.getJSONArray("Projects");
 					JSONArray tempjsArr = tempjs.getJSONArray("items");
-					JSONObject tempProjectLevel = (JSONObject) tempjsArr.get(locationj);
-					tempProjectLevel.put("items", jsonServerTempArray);
-					tempjsArr.put(locationj, tempProjectLevel);
+					JSONObject tempProjectLevel =null;
+					if(locationj>-1){
+						tempProjectLevel = (JSONObject) tempjsArr.get(locationj);
+						tempProjectLevel.put("items", jsonServerTempArray);
+						//tempProjectLevel.put("Servers", jsonServerTempArray);
+						tempjsArr.put(locationj, tempProjectLevel);
+					}
 					tempjs.put("items", tempjsArr);
+					//tempjs.put("Projects", tempjsArr);
 					objecttemp.put(locationi,tempjs);
-					projectMap.put(tempProjectID, tempServerMap);
+
 				}
+				projectMap.put(tempProjectID, tempServerMap);
 			}
 		}
 
@@ -218,25 +233,35 @@ public class TreeViewDaoImpl implements TreeViewDao{
 				jsonConfigTempArray.put(jsonConfigTemp);
 
 			}	
-			if(locationi>-1 && locationj>-1 && locationk>-1){
-				JSONObject tempjs = (JSONObject) objecttemp.get(locationi);
+			System.out.println("location i and location j and location k  " + locationi +" "+ locationj + " " + locationk);
+			JSONObject tempjs = null;
+			JSONArray tempjsArr = null;
+			if(locationi>-1){
+				tempjs = (JSONObject) objecttemp.get(locationi);
 				//JSONArray tempjsArr = tempjs.getJSONArray("Projects");
-				JSONArray tempjsArr = tempjs.getJSONArray("items");
-				JSONObject tempProjectLevel = (JSONObject) tempjsArr.get(locationj);
-				//JSONArray tempjsArrServer = tempProjectLevel.getJSONArray("Servers");
-				JSONArray tempjsArrServer = tempProjectLevel.getJSONArray("items");
-				JSONObject tempServerLevel = (JSONObject) tempjsArrServer.get(locationk);
-				//tempServerLevel.put("Configs", jsonConfigTempArray);
-				tempServerLevel.put("items", jsonConfigTempArray);
-				tempjsArrServer.put(locationk,tempServerLevel);			
-				tempProjectLevel.put("items", tempjsArrServer);
-				//tempProjectLevel.put("Servers", tempjsArrServer);
-				tempjsArr.put(locationj, tempProjectLevel);
+				tempjsArr = tempjs.getJSONArray("items");
+				JSONObject tempProjectLevel = null;
+				JSONArray tempjsArrServer = null;
+				JSONObject tempServerLevel = null;
+				if(locationj>-1){
+					tempProjectLevel = (JSONObject) tempjsArr.get(locationj);
+					//JSONArray tempjsArrServer = tempProjectLevel.getJSONArray("Servers");
+					tempjsArrServer = tempProjectLevel.getJSONArray("items");
+					if(locationk>-1){
+						tempServerLevel = (JSONObject) tempjsArrServer.get(locationk);
+						//tempServerLevel.put("Configs", jsonConfigTempArray);
+						tempServerLevel.put("items", jsonConfigTempArray);
+						tempjsArrServer.put(locationk,tempServerLevel);			
+					}
+					tempProjectLevel.put("items", tempjsArrServer);
+					//tempProjectLevel.put("Servers", tempjsArrServer);
+					tempjsArr.put(locationj, tempProjectLevel);
+				}
 				tempjs.put("items", tempjsArr);
 				//tempjs.put("Projects", tempjsArr);
 				objecttemp.put(locationi,tempjs);
-				serverMap.put(tempServerID, tempServerMap);
 			}
+			serverMap.put(tempServerID, tempServerMap);
 		}
 
 		profile.put("Profile", objecttemp);
@@ -249,6 +274,7 @@ public class TreeViewDaoImpl implements TreeViewDao{
 		uid.put("Profile", objecttemp);
 		Root.put(uid);
 		UserProfile.put("UserProfile", Root);
+		System.out.println(UserProfile.toString());
 		return UserProfile;
 	}
 }
