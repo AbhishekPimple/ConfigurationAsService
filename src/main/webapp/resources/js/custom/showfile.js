@@ -1,19 +1,12 @@
 $(document).ready(function() {
 	/* console.log($("#filecontent").text()) */
-	var servers = [ {
-		text : "Server 1",
-		value : "4"
-	}, {
-		text : "Server 2",
-		value : "2"
-	}, {
-		text : "Server 3",
-		value : "3"
-	} ];
+	var servers = window.servers;
+	console.log("In Show file", servers);
+	//var serverData = JSON.parse(servers);
 	
 	$("#selectserver").kendoDropDownList({
-		dataTextField : "text",
-		dataValueField : "value",
+		dataTextField : "name",
+		dataValueField : "id",
 		dataSource : servers,
 		indexselectserver : 0,
 		change : onChangeServer

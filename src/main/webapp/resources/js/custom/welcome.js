@@ -155,9 +155,6 @@ $(document).ready(
 			serverData+="]";
 			console.log("server data ", serverData);
 
-			$("#getfile").click(function() {
-				window.open("getfile", null, null, null);
-			});
 
 			function projectvalidateFields() {
 				//var x = document.forms["myForm"]["fname"].value;
@@ -427,6 +424,17 @@ $(document).ready(
 				id : "3",
 				checked : "true"
 			} ];*/
+			
+
+			$("#getfile").click(function() {
+				/*var fileWindow = window.open("getfile", null, null, null);*/
+				var fileID = $("#fileid").val();
+				console.log("fileId", fileID);
+				var fileWindow = window.open("http://localhost:8080/ConfigAsService/getfile?fileid="+fileID, null, null, null);
+				fileWindow.servers = servers;
+				console.log("Sending to showfile window", servers);
+			});
+			
 			$("#tabstrip").kendoTabStrip({
 				animation : {
 					open : {
