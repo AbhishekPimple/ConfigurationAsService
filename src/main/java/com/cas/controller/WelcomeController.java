@@ -1,7 +1,9 @@
 package com.cas.controller;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,30 +19,32 @@ import com.cas.model.User;
 
 @Controller
 public class WelcomeController {
-	@Autowired
-	private TreeViewDelegate treeViewDelegate;
+    @Autowired
+    private TreeViewDelegate treeViewDelegate;
+    private static final Logger LOGGER = Logger.getLogger(WelcomeController.class.getName());
 
-	@RequestMapping(value = "/welcome", method = RequestMethod.GET)
-	public ModelAndView displayHomepage(HttpServletRequest request, HttpServletResponse response) {
-		ModelAndView model = new ModelAndView("welcomepage");
-		return model;
-	}
+    @RequestMapping(value = "/welcome", method = RequestMethod.GET)
+    public ModelAndView displayHomepage() {
+         
+        return new ModelAndView("welcomepage");
+    }
 
-	@RequestMapping(value = "/loadProfile", method = RequestMethod.POST)
-	public @ResponseBody String displayTreeView(HttpServletRequest request, HttpServletResponse response) {
-		User user = (User) request.getSession().getAttribute("LOGGEDIN_USER");
-		String emailId = user.getEmailId();
-		JSONObject profile=null;
-		try {
-			profile = treeViewDelegate.populate(emailId);
+    @RequestMapping(value = "/loadProfile", method = RequestMethod.POST)
+    @ResponseBody
+    public String displayTreeView(HttpServletRequest request) {
+        User user = (User) request.getSession().getAttribute("LOGGEDIN_USER");
+        String emailId = user.getEmailId();
+        JSONObject profile=null;
+        try {
+            profile = treeViewDelegate.populate(emailId);
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		String profileString = null;
-		if(profile != null){
-			profileString = profile.toString();
-		}
-		return profileString;
-	}
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE,e.getMessage(),e);
+        }
+        String profileString = null;
+        if(profile != null){
+            profileString = profile.toString();
+        }
+        return profileString;
+    }
 }

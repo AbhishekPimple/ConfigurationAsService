@@ -5,20 +5,21 @@ import com.cas.model.Project;
 import com.cas.service.ProjectService;
 
 public class ProjectServiceImpl implements ProjectService{
-	ProjectDao projectDao;
-	
-	public ProjectDao getProjectDao() {
-		return projectDao;
-	}
+    ProjectDao projectDao;
 
-	public void setProjectDao(ProjectDao projectDao) {
-		this.projectDao = projectDao;
-	}
+    public ProjectDao getProjectDao() {
+        return projectDao;
+    }
 
-	public Project createProject(Project project) {
-		 
-		
-		return projectDao.createProject(project);
-	}
+    public void setProjectDao(ProjectDao projectDao) {
+        this.projectDao = projectDao;
+    }
+
+    @Override
+    public Project createProject(Project project) {
+
+
+        return projectDao.createProject(project);
+    }
 
 }

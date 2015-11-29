@@ -6,20 +6,20 @@ import com.cas.service.*;
 
 public class RegisterDelegate
 {
-	private RegisterService registerService;
+    private RegisterService registerService;
 
-	public RegisterService getRegisterService()
-	{
-		return this.registerService;
-	}
+    public RegisterService getRegisterService()
+    {
+        return this.registerService;
+    }
 
-	public void setRegisterService(RegisterService registerService)
-	{
-		this.registerService = registerService;
-	}
+    public void setRegisterService(RegisterService registerService)
+    {
+        this.registerService = registerService;
+    }
 
-	public boolean register(String emailId, String username, String password) throws SQLException
-	{
-	    return registerService.register(emailId, username, password);
-	}
+    public boolean register(String emailId, String username, String password) throws SQLException
+    {
+        return registerService.register(emailId, username, password);
+    }
 }

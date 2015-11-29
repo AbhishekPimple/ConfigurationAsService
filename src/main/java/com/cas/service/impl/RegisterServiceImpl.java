@@ -6,19 +6,19 @@ import com.cas.dao.RegisterDao;
 import com.cas.service.RegisterService;
 
 public class RegisterServiceImpl implements RegisterService {
-	RegisterDao registerDao;
-	
-	public RegisterDao getRegisterDao() {
-		return registerDao;
-	}
+    RegisterDao registerDao;
 
-	public void setRegisterDao(RegisterDao registerDao) {
-		this.registerDao = registerDao;
-	}
+    public RegisterDao getRegisterDao() {
+        return registerDao;
+    }
 
-	public boolean register(String emailId, String username, String password) throws SQLException {
-		 
-		return registerDao.register(emailId, username, password);
-	}
+    public void setRegisterDao(RegisterDao registerDao) {
+        this.registerDao = registerDao;
+    }
+    @Override
+    public boolean register(String emailId, String username, String password) throws SQLException {
+
+        return registerDao.register(emailId, username, password);
+    }
 
 }
