@@ -34,7 +34,6 @@ public class LoginController {
 		try {
 			User returnedUser = loginDelegate.isValidUser(user.getEmailId(), user.getPassword());
 			if (returnedUser != null) {
-				System.out.println("User Login Successful");
 				request.getSession().setAttribute("LOGGEDIN_USER", user);
 				redirectAttributes.addFlashAttribute("loggedInUser", returnedUser.getUsername());
 				return "redirect:/welcome";

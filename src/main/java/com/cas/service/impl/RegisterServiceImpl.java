@@ -17,7 +17,7 @@ public class RegisterServiceImpl implements RegisterService {
 	}
 
 	public boolean register(String emailId, String username, String password) throws SQLException {
-		// TODO Auto-generated method stub
+		 
 		return registerDao.register(emailId, username, password);
 	}
 

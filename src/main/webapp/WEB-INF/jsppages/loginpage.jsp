@@ -7,14 +7,7 @@
 <welcome:loginheader />
 <h2>${message}</h2>
 <script>
-	function validateForm() {
-		var emailid = document.forms["loginForm"]["emailid"].value;
-		var password = document.forms["loginForm"]["password"].value;
-		if (emailid == null || emailid == "" || password == null
-				|| password == "") {
-			alert("Please fill all mandatory fields.");
-			return false;
-		}
+
 
 function validateForm() {
     var emailid = document.forms["loginForm"]["emailid"].value;

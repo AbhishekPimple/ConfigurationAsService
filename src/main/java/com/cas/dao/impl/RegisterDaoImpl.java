@@ -19,7 +19,7 @@ public class RegisterDaoImpl implements RegisterDao {
 		this.dataSource = dataSource;
 	}
 	public boolean register(String emailId, String username, String password) throws SQLException {
-		// TODO Auto-generated method stub
+		 
 		boolean isUserExists = false;
 		String query = "Select count(1) from user where user_email_Id = ?";
 		PreparedStatement pstmt = dataSource.getConnection().prepareStatement(query);

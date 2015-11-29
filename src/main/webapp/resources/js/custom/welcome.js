@@ -22,10 +22,10 @@ $(document).ready(
 
 			console.log("After ajax call, treeview is ", treeViewdata);
 			var profilearr = treeViewdata.UserProfile[0].Profile;
-			console.log(profilearr[0]);
+			console.log(profilearr);
 			//var profiledata = $.parseJSON(profilearr[0]);
 			
-			$.each(profilearr[0], function(i, item) {
+			$.each(profilearr, function(i, item) {
 			    console.log(item);
 			    console.log(item.id);
 			});

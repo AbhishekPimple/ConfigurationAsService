@@ -21,6 +21,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.cas.delegate.ServerDelegate;
 import com.cas.model.Server;
 
+
 @Controller
 public class ServerController {
 	@Autowired
@@ -34,7 +35,6 @@ public class ServerController {
 		try {
 
 			if (serverDelegate.createServer(server) != null) {
-				System.out.println("Server is created Successfully");
 				return server;
 			} else {
 				return null;

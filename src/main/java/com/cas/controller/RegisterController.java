@@ -34,7 +34,6 @@ public class RegisterController {
 			
 			boolean isUserExists = registerDelegate.register(User.getEmailId(), User.getUsername(), User.getPassword());
 			if (!isUserExists) {
-				System.out.println("User Registration Successful");
 				User user = new User();
 				user.setEmailId(user.getEmailId());
 				model = new ModelAndView("register");

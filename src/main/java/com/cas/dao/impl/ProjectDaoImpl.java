@@ -20,7 +20,7 @@ public class ProjectDaoImpl implements ProjectDao {
 		this.dataSource = dataSource;
 	}
 	public Project createProject(Project project) {
-		// TODO Auto-generated method stub
+		 
 		boolean isProjectExists = false;
 		PreparedStatement pstmt = null;
 		ResultSet resultSet = null;

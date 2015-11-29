@@ -16,7 +16,7 @@ public class ProjectServiceImpl implements ProjectService{
 	}
 
 	public Project createProject(Project project) {
-		// TODO Auto-generated method stub
+		 
 		
 		return projectDao.createProject(project);
 	}

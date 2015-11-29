@@ -33,7 +33,7 @@ public class FileServiceImpl implements FileService {
 	}
 
 	public List<String> getFile(int fileId) {
-		// TODO Auto-generated method stub
+		 
 		List<String> fileContent = new ArrayList<String>();
 		Map<String, String> fileData = new HashMap<String, String>();
 		String propertyHome = System.getenv("PROPERTY_HOME");
@@ -59,14 +59,12 @@ public class FileServiceImpl implements FileService {
 					+ fileData.get("hostname") + " " + fileData.get("password") + " pull" + " "
 					+ fileData.get("configfilepath") + " " + propertyHome;
 
-			System.out.println("final pull command is " + cmd);
+		
 			Process p = Runtime.getRuntime().exec(cmd);
 			p.waitFor();
 
 			BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));
 			BufferedReader r2 = new BufferedReader(new InputStreamReader(p.getErrorStream()));
-			System.out.println("Output stream: " + p.getOutputStream().toString());
-			System.out.println("Exit Value is : " + p.exitValue());
 
 			while (r.ready()) {
 				String readLine = r.readLine();
@@ -86,7 +84,6 @@ public class FileServiceImpl implements FileService {
 				}
 			}
 			while (r2.ready()) {
-				System.out.println(r2.readLine());
 			}
 
 		} catch (Throwable t) {
@@ -116,14 +113,13 @@ public class FileServiceImpl implements FileService {
 			}
 
 		}
-		/* System.out.println(fileContent); */
 
 		return fileContent;
 
 	}
 
 	public boolean saveFile(String name, String content, String serverId, String isRestart) {
-		// TODO Auto-generated method stub
+		 
 		String propertyHome = System.getenv("PROPERTY_HOME");
 		String scriptHome = System.getenv("SCRIPT_HOME");
 		content = content.replaceAll("<br><br>", "\n");
@@ -164,55 +160,34 @@ public class FileServiceImpl implements FileService {
 						+ serverData.get("hostname") + " " + serverData.get("password") + " push" + " " + propertyHome
 						+ oldFileName + " " + remotePath;
 
-				System.out.println("final push command is " + cmd);
 				Process p = Runtime.getRuntime().exec(cmd);
 				p.waitFor();
 
 				BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));
 				BufferedReader r2 = new BufferedReader(new InputStreamReader(p.getErrorStream()));
-				System.out.println("Output stream: " + p.getOutputStream().toString());
-				System.out.println("Exit Value is : " + p.exitValue());
 
 				while (r.ready()) {
-
-					System.out.println("Success!!!!!!!");
-					System.out.println(r.readLine());
 				}
 				while (r2.ready()) {
-
-					System.out.println("Error !!!!!!");
-					System.out.println(r2.readLine());
 				}
-				System.out.println("File Saved");
 				
 				if(isRestart.equals("true")){
 					String restartCommand = "sh " + scriptHome + "launchExpect.sh" + " " + scriptHome+" "+serverData.get("username") + " "
 							+ serverData.get("hostname") + " " + serverData.get("password") + " restart ";
-					System.out.println("final restart command is " + restartCommand);
 					
 					Process processRestart = new ProcessBuilder(restartCommand, serverData.get("restartcommand")).start();//Runtime.getRuntime().exec(new String[]{restartCommand, serverData.get("restartcommand")});
 					processRestart.waitFor();
 
-					
-					/*Process processRestart = Runtime.getRuntime().exec(new String[]{restartCommand, serverData.get("restartcommand")});
-					processRestart.waitFor();
-*/
+	
 					BufferedReader iStream = new BufferedReader(new InputStreamReader(processRestart.getInputStream()));
 					BufferedReader eStream = new BufferedReader(new InputStreamReader(processRestart.getErrorStream()));
-					System.out.println("Output stream: " + processRestart.getOutputStream().toString());
-					System.out.println("Exit Value is : " + processRestart.exitValue());
-
+	
 					while (iStream.ready()) {
 
-						System.out.println("Success!!!!!!!");
-						System.out.println(iStream.readLine());
 					}
 					while (eStream.ready()) {
 
-						System.out.println("Error !!!!!!");
-						System.out.println(eStream.readLine());
 					}
-					System.out.println("Server restarted");
 				
 				}
 				return false;
@@ -236,7 +211,6 @@ public class FileServiceImpl implements FileService {
 			}
 
 		} catch (java.text.ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return false;
@@ -264,14 +238,11 @@ public class FileServiceImpl implements FileService {
 					+ serverData.get("hostname") + " " + serverData.get("password") + " getModTime" + " "
 					+ remotePathCheck;
 
-			System.out.println("final get mod time command is " + checkCommand);
 			Process checkProc = Runtime.getRuntime().exec(checkCommand);
 			checkProc.waitFor();
 
 			BufferedReader iStream = new BufferedReader(new InputStreamReader(checkProc.getInputStream()));
 			BufferedReader eStream = new BufferedReader(new InputStreamReader(checkProc.getErrorStream()));
-			System.out.println("Output stream: " + checkProc.getOutputStream().toString());
-			System.out.println("Exit Value is : " + checkProc.exitValue());
 			
 			while (iStream.ready()) {
 				String readLine = iStream.readLine();
@@ -280,10 +251,10 @@ public class FileServiceImpl implements FileService {
 					isModified = checkifModified(readLine.substring(8, 27), fileId);
 
 				}
-				System.out.println(readLine);
+
 			}
 			while (eStream.ready()) {
-				System.out.println(eStream.readLine());
+	
 			}
 		} catch (Throwable t) {
 			t.printStackTrace();
@@ -293,7 +264,7 @@ public class FileServiceImpl implements FileService {
 	}
 
 	public com.cas.model.File addFile(com.cas.model.File file) {
-		// TODO Auto-generated method stub
+		 
 		return fileDao.addFile(file);
 	}
 

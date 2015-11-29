@@ -33,7 +33,6 @@ public class WorkbenchController {
 		try {
 
 			if (workbenchDelegate.createWorkbench(workbench, userId) != null) {
-				System.out.println("Workbench is created Successfully");
 				return workbench;
 			} else {
 				return null;

@@ -21,7 +21,7 @@ public class TreeViewServiceImpl implements TreeViewService{
 	}
 
 	public JSONObject populate(String emailId) throws SQLException {
-		// TODO Auto-generated method stub
+		 
 		return treeViewDao.populate(emailId);
 	}
 	
