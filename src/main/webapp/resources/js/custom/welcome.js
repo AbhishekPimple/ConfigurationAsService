@@ -77,10 +77,10 @@ $(document).ready(
 				if(i<temp.length-1){
 					workbenchData += "{ \"text\" : "+"\""+temp[i].id+"\""+", \"value\" : "+"\""+(i+1)+"\""+"},";
 				}else{
-					workbenchData += "{ \"text\" : "+"\""+temp[i].id+"\""+", \"value\" : "+"\""+(i+1)+"\""+"}]";
+					workbenchData += "{ \"text\" : "+"\""+temp[i].id+"\""+", \"value\" : "+"\""+(i+1)+"\""+"}";
 				}
 			}
-
+			workbenchData += "]"
 			var projectData="[";
 			var projectMap = new Object();
 			var count = 1;
