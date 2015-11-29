@@ -4,19 +4,19 @@ import com.cas.model.Server;
 import com.cas.service.ServerService;
 
 public class ServerDelegate {
-	
-	ServerService serverService;
-	
-	public ServerService getServerService() {
-		return serverService;
-	}
-	
-	public void setServerService(ServerService serverService) {
-		this.serverService = serverService;
-	}
-   
-	public Server createServer(Server server) {
-		return serverService.createServer(server);
-		
-	};
+
+    ServerService serverService;
+
+    public ServerService getServerService() {
+        return serverService;
+    }
+
+    public void setServerService(ServerService serverService) {
+        this.serverService = serverService;
+    }
+
+    public Server createServer(Server server) {
+        return serverService.createServer(server);
+
+    }
 }

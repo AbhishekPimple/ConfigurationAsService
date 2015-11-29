@@ -1,11 +1,11 @@
 package com.cas.controller;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.codehaus.jackson.JsonParseException;
-import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,29 +20,31 @@ import com.cas.model.Workbench;
 
 @Controller
 public class WorkbenchController {
-	@Autowired
-	private WorkbenchDelegate workbenchDelegate;
-	
-	@RequestMapping(value = "/workbench", method = RequestMethod.POST, headers = {"Content-type=application/json"})
-	public @ResponseBody Workbench createWorkbench(HttpServletRequest request,@RequestBody String workbenchJson) throws JsonParseException, JsonMappingException, IOException { 
-	
+    @Autowired
+    private WorkbenchDelegate workbenchDelegate;
+    private static final Logger LOGGER = Logger.getLogger(WorkbenchController.class.getName());
 
-	Workbench workbench = new ObjectMapper().readValue(workbenchJson, Workbench.class);
-	User user = (User) request.getSession().getAttribute("LOGGEDIN_USER");
-	String userId = user.getEmailId();
-		try {
+    @RequestMapping(value = "/workbench", method = RequestMethod.POST, headers = {"Content-type=application/json"})
+    @ResponseBody
+    public Workbench createWorkbench(HttpServletRequest request,@RequestBody String workbenchJson) throws  IOException { 
 
-			if (workbenchDelegate.createWorkbench(workbench, userId) != null) {
-				return workbench;
-			} else {
-				return null;
-			}
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
+        Workbench workbench = new ObjectMapper().readValue(workbenchJson, Workbench.class);
+        User user = (User) request.getSession().getAttribute("LOGGEDIN_USER");
+        String userId = user.getEmailId();
+        try {
 
-	}
-	
+            if (workbenchDelegate.createWorkbench(workbench, userId) != null) {
+                return workbench;
+            } else {
+                return null;
+            }
+
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE,e.getMessage(),e);
+        }
+        return null;
+
+    }
+
 }

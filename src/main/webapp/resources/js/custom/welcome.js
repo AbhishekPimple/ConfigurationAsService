@@ -53,7 +53,7 @@ $(document).ready(
 					//console.log("here");
 					var parent=null,parentparent=null;
 					var child = tree.dataItem(event.node);
-					//console.log("child",child);
+					console.log("child",child);
 
 					if(!(child.parentNode() == undefined)){
 						parent = child.parentNode();
@@ -72,22 +72,23 @@ $(document).ready(
 			var workbenchData = "[";
 			console.log("treeview profile", temp.length);
 			console.log("here");
-
+			console.log("temp is here ", temp);
 			for(var i =0; i<temp.length;i++){
 				if(i<temp.length-1){
-					workbenchData += "{ \"text\" : "+"\""+temp[i].id+"\""+", \"value\" : "+"\""+(i+1)+"\""+"},";
+					workbenchData += "{ \"text\" : "+"\""+temp[i].id+"\""+", \"value\" : "+"\""+temp[i].workbenchid+"\""+"},";
 				}else{
-					workbenchData += "{ \"text\" : "+"\""+temp[i].id+"\""+", \"value\" : "+"\""+(i+1)+"\""+"}]";
+					workbenchData += "{ \"text\" : "+"\""+temp[i].id+"\""+", \"value\" : "+"\""+temp[i].workbenchid+"\""+"}";
 				}
 			}
-
+			workbenchData += "]"
 			var projectData="[";
 			var projectMap = new Object();
 			var count = 1;
 			for(var i = 0 ; i<temp.length ; i++){
 				var tempProjectdata  = temp[i].items;
 				for( var j = 0 ; j < tempProjectdata.length ; j++){
-					projectMap[tempProjectdata[j].id]=count;
+					console.log(" temp project data ", tempProjectdata);
+					projectMap[tempProjectdata[j].id]=tempProjectdata[j].ProjectID;
 					count++;
 					/*projectData += "{ \"text\" : "+"\""+tempProjectdata[j].id+"\""+", \"value\" : "+"\""+count+"\""+"},";
 					}else{
@@ -127,7 +128,8 @@ $(document).ready(
 					var tempServerdata = tempProjectdata[j].items;
 					for( var k = 0 ; k < tempServerdata.length ; k++){
 						if(serverMap[tempServerdata[k].id] == undefined){
-							serverMap[tempServerdata[k].id] = count;
+							console.log("server temp is here " , tempServerdata);
+							serverMap[tempServerdata[k].id] = tempServerdata[k].ServerID;
 							count++;
 						}
 					}
