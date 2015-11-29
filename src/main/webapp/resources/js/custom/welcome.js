@@ -4,7 +4,7 @@ $(document).ready(
 			$(document).bind("contextmenu", function(e) {
 				return false;
 			});
-
+//			treeview implmentation
 			var treeViewdata;
 			$.ajax({
 				url: "loadProfile",
@@ -24,20 +24,20 @@ $(document).ready(
 			var profilearr = treeViewdata.UserProfile[0].Profile;
 			console.log(profilearr[0]);
 			//var profiledata = $.parseJSON(profilearr[0]);
-			
+
 			$.each(profilearr[0], function(i, item) {
-			    console.log(item);
-			    console.log(item.id);
+				console.log(item);
+				console.log(item.id);
 			});
-			
-			var testArray = new Array();
+
+			var itemsArray = new Array();
 			var testObject = new Object();
 			testObject.id=treeViewdata.UserProfile[0].userid;
 			testObject.items = treeViewdata.UserProfile[0].Profile;
-			testArray.push(testObject);
+			itemsArray.push(testObject);
 
 			var inlineDefault = new kendo.data.HierarchicalDataSource({
-				data : testArray,
+				data : itemsArray,
 				schema : {
 					model : {
 						id : "id",
@@ -45,6 +45,10 @@ $(document).ready(
 					}
 				}
 			});
+
+
+
+
 
 			var tree = $("#treeview-left").kendoTreeView({
 				dataSource : inlineDefault,
@@ -66,7 +70,94 @@ $(document).ready(
 					//alert("node: " + JSON.stringify(child)+ "\nparent: "+ JSON.stringify(parent)+ "\nparentparent: "+ JSON.stringify(parentparent) /* + " parent:" +JSON.stringify(tree.dataItem(event.node)).parent()*/);
 				}
 			}).data("kendoTreeView");
+//			treeview implementation 
+
+			var temp = treeViewdata.UserProfile[0].Profile;
+			var workbenchData = "[";
+			console.log("treeview profile", temp.length);
+			console.log("here");
+
+			for(var i =0; i<temp.length;i++){
+				if(i<temp.length-1){
+					workbenchData += "{ \"text\" : "+"\""+temp[i].id+"\""+", \"value\" : "+"\""+(i+1)+"\""+"},";
+				}else{
+					workbenchData += "{ \"text\" : "+"\""+temp[i].id+"\""+", \"value\" : "+"\""+(i+1)+"\""+"}]";
+				}
+			}
+
+			var projectData="[";
+			var projectMap = new Object();
+			var count = 1;
+			for(var i = 0 ; i<temp.length ; i++){
+				var tempProjectdata  = temp[i].items;
+				for( var j = 0 ; j < tempProjectdata.length ; j++){
+					projectMap[tempProjectdata[j].id]=count;
+					count++;
+					/*projectData += "{ \"text\" : "+"\""+tempProjectdata[j].id+"\""+", \"value\" : "+"\""+count+"\""+"},";
+					}else{
+						projectData += "{ \"text\" : "+"\""+tempProjectdata[j].id+"\""+", \"value\" : "+"\""+count+"\""+"}]";
+					}	*/
+
+				}
+			}
+
+			var projectMapSize = 0;
+
+			for (var i in projectMap){
+				if (projectMap.hasOwnProperty(i)) {
+					console.log(i, projectMap[i]);
+					projectMapSize++;
+				}
+			}
+			var m=0;
+			for(var i =0 in projectMap){
+
+				if(m<projectMapSize-1){
+					projectData += "{ \"text\" : "+"\""+i+"\""+", \"value\" : "+"\""+projectMap[i]+"\""+"},";
+				}else{
+					projectData += "{ \"text\" : "+"\""+i+"\""+", \"value\" : "+"\""+projectMap[i]+"\""+"}]";
+				}
+				m++;
+			}
+
+			console.log("project data ", projectData);
 			
+			var serverMap = new Object();
+			var serverData="[";
+			var count = 1;
+			for(var i = 0 ; i<temp.length ; i++){
+				var tempProjectdata  = temp[i].items;
+				for( var j = 0 ; j < tempProjectdata.length ; j++){
+					var tempServerdata = tempProjectdata[j].items;
+					for( var k = 0 ; k < tempServerdata.length ; k++){
+						if(serverMap[tempServerdata[k].id] == undefined){
+							serverMap[tempServerdata[k].id] = count;
+							count++;
+						}
+					}
+				}
+			}
+
+			var size = 0;
+
+			for (var i in serverMap){
+				if (serverMap.hasOwnProperty(i)) {
+					console.log(i, serverMap[i]);
+					size++;
+				}
+			}
+			var j=0;
+			for(var i =0 in serverMap){
+
+				if(j<size-1){
+					serverData += "{ \"name\" : "+"\""+ i +"\""+", \"id\" : "+"\""+ serverMap[i]+"\""+", \"checked\" : "+"\""+"false"+"\""+ "},";
+				}else{
+					serverData += "{ \"name\" : "+"\""+ i +"\""+", \"id\" : "+"\""+ serverMap[i]+"\""+", \"checked\" : "+"\""+"true"+"\""+ "}]";
+				}
+				j++;
+			}
+			console.log("server data ", serverData);
+
 			$("#getfile").click(function() {
 				window.open("getfile", null, null, null);
 			});
@@ -79,11 +170,11 @@ $(document).ready(
 					return false;
 				}
 				if (projectName > 30) {
-			    	alert("Some of the fields are too long");
-			    	return false;
+					alert("Some of the fields are too long");
+					return false;
 				}
-				
-					return true;
+
+				return true;
 			}
 			$("#createprojectbutton").click(function() {
 				if(projectvalidateFields()){
@@ -130,11 +221,11 @@ $(document).ready(
 					return false;
 				}
 				if (workbenchName > 30) {
-			    	alert("Some of the fields are too long");
-			    	return false;
+					alert("Some of the fields are too long");
+					return false;
 				}
-				
-					return true;
+
+				return true;
 			}
 
 			$("#createworkbenchbutton").click(function() {
@@ -190,11 +281,11 @@ $(document).ready(
 					return false;
 				}
 				if (serverName > 30 || hostIP > 30 || username > 30 || password > 30 || serverType > 30 || logFilePath > 30 || restartCmd > 100) {
-			    	alert("Some of the fields are too long");
-			    	return false;
+					alert("Some of the fields are too long");
+					return false;
 				}
-				
-					return true;
+
+				return true;
 			}
 
 			$("#createserverbutton").click(function() {
@@ -254,11 +345,11 @@ $(document).ready(
 					return false;
 				}
 				if (fileName > 30) {
-			    	alert("Some of the fields are too long");
-			    	return false;
+					alert("Some of the fields are too long");
+					return false;
 				}
-				
-					return true;
+
+				return true;
 			}
 
 			$("#addfilebutton").click(function() {
@@ -303,7 +394,8 @@ $(document).ready(
 			});
 
 
-			var workbenches = [ {
+			var workbenches = JSON.parse(workbenchData);
+			console.log("workbenches", workbenches);/*[ {
 				text : "DEV",
 				value : "1"
 			}, {
@@ -312,9 +404,9 @@ $(document).ready(
 			}, {
 				text : "Production",
 				value : "3"
-			} ];
+			} ];*/
 
-			var projects = [ {
+			var projects = JSON.parse(projectData);/*[ {
 				text : "SOLR",
 				value : "1"
 			}, {
@@ -323,9 +415,9 @@ $(document).ready(
 			}, {
 				text : "CAS",
 				value : "3"
-			} ];
+			} ];*/
 
-			var servers = [ {
+			var servers = JSON.parse(serverData);/*[ {
 				name : "Server 1",
 				id : "1",
 				checked : "true"
@@ -337,7 +429,7 @@ $(document).ready(
 				name : "Server 3",
 				id : "3",
 				checked : "true"
-			} ];
+			} ];*/
 			$("#tabstrip").kendoTabStrip({
 				animation : {
 					open : {
@@ -406,6 +498,8 @@ $(document).ready(
 			}
 			;
 
+
+
 			$.each(servers, function() {
 				$("#servercheckboxes")
 				.append(
@@ -413,7 +507,6 @@ $(document).ready(
 
 								$("<input>").attr({'type':'checkbox','id':this.id})
 
-								.val(this.id).prop('checked',
-										this.checked)));
+								.val(this.id)));
 			});
 		});
