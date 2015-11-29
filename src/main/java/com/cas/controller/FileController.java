@@ -41,7 +41,7 @@ public class FileController {
 		if(fileId != null){
 			intfileId = Integer.parseInt(fileId);
 		}
-		fileContent = filedelegate.getFile(6);
+		fileContent = filedelegate.getFile(intfileId);
 		String filename = fileContent.get(0);
 		
 		fileContent.remove(0);
