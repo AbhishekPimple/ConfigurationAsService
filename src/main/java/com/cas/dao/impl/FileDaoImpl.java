@@ -140,7 +140,8 @@ public class FileDaoImpl implements FileDao{
 				serverData.put("username", resultSet1.getString("server_username"));
 				serverData.put("hostname", resultSet1.getString("server_ipaddress"));
 				serverData.put("password", resultSet1.getString("server_password"));
-				String serverRestartCommand = "\"" + resultSet1.getString("server_restart_cmd") + "\"";
+				String serverRestartCommand = resultSet1.getString("server_restart_cmd");
+				serverRestartCommand=serverRestartCommand.replaceAll(" ", "#");
 				serverData.put("restartcommand", serverRestartCommand);
 			}	
 		}catch(SQLException e){

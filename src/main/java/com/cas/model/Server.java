@@ -14,7 +14,14 @@ public class Server implements Serializable{
 	String logFilePath;
 	String restartCmd;
 	String projectId;
+	String serverId;
 	
+	public String getServerId() {
+		return serverId;
+	}
+	public void setServerId(String serverId) {
+		this.serverId = serverId;
+	}
 	public String getHostIP() {
 		return hostIP;
 	}

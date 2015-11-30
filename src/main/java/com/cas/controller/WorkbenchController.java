@@ -45,4 +45,24 @@ public class WorkbenchController {
 
 	}
 	
+	@RequestMapping(value = "/workbenchupdate", method = RequestMethod.POST, headers = {"Content-type=application/json"})
+	public @ResponseBody Workbench updateWorkbench(@RequestBody String workbenchJson) throws JsonParseException, JsonMappingException, IOException {
+
+		Workbench workbench = new ObjectMapper().readValue(workbenchJson, Workbench.class);
+
+		try {
+
+			if (workbenchDelegate.updateWorkbench(workbench) != null) {
+				return workbench;
+			} else {
+				return null;
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+
+	}
+	
 }

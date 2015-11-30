@@ -3,7 +3,7 @@ package com.cas.model;
 import java.io.Serializable;
 
 public class Project implements Serializable{
-	
+
 
 	/**
 	 * 
@@ -12,10 +12,13 @@ public class Project implements Serializable{
 	String projectName;
 	String projectDesc;
 	String workbenchId;
-	
-	
-	public Project(){
-		
+	String projectId;
+
+	public String getProjectId() {
+		return projectId;
+	}
+	public void setProjectId(String projectId) {
+		this.projectId = projectId;
 	}
 	public String getProjectName() {
 		return projectName;
@@ -35,5 +38,5 @@ public class Project implements Serializable{
 	public void setWorkbenchId(String workbenchId) {	
 		this.workbenchId = workbenchId;
 	}
-	
+
 }

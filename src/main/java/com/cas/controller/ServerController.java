@@ -46,4 +46,24 @@ public class ServerController {
 		return null;
 
 	}
+	
+	@RequestMapping(value = "/serverupdate", method = RequestMethod.POST, headers = {"Content-type=application/json"})
+	public @ResponseBody Server updateServer(@RequestBody String serverJson) throws JsonParseException, JsonMappingException, IOException {
+
+		Server server = new ObjectMapper().readValue(serverJson, Server.class);
+
+		try {
+
+			if (serverDelegate.updateServer(server) != null) {
+				return server;
+			} else {
+				return null;
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+
+	}
 }

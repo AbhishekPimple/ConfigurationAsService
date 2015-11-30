@@ -16,5 +16,9 @@ public class WorkbenchDelegate {
 	
 	public Workbench createWorkbench(Workbench workbench, String emailId){
 		return workbenchService.createWorkbench(workbench, emailId);
+	}
+
+	public Object updateWorkbench(Workbench workbench) {
+		return workbenchService.updateWorkbench(workbench);
 	};
 }

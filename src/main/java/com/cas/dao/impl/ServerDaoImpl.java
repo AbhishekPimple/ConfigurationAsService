@@ -11,17 +11,17 @@ import com.mysql.jdbc.PreparedStatement;
 
 public class ServerDaoImpl implements ServerDao{
 	DataSource dataSource;
-	
+
 	public DataSource getDataSource() {
 		return dataSource;
 	}
-	
+
 	public void setDataSource(DataSource dataSource) {
 		this.dataSource = dataSource;
 	}
-	
+
 	public Server createServer(Server server){
-		
+
 		boolean isServerExists = false;
 		PreparedStatement pstmt = null;
 		ResultSet resultSet = null;
@@ -51,7 +51,7 @@ public class ServerDaoImpl implements ServerDao{
 					preparedStatement.setString(7, server.getLogFilePath());
 					preparedStatement.setString(8, server.getServerType());
 					preparedStatement.setString(9, server.getRestartCmd());
-					
+
 					preparedStatement .executeUpdate();
 					return server;
 				}
@@ -67,11 +67,50 @@ public class ServerDaoImpl implements ServerDao{
 					}
 				}
 			}
-			
+
 		}
-		
+
 		return null;
-		
+
 	}
 
+	public Server updateServer(Server server) {
+		//boolean isServerExists = false;
+		PreparedStatement pstmt = null;
+		ResultSet resultSet = null;
+		int proj_id=0;
+		proj_id=Integer.parseInt(server.getProjectId());
+		int serv_id=0;
+		serv_id=Integer.parseInt(server.getServerId());
+		if(server != null){
+			try{
+
+				String updateTableSQL = "UPDATE server set"
+						+ " server_name = ?," +" server_desc = ?,"+ " server_username = ?," + " server_password = ?," + " server_ipaddress = ?," 
+						+ " server_logfile_path = ?," + " server_type = ?," + " server_restart_cmd = ? "
+						+ " where server_id = ?" ;
+				System.out.println(updateTableSQL);
+				PreparedStatement preparedStatement = (PreparedStatement) dataSource.getConnection().prepareStatement(updateTableSQL);
+				preparedStatement.setString(1, server.getServerName());
+				preparedStatement.setString(2, server.getServerDesc());
+				preparedStatement.setString(3, server.getUsername());
+				preparedStatement.setString(4, server.getPassword());
+				preparedStatement.setString(5, server.getHostIP());
+				preparedStatement.setString(6, server.getLogFilePath());
+				preparedStatement.setString(7, server.getServerType());
+				preparedStatement.setString(8, server.getRestartCmd());
+				preparedStatement.setInt(9, serv_id);
+
+				preparedStatement .executeUpdate();
+				return server;
+			}
+
+			catch(SQLException e){
+				e.printStackTrace();
+			}
+		}
+		return null;
+	}
 }
+
+

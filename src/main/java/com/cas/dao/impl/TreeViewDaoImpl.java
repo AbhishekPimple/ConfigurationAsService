@@ -53,22 +53,22 @@ public class TreeViewDaoImpl implements TreeViewDao{
 
 		//get list of workbenches 
 		JSONObject profile = new JSONObject();
-
+		String workbenchDesc;
 		JSONArray workbenches;
 		pstmt = dataSource.getConnection().prepareStatement(workbench);
 		pstmt.setString(1, String.valueOf(userID));
 		resultSet = pstmt.executeQuery();
 		workbenches = new JSONArray();
-		JSONObject jsontemp = null;
+		JSONObject jsontemp ;
 		while(resultSet.next()){
 			jsontemp = new JSONObject();
 			workbenchID = String.valueOf(resultSet.getInt("workbench_id"));
 			workbenchName = resultSet.getString("workbench_name");
+			workbenchDesc = resultSet.getString("workbench_desc");
 			workbenchIDList.add(workbenchID);
 			jsontemp.put("workbenchid",workbenchID );
+			jsontemp.put("workbenchDesc", workbenchDesc);
 			jsontemp.put("id", workbenchName);
-			//jsontemp.put("WorkbenchID",workbenchID );
-			//jsontemp.put("Projects", new JSONArray());
 			jsontemp.put("items", new JSONArray());
 			workbenches.put(jsontemp);
 		}
@@ -78,7 +78,7 @@ public class TreeViewDaoImpl implements TreeViewDao{
 		//get project from workbenchesID
 		Map<String,String> tempProjectMap;
 		JSONObject jsonProjectTemp;
-		String projectID,projectName;
+		String projectID,projectName,projectDesc;
 		JSONArray objecttemp = null;
 		pstmt = dataSource.getConnection().prepareStatement(project);
 		for (ListIterator<String> iter = workbenchIDList.listIterator(); iter.hasNext(); ) {
@@ -89,7 +89,7 @@ public class TreeViewDaoImpl implements TreeViewDao{
 			objecttemp = profile.getJSONArray("Profile");
 			int location = -1;
 			JSONArray jsonProjectTempArray = new JSONArray();
-			System.out.println(objecttemp.toString());
+
 			for(int i = 0 ;i<objecttemp.length();i++){
 				JSONObject tempjs = (JSONObject) objecttemp.get(i);
 				if(tempjs.get("workbenchid").equals(tempWorkbenchID)){
@@ -101,20 +101,17 @@ public class TreeViewDaoImpl implements TreeViewDao{
 				jsonProjectTemp = new JSONObject();
 				projectID = String.valueOf(resultSet.getInt("project_id"));
 				projectName = resultSet.getString("project_name");
+				projectDesc = resultSet.getString("project_desc");
 				tempProjectMap.put(projectID, projectName);
 				jsonProjectTemp.put("ProjectID", projectID);
 				jsonProjectTemp.put("id",projectName);
-				//jsonProjectTemp.put("ProjectName",projectName);
+				jsonProjectTemp.put("projectDesc",projectDesc);
 				jsonProjectTemp.put("items", new JSONArray());
-				//jsonProjectTemp.put("Servers", new JSONArray());
 				jsonProjectTempArray.put(jsonProjectTemp);
 			}
 			if(location>-1){
 				JSONObject tempjs = (JSONObject) objecttemp.get(location);
 				tempjs.put("items", jsonProjectTempArray);
-				/*JSONArray tempJsArray = tempjs.getJSONArray("Projects");
-				tempJsArray.put(jsonProjectTemp);
-				tempjs.put(key, value)*/
 				objecttemp.put(location, tempjs);
 			}
 			workbenchMap.put(tempWorkbenchID, tempProjectMap);
@@ -127,9 +124,9 @@ public class TreeViewDaoImpl implements TreeViewDao{
 
 		Map<String,Map<String,String>> projectMap = new HashMap();
 		Map<String,String> tempServerMap;
-		String serverID,serverName;
+		String serverID,serverName,serverUsername,serverIP,serverLogPath,serverType,serverStatus,serverDesc,serverRestartCmd;
 		JSONObject jsonServerTemp;
-		JSONArray jsonServerTempArray,jsonProjectsArray;
+		JSONArray jsonServerTempArray;
 
 		pstmt = dataSource.getConnection().prepareStatement(server);
 		for (Map.Entry<String,Map<String,String>> iter : workbenchMap.entrySet() ) {
@@ -158,9 +155,23 @@ public class TreeViewDaoImpl implements TreeViewDao{
 					jsonServerTemp = new JSONObject();
 					serverID = String.valueOf(resultSet.getInt("server_id"));
 					serverName = resultSet.getString("server_name");
+					serverUsername = resultSet.getString("server_username");
+					serverIP = resultSet.getString("server_ipaddress");
+					serverLogPath = resultSet.getString("server_logfile_path");
+					serverType = resultSet.getString("server_type");
+					serverStatus = resultSet.getString("server_status");
+					serverDesc = resultSet.getString("server_desc");
+					serverRestartCmd = resultSet.getString("server_restart_cmd");
 					jsonServerTemp.put("ServerID", serverID);
 					//jsonServerTemp.put("ServerName", serverName);
 					jsonServerTemp.put("id", serverName);
+					jsonServerTemp.put("serverUsername", serverUsername);
+					jsonServerTemp.put("serverIP", serverIP);
+					jsonServerTemp.put("serverLogPath", serverLogPath);
+					jsonServerTemp.put("serverType", serverType);
+					jsonServerTemp.put("serverStatus", serverStatus);
+					jsonServerTemp.put("serverDesc", serverDesc);
+					jsonServerTemp.put("serverRestartCmd", serverRestartCmd);
 					tempServerMap.put(serverID, serverName);
 					jsonServerTempArray.put(jsonServerTemp);
 				}	

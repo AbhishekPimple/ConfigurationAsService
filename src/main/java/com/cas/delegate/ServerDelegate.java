@@ -18,5 +18,9 @@ public class ServerDelegate {
 	public Server createServer(Server server) {
 		return serverService.createServer(server);
 		
-	};
+	}
+
+	public Object updateServer(Server server) {
+		return serverService.updateServer(server);
+	}
 }

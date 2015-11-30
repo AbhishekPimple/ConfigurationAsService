@@ -20,4 +20,8 @@ public class ServerServiceImpl implements ServerService{
 		return serverDao.createServer(server);
 	}
 
+	public Server updateServer(Server server) {
+		return serverDao.updateServer(server);
+	}
+
 }

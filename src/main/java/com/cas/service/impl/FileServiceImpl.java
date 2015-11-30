@@ -59,7 +59,7 @@ public class FileServiceImpl implements FileService {
 					+ fileData.get("hostname") + " " + fileData.get("password") + " pull" + " "
 					+ fileData.get("configfilepath") + " " + propertyHome;
 
-		
+			System.out.println("Get Command is :"+cmd);
 			Process p = Runtime.getRuntime().exec(cmd);
 			p.waitFor();
 
@@ -68,6 +68,8 @@ public class FileServiceImpl implements FileService {
 
 			while (r.ready()) {
 				String readLine = r.readLine();
+				//System.out.println("success:");
+				System.out.println(readLine);
 				if (readLine.startsWith("Modify: ")) {
 					
 					
@@ -84,7 +86,9 @@ public class FileServiceImpl implements FileService {
 				}
 			}
 			while (r2.ready()) {
+				System.out.println(r2.readLine());
 			}
+			
 
 		} catch (Throwable t) {
 			t.printStackTrace();
@@ -167,15 +171,20 @@ public class FileServiceImpl implements FileService {
 				BufferedReader r2 = new BufferedReader(new InputStreamReader(p.getErrorStream()));
 
 				while (r.ready()) {
+					System.out.println("Success");
+					System.out.println(r.readLine());
 				}
 				while (r2.ready()) {
+					System.out.println("Error!");
+					System.out.println(r2.readLine());
 				}
 				
 				if(isRestart.equals("true")){
 					String restartCommand = "sh " + scriptHome + "launchExpect.sh" + " " + scriptHome+" "+serverData.get("username") + " "
-							+ serverData.get("hostname") + " " + serverData.get("password") + " restart ";
+							+ serverData.get("hostname") + " " + serverData.get("password") + " restart " + serverData.get("restartcommand");
 					
-					Process processRestart = new ProcessBuilder(restartCommand, serverData.get("restartcommand")).start();//Runtime.getRuntime().exec(new String[]{restartCommand, serverData.get("restartcommand")});
+					System.out.println("Final Restart Command is :"+restartCommand);
+					Process processRestart = Runtime.getRuntime().exec(restartCommand);//new ProcessBuilder(restartCommand, serverData.get("restartcommand")).start();//Runtime.getRuntime().exec(new String[]{restartCommand, serverData.get("restartcommand")});
 					processRestart.waitFor();
 
 	
@@ -183,10 +192,12 @@ public class FileServiceImpl implements FileService {
 					BufferedReader eStream = new BufferedReader(new InputStreamReader(processRestart.getErrorStream()));
 	
 					while (iStream.ready()) {
-
+						System.out.println("success");
+						System.out.println(iStream.readLine());
 					}
 					while (eStream.ready()) {
-
+						System.out.println("Error");
+						System.out.println(eStream.readLine());
 					}
 				
 				}
@@ -237,6 +248,8 @@ public class FileServiceImpl implements FileService {
 			String checkCommand = "sh " + scriptHome + "launchExpect.sh" + " " + scriptHome+" "+serverData.get("username") + " "
 					+ serverData.get("hostname") + " " + serverData.get("password") + " getModTime" + " "
 					+ remotePathCheck;
+			
+			System.out.println("Modified time script command is :"+checkCommand);
 
 			Process checkProc = Runtime.getRuntime().exec(checkCommand);
 			checkProc.waitFor();
@@ -254,7 +267,7 @@ public class FileServiceImpl implements FileService {
 
 			}
 			while (eStream.ready()) {
-	
+					System.out.println(eStream.readLine());
 			}
 		} catch (Throwable t) {
 			t.printStackTrace();

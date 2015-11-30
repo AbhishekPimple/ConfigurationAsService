@@ -54,4 +54,44 @@ public class ProjectController {
 		return null;
 
 	}
+	
+	@RequestMapping(value = "/projectupdate", method = RequestMethod.POST, headers = {"Content-type=application/json"})
+	public @ResponseBody Project updateProject(@RequestBody String projectJson) throws JsonParseException, JsonMappingException, IOException {
+
+		Project project = new ObjectMapper().readValue(projectJson, Project.class);
+
+		try {
+
+			if (projectDelegate.updateProject(project) != null) {
+				return project;
+			} else {
+				return null;
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+
+	}
+	
+	@RequestMapping(value = "/projectdelete", method = RequestMethod.POST, headers = {"Content-type=application/json"})
+	public @ResponseBody Project deleteProject(@RequestBody String projectJson) throws JsonParseException, JsonMappingException, IOException {
+
+		Project project = new ObjectMapper().readValue(projectJson, Project.class);
+
+		try {
+
+			if (projectDelegate.deleteProject(project) != null) {
+				return project;
+			} else {
+				return null;
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+
+	}
 }
