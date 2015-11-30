@@ -19,6 +19,7 @@ import com.cas.model.User;
 @Controller
 public class LoginController {
 
+
     private static final Logger LOGGER = Logger.getLogger(LoginController.class.getName());
     @Autowired
     private LoginDelegate loginDelegate;
@@ -53,4 +54,5 @@ public class LoginController {
         return "redirect:/";
 
     }
+
 }

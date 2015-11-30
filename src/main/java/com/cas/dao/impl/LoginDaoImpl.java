@@ -11,6 +11,9 @@ import com.cas.model.User;
 
 public class LoginDaoImpl implements LoginDao {
 
+    private static final int ONE = 1;
+    private static final int TWO = 2;
+
     DataSource dataSource;
 
     public DataSource getDataSource() {
@@ -26,8 +29,8 @@ public class LoginDaoImpl implements LoginDao {
         String query = "Select * from user where user_email_id = ? and user_password = ?";
         User user = null;
         PreparedStatement pstmt = dataSource.getConnection().prepareStatement(query);
-        pstmt.setString(1, emailId);
-        pstmt.setString(2, password);
+        pstmt.setString(ONE, emailId);
+        pstmt.setString(TWO, password);
         ResultSet resultSet = pstmt.executeQuery();
         if (resultSet.next()) {
             user = new User();

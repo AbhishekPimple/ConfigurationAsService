@@ -42,7 +42,7 @@ public class TreeViewDaoImpl implements TreeViewDao {
 
         List<String> workbenchIDList = new ArrayList<String>();
 
-        Map<String, Map<String, String>> workbenchMap = new HashMap();
+        Map<String, Map<String, String>> workbenchMap = new HashMap<String, Map<String, String>>();
 
         String user = "Select user_id from user where user_email_id = ?";
         String workbench = "Select * from workbench where user_id = ?";
@@ -90,7 +90,7 @@ public class TreeViewDaoImpl implements TreeViewDao {
             String tempWorkbenchID = iter.next();
             pstmt.setString(1, tempWorkbenchID);
             resultSet = pstmt.executeQuery();
-            tempProjectMap = new HashMap();
+            tempProjectMap = new HashMap<String, String>();
             objecttemp = profile.getJSONArray(PROFILE);
             int location = -1;
             JSONArray jsonProjectTempArray = new JSONArray();
@@ -125,7 +125,7 @@ public class TreeViewDaoImpl implements TreeViewDao {
 
         // get server from project
 
-        Map<String, Map<String, String>> projectMap = new HashMap();
+        Map<String, Map<String, String>> projectMap = new HashMap<String, Map<String, String>> ();
         Map<String, String> tempServerMap;
         String serverID, serverName, serverUsername, serverIP, serverLogPath, serverType, serverStatus, serverDesc,
                 serverRestartCmd;
@@ -138,7 +138,7 @@ public class TreeViewDaoImpl implements TreeViewDao {
                 String tempProjectID = iter1.getKey();
                 pstmt.setString(1, tempProjectID);
                 resultSet = pstmt.executeQuery();
-                tempServerMap = new HashMap();
+                tempServerMap = new HashMap<String, String>();
                 jsonServerTempArray = new JSONArray();
                 int locationi = -1, locationj = -1;
                 for (int i = 0; i < objecttemp.length(); i++) {
@@ -197,7 +197,7 @@ public class TreeViewDaoImpl implements TreeViewDao {
         }
 
         // get config from server
-        Map<String, Map<String, String>> serverMap = new HashMap();
+        Map<String, Map<String, String>> serverMap = new HashMap<String, Map<String, String>> ();
 
         JSONArray jsonConfigTempArray;
         JSONObject jsonConfigTemp;
@@ -207,7 +207,7 @@ public class TreeViewDaoImpl implements TreeViewDao {
             String tempServerID = iter.getKey();
             pstmt.setString(1, tempServerID);
             resultSet = pstmt.executeQuery();
-            tempServerMap = new HashMap();
+            tempServerMap = new HashMap<String, String>();
 
             jsonConfigTempArray = new JSONArray();
 

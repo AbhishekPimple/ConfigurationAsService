@@ -22,14 +22,18 @@ import com.cas.dao.FileDao;
 import com.cas.service.FileService;
 
 public class FileServiceImpl implements FileService {
+
     FileDao fileDao;
-    private  static final Logger LOGGER = Logger.getLogger(FileServiceImpl.class.getName()); 
+    private static final Logger LOGGER = Logger.getLogger(FileServiceImpl.class.getName());
+    public static final int START = 8;
+    public static final int END = 27;
+    public static final int BEGINING = 0;
     public static final String SCRIPT_HOME = "SCRIPT_HOME";
-    public static final String PASSWD = "password" ;
+    public static final String PASSWD = "password";
     public static final String HOSTNAME = "hostname";
     public static final String USERNAME = "username";
     public static final String SCRIPT_FILE = "launchExpect.sh";
-    
+
     public FileDao getFileDao() {
         return fileDao;
     }
@@ -37,7 +41,7 @@ public class FileServiceImpl implements FileService {
     public void setFileDao(FileDao fileDao) {
         this.fileDao = fileDao;
     }
-    
+
     @Override
     public List<String> getFile(int fileId) {
 
@@ -46,29 +50,20 @@ public class FileServiceImpl implements FileService {
         String propertyHome = System.getenv("PROPERTY_HOME");
         String scriptHome = System.getenv(SCRIPT_HOME);
 
-
-
         String baseFileName = null;
         try {
             fileData = fileDao.getFileData(fileId);
             baseFileName = fileId + "_" + fileData.get("filename");
         } catch (SQLException e1) {
-            LOGGER.log(Level.SEVERE,e1.getMessage(),e1);
+            LOGGER.log(Level.SEVERE, e1.getMessage(), e1);
 
         }
 
-        /*
-         * sh launchExpect.sh parag ubuntu.local root pull /home/parag/abc.txt
-         * /home/prasad/CAS/
-         */
-        Timestamp filetimestamp;
-
         try {
 
-            String cmd = "sh " + scriptHome + SCRIPT_FILE + " " +scriptHome+" "+fileData.get(USERNAME) + " "
+            String cmd = "sh " + scriptHome + SCRIPT_FILE + " " + scriptHome + " " + fileData.get(USERNAME) + " "
                     + fileData.get(HOSTNAME) + " " + fileData.get(PASSWD) + " pull" + " "
                     + fileData.get("configfilepath") + " " + propertyHome;
-
 
             Process p = Runtime.getRuntime().exec(cmd);
             p.waitFor();
@@ -79,27 +74,16 @@ public class FileServiceImpl implements FileService {
             while (r.ready()) {
                 String readLine = r.readLine();
                 if (readLine.startsWith("Modify: ")) {
-
-
-                    try {
-                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-                        Date parsedDate = dateFormat.parse(readLine.substring(8, 27));
-                        filetimestamp = new java.sql.Timestamp(parsedDate.getTime());
-                        fileDao.insertFileTimeStamp(filetimestamp, fileId);
-
-                    } catch (java.text.ParseException e) {
-
-                        LOGGER.log(Level.SEVERE, e.toString());
-                    }
+                    insertFileStamp(readLine.substring(START, END), fileId);
                 }
             }
             while (r2.ready()) {
+                LOGGER.log(Level.ALL, r2.readLine());
             }
             r.close();
             r2.close();
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE,e.getMessage(),e);
-
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
 
         }
 
@@ -119,7 +103,7 @@ public class FileServiceImpl implements FileService {
             }
 
         } catch (FileNotFoundException e) {
-            LOGGER.log(Level.SEVERE,e.getMessage(),e);
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
         } finally {
             if (s != null) {
                 s.close();
@@ -130,52 +114,37 @@ public class FileServiceImpl implements FileService {
         return fileContent;
 
     }
+
     @Override
     public boolean saveFile(String name, String content, String serverId, String isRestart) {
 
         String newContent = content;
         String propertyHome = System.getenv("PROPERTY_HOME");
         String scriptHome = System.getenv(SCRIPT_HOME);
-        Map<String,String> replaceMap = new HashMap<String, String>();
+        Map<String, String> replaceMap = new HashMap<String, String>();
         replaceMap.put("<br><br>", "\n");
         replaceMap.put("<div>", "");
         replaceMap.put("</div>", "");
         replaceMap.put("<br>", "\n");
-        
-        for(Map.Entry<String, String> entry: replaceMap.entrySet()){
+
+        for (Map.Entry<String, String> entry : replaceMap.entrySet()) {
             newContent = newContent.replaceAll(entry.getKey(), entry.getValue());
         }
-        
-        
-        try{
+
+        try {
             String filename = propertyHome + name;
             int splitIndex = name.indexOf("_");
-            int fileId = Integer.parseInt(name.substring(0, splitIndex));
+            int fileId = Integer.parseInt(name.substring(BEGINING, splitIndex));
             String oldFileName = name.substring(splitIndex + 1, name.length());
             File thisFile = new File(filename);
             File oldFile = new File(propertyHome + oldFileName);
             thisFile.renameTo(oldFile);
+            writeDataToFile(oldFile, newContent);
 
-            try {
-
-                FileWriter fileWriter = new FileWriter(oldFile, false);
-                fileWriter.write(newContent);
-                fileWriter.close();
-
-                // Scp file to required server
-
-            } catch (FileNotFoundException e) {
-                LOGGER.log(Level.SEVERE,e.getMessage(),e);
-
-
-            } catch (IOException e) {
-                LOGGER.log(Level.SEVERE,e.getMessage(),e);
-
-            }
             Map<String, String> serverData = fileDao.getServerData(fileId, Integer.parseInt(serverId));
             String remotePath = serverData.get("remotefilepath");
-            remotePath = remotePath.substring(0, remotePath.lastIndexOf("/") + 1);
-            String cmd = "sh " + scriptHome + SCRIPT_FILE + " " + scriptHome+" "+serverData.get(USERNAME) + " "
+            remotePath = remotePath.substring(BEGINING, remotePath.lastIndexOf("/") + 1);
+            String cmd = "sh " + scriptHome + SCRIPT_FILE + " " + scriptHome + " " + serverData.get(USERNAME) + " "
                     + serverData.get(HOSTNAME) + " " + serverData.get(PASSWD) + " push" + " " + propertyHome
                     + oldFileName + " " + remotePath;
 
@@ -183,35 +152,35 @@ public class FileServiceImpl implements FileService {
 
             p.waitFor();
 
-
             BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));
             BufferedReader r2 = new BufferedReader(new InputStreamReader(p.getErrorStream()));
 
             while (r.ready()) {
+                LOGGER.log(Level.ALL, r.readLine());
             }
             while (r2.ready()) {
+                LOGGER.log(Level.ALL, r2.readLine());
             }
 
-            if("true".equals(isRestart)){
-                String restartCommand = "sh " + scriptHome + SCRIPT_FILE + " " + scriptHome+" "+serverData.get(USERNAME) + " "
-                        + serverData.get(HOSTNAME) + " " + serverData.get(PASSWD) + " restart ";
+            if ("true".equals(isRestart)) {
+                String restartCommand = "sh " + scriptHome + SCRIPT_FILE + " " + scriptHome + " "
+                        + serverData.get(USERNAME) + " " + serverData.get(HOSTNAME) + " " + serverData.get(PASSWD)
+                        + " restart ";
 
                 Process processRestart = new ProcessBuilder(restartCommand, serverData.get("restartcommand")).start();
                 processRestart.waitFor();
-
 
                 BufferedReader iStream = new BufferedReader(new InputStreamReader(processRestart.getInputStream()));
                 BufferedReader eStream = new BufferedReader(new InputStreamReader(processRestart.getErrorStream()));
 
                 while (iStream.ready()) {
-
+                    LOGGER.log(Level.ALL, iStream.readLine());
                 }
                 while (eStream.ready()) {
-
+                    LOGGER.log(Level.ALL, eStream.readLine());
                 }
                 iStream.close();
                 eStream.close();
-
 
             }
             r.close();
@@ -219,13 +188,13 @@ public class FileServiceImpl implements FileService {
             return false;
 
         } catch (FileNotFoundException e) {
-            LOGGER.log(Level.SEVERE,e.getMessage(),e);
-           
-        } catch(IOException e){
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
 
-           LOGGER.log(Level.SEVERE,e.getMessage(),e);
+        } catch (IOException e) {
 
-        }catch (InterruptedException e) {
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+
+        } catch (InterruptedException e) {
 
             LOGGER.log(Level.SEVERE, e.toString());
 
@@ -233,6 +202,36 @@ public class FileServiceImpl implements FileService {
 
         return false;
 
+    }
+
+    public void writeDataToFile(File oldFile, String content) {
+        try {
+
+            FileWriter fileWriter = new FileWriter(oldFile, false);
+            fileWriter.write(content);
+            fileWriter.close();
+
+        } catch (FileNotFoundException e) {
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+
+        }
+    }
+
+    public void insertFileStamp(String timestampString, int fileId) {
+        try {
+            Timestamp filetimestamp;
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+            Date parsedDate = dateFormat.parse(timestampString);
+            filetimestamp = new java.sql.Timestamp(parsedDate.getTime());
+            fileDao.insertFileTimeStamp(filetimestamp, fileId);
+
+        } catch (java.text.ParseException e) {
+
+            LOGGER.log(Level.SEVERE, e.toString());
+        }
     }
 
     private boolean checkifModified(String substring, int fileId) {
@@ -251,14 +250,13 @@ public class FileServiceImpl implements FileService {
         }
         return false;
     }
+
     @Override
     public boolean checkModified(String name, String content, String serverId) {
 
         String scriptHome = System.getenv(SCRIPT_HOME);
         int splitIndex = name.indexOf("_");
-        int fileId = Integer.parseInt(name.substring(0, splitIndex));
-
-
+        int fileId = Integer.parseInt(name.substring(BEGINING, splitIndex));
 
         boolean isModified = false;
         Map<String, String> serverData = fileDao.getServerData(fileId, Integer.parseInt(serverId));
@@ -267,9 +265,9 @@ public class FileServiceImpl implements FileService {
 
             String remotePathCheck = serverData.get("remotefilepath");
 
-            String checkCommand = "sh " + scriptHome + SCRIPT_FILE + " " + scriptHome+" "+serverData.get(USERNAME) + " "
-                    + serverData.get(HOSTNAME) + " " + serverData.get(PASSWD) + " getModTime" + " "
-                    + remotePathCheck;
+            String checkCommand = "sh " + scriptHome + SCRIPT_FILE + " " + scriptHome + " " + serverData.get(USERNAME)
+            + " " + serverData.get(HOSTNAME) + " " + serverData.get(PASSWD) + " getModTime" + " "
+            + remotePathCheck;
 
             Process checkProc = Runtime.getRuntime().exec(checkCommand);
             checkProc.waitFor();
@@ -281,24 +279,24 @@ public class FileServiceImpl implements FileService {
                 String readLine = iStream.readLine();
                 if (readLine.startsWith("Modify: ")) {
 
-                    isModified = checkifModified(readLine.substring(8, 27), fileId);
+                    isModified = checkifModified(readLine.substring(START, END), fileId);
 
                 }
 
             }
             while (eStream.ready()) {
-
+                LOGGER.log(Level.ALL, eStream.readLine());
             }
             iStream.close();
             eStream.close();
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE,e.getMessage(),e);
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
 
         }
 
-
         return isModified;
     }
+
     @Override
     public com.cas.model.File addFile(com.cas.model.File file) {
 

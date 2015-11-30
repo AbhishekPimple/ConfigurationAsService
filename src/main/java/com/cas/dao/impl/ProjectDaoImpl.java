@@ -12,6 +12,12 @@ import com.cas.dao.ProjectDao;
 import com.cas.model.Project;
 
 public class ProjectDaoImpl implements ProjectDao {
+
+    private static final int ZERO = 0;
+    private static final int ONE = 1;
+    private static final int TWO = 2;
+    private static final int THREE = 3;
+
     DataSource dataSource;
     private static final Logger LOGGER = Logger.getLogger(ProjectDaoImpl.class.getName());
 
@@ -33,18 +39,18 @@ public class ProjectDaoImpl implements ProjectDao {
             try {
                 String query = "Select count(1) from project where project_name = ?";
                 pstmt = dataSource.getConnection().prepareStatement(query);
-                pstmt.setString(1, project.getProjectName());
+                pstmt.setString(ONE, project.getProjectName());
                 resultSet = pstmt.executeQuery();
                 if (resultSet.next()) {
-                    isProjectExists = resultSet.getInt(1) > 0;
+                    isProjectExists = resultSet.getInt(ONE) > ZERO;
                 }
                 if (!isProjectExists) {
                     String insertTableSQL = "INSERT INTO project" + "(project_name, project_desc, workbench_id) VALUES"
                             + "(?,?,?)";
                     PreparedStatement preparedStatement = dataSource.getConnection().prepareStatement(insertTableSQL);
-                    preparedStatement.setString(1, project.getProjectName());
-                    preparedStatement.setString(2, project.getProjectDesc());
-                    preparedStatement.setInt(3, Integer.parseInt(project.getWorkbenchId()));
+                    preparedStatement.setString(ONE, project.getProjectName());
+                    preparedStatement.setString(TWO, project.getProjectDesc());
+                    preparedStatement.setInt(THREE, Integer.parseInt(project.getWorkbenchId()));
                     preparedStatement.executeUpdate();
                     return project;
                 }

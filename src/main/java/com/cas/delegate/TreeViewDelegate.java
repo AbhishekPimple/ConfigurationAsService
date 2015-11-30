@@ -18,8 +18,7 @@ public class TreeViewDelegate {
         this.treeViewService = treeViewService;
     }
 
-    public JSONObject populate(String emailId) throws SQLException
-    {
+    public JSONObject populate(String emailId) throws SQLException {
         return treeViewService.populate(emailId);
     }
 }

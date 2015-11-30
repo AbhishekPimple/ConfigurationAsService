@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
-<%@include file="springtabinclude.jsp"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+
 
 <%@taglib prefix="welcome" tagdir="/WEB-INF/tags"%>
 
@@ -17,6 +18,7 @@ function validateForm() {
         return false;
     }
     
+    //Ref: W3Schools.com
     var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
     if(!re.test(emailid))  {
        alert("Please add correct email address.");
