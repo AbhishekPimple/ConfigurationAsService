@@ -4,17 +4,23 @@ import com.cas.model.Workbench;
 import com.cas.service.WorkbenchService;
 
 public class WorkbenchDelegate {
-    WorkbenchService workbenchService;
 
-    public WorkbenchService getWorkbenchService() {
-        return workbenchService;
-    }
+	WorkbenchService workbenchService;
+	
+	public WorkbenchService getWorkbenchService() {
+		return workbenchService;
+	}
+	
+	public void setWorkbenchService(WorkbenchService workbenchService) {
+		this.workbenchService = workbenchService;
+	}
+	
+	public Workbench createWorkbench(Workbench workbench, String emailId){
+		return workbenchService.createWorkbench(workbench, emailId);
+	}
 
-    public void setWorkbenchService(WorkbenchService workbenchService) {
-        this.workbenchService = workbenchService;
-    }
+	public Object updateWorkbench(Workbench workbench) {
+		return workbenchService.updateWorkbench(workbench);
+	};
 
-    public Workbench createWorkbench(Workbench workbench, String emailId){
-        return workbenchService.createWorkbench(workbench, emailId);
-    }
 }

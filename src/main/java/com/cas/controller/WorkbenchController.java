@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,9 +18,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.cas.delegate.WorkbenchDelegate;
 import com.cas.model.User;
 import com.cas.model.Workbench;
+import com.fasterxml.jackson.core.JsonParseException;
 
 @Controller
 public class WorkbenchController {
+
     @Autowired
     private WorkbenchDelegate workbenchDelegate;
     private static final Logger LOGGER = Logger.getLogger(WorkbenchController.class.getName());
@@ -46,5 +49,24 @@ public class WorkbenchController {
         return null;
 
     }
+	@RequestMapping(value = "/workbenchupdate", method = RequestMethod.POST, headers = {"Content-type=application/json"})
+	public @ResponseBody Workbench updateWorkbench(@RequestBody String workbenchJson) throws JsonParseException, JsonMappingException, IOException {
+
+		Workbench workbench = new ObjectMapper().readValue(workbenchJson, Workbench.class);
+
+		try {
+
+			if (workbenchDelegate.updateWorkbench(workbench) != null) {
+				return workbench;
+			} else {
+				return null;
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+
+	}
 
 }

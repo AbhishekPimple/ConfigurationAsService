@@ -13,6 +13,11 @@ then
     my_pid=$!
 fi
 
+if [ "$cmd" = "restart" ]
+then
+    filepath=`echo $filepath | tr '#' ' '`;
+fi
+
 expect $1transferFile.exp $user $ip $password $cmd "$filepath" $dest_dir
 retval=$?
 echo "Return value of ip:$ip =$retval"; # Printing returned value from Expect

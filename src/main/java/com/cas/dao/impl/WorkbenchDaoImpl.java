@@ -20,6 +20,38 @@ public class WorkbenchDaoImpl implements WorkbenchDao {
     DataSource dataSource;
     private static final Logger LOGGER = Logger.getLogger(WorkbenchDaoImpl.class.getName());
 
+	public Workbench updateWorkbench(Workbench workbench) {
+		//boolean isWorkbenchExists = false;
+		PreparedStatement pstmt = null;
+		ResultSet resultSet = null;
+
+		int work_id=0;
+		work_id=Integer.parseInt(workbench.getWorkbenchId());
+		if(workbench != null){
+			try{
+
+				String updateTableSQL = "UPDATE workbench set"
+						+ " workbench_name = ?," +" workbench_desc = ?"
+						+ " where workbench_id = ?" ;
+				System.out.println(updateTableSQL);
+				PreparedStatement preparedStatement = (PreparedStatement) dataSource.getConnection().prepareStatement(updateTableSQL);
+				preparedStatement.setString(1, workbench.getWorkbenchName());
+				preparedStatement.setString(2, workbench.getWorkbenchDesc());
+				preparedStatement.setInt(3, work_id);
+				System.out.println(preparedStatement);
+
+				preparedStatement .executeUpdate();
+				return workbench;
+			}
+
+			catch(SQLException e){
+				e.printStackTrace();
+			}
+		}
+		return null;
+	}
+
+
     public DataSource getDataSource() {
         return dataSource;
     }

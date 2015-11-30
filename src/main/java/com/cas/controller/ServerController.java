@@ -4,9 +4,9 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.cas.delegate.ServerDelegate;
 import com.cas.model.Server;
+import com.fasterxml.jackson.core.JsonParseException;
 
 
 @Controller
@@ -42,5 +43,26 @@ public class ServerController {
         }
         return null;
 
-    }
+	}
+	
+	@RequestMapping(value = "/serverupdate", method = RequestMethod.POST, headers = {"Content-type=application/json"})
+	public @ResponseBody Server updateServer(@RequestBody String serverJson) throws JsonParseException, JsonMappingException, IOException {
+
+		Server server = new ObjectMapper().readValue(serverJson, Server.class);
+
+		try {
+
+			if (serverDelegate.updateServer(server) != null) {
+				return server;
+			} else {
+				return null;
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+
+	}
+
 }

@@ -18,4 +18,13 @@ public class ProjectDelegate {
         return projectService.createProject(project);
     }
 
+
+	public Project updateProject(Project project) {
+		return projectService.updateProject(project);
+	}
+
+	public Project deleteProject(Project project) {
+		return projectService.deleteProject(project);
+	}
+
 }

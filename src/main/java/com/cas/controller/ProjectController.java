@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.cas.delegate.ProjectDelegate;
 import com.cas.model.Project;
+import com.fasterxml.jackson.core.JsonParseException;
 
 
 @Controller
@@ -52,5 +54,47 @@ public class ProjectController {
         }
         return null;
 
-    }
+
+	}
+	
+	@RequestMapping(value = "/projectupdate", method = RequestMethod.POST, headers = {"Content-type=application/json"})
+	public @ResponseBody Project updateProject(@RequestBody String projectJson) throws JsonParseException, JsonMappingException, IOException {
+
+		Project project = new ObjectMapper().readValue(projectJson, Project.class);
+
+		try {
+
+			if (projectDelegate.updateProject(project) != null) {
+				return project;
+			} else {
+				return null;
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+
+	}
+	
+	@RequestMapping(value = "/projectdelete", method = RequestMethod.POST, headers = {"Content-type=application/json"})
+	public @ResponseBody Project deleteProject(@RequestBody String projectJson) throws JsonParseException, JsonMappingException, IOException {
+
+		Project project = new ObjectMapper().readValue(projectJson, Project.class);
+
+		try {
+
+			if (projectDelegate.deleteProject(project) != null) {
+				return project;
+			} else {
+				return null;
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+
+	}
+
 }
