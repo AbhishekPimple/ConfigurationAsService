@@ -1,7 +1,9 @@
 package com.cas.controller;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,39 +18,41 @@ import com.cas.model.User;
 
 @Controller
 public class LoginController {
-	@Autowired
-	private LoginDelegate loginDelegate;
 
-	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public ModelAndView displayLogin(HttpServletRequest request, HttpServletResponse response) {
-		ModelAndView model = new ModelAndView("loginpage");
-		User user = new User();
-		model.addObject("user", user);
-		return model;
-	}
 
-	@RequestMapping(value = "/performlogin", method = RequestMethod.POST)
-	public String performLogin(HttpServletRequest request, HttpServletResponse response,
-			@ModelAttribute("user") User user, RedirectAttributes redirectAttributes) {
-		ModelAndView model = null;
-		try {
-			User returnedUser = loginDelegate.isValidUser(user.getEmailId(), user.getPassword());
-			if (returnedUser != null) {
-				request.getSession().setAttribute("LOGGEDIN_USER", user);
-				redirectAttributes.addFlashAttribute("loggedInUser", returnedUser.getUsername());
-				return "redirect:/welcome";
-			} else {
-				//model = new ModelAndView("loginpage");
-				//model.addObject("user", user);
-				redirectAttributes.addFlashAttribute("message", "Invalid credentials!");
-				//request.setAttribute("message", "Invalid credentials!");
-				return "redirect:/";
-			}
+    private static final Logger LOGGER = Logger.getLogger(LoginController.class.getName());
+    @Autowired
+    private LoginDelegate loginDelegate;
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return "redirect:/";
+    @RequestMapping(value = "/", method = RequestMethod.GET)
+    public ModelAndView displayLogin() {
+        ModelAndView model = new ModelAndView("loginpage");
+        User user = new User();
+        model.addObject("user", user);
+        return model;
+    }
 
-	}
+    @RequestMapping(value = "/performlogin", method = RequestMethod.POST)
+    public String performLogin(HttpServletRequest request, 
+            @ModelAttribute("user") User user, RedirectAttributes redirectAttributes) {
+
+        try {
+            User returnedUser = loginDelegate.isValidUser(user.getEmailId(), user.getPassword());
+            if (returnedUser != null) {
+                request.getSession().setAttribute("LOGGEDIN_USER", user);
+                redirectAttributes.addFlashAttribute("loggedInUser", returnedUser.getUsername());
+                return "redirect:/welcome";
+            } else {
+                redirectAttributes.addFlashAttribute("message", "Invalid credentials!");
+                return "redirect:/";
+            }
+
+        }  catch (Exception e) {
+            LOGGER.log(Level.SEVERE,e.getMessage(),e);
+
+        }
+        return "redirect:/";
+
+    }
+
 }

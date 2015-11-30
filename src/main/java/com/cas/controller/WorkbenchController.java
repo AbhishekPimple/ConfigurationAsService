@@ -1,10 +1,11 @@
 package com.cas.controller;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,34 +18,37 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.cas.delegate.WorkbenchDelegate;
 import com.cas.model.User;
 import com.cas.model.Workbench;
+import com.fasterxml.jackson.core.JsonParseException;
 
 @Controller
 public class WorkbenchController {
-	@Autowired
-	private WorkbenchDelegate workbenchDelegate;
-	
-	@RequestMapping(value = "/workbench", method = RequestMethod.POST, headers = {"Content-type=application/json"})
-	public @ResponseBody Workbench createWorkbench(HttpServletRequest request,@RequestBody String workbenchJson) throws JsonParseException, JsonMappingException, IOException { 
-	
 
-	Workbench workbench = new ObjectMapper().readValue(workbenchJson, Workbench.class);
-	User user = (User) request.getSession().getAttribute("LOGGEDIN_USER");
-	String userId = user.getEmailId();
-		try {
+    @Autowired
+    private WorkbenchDelegate workbenchDelegate;
+    private static final Logger LOGGER = Logger.getLogger(WorkbenchController.class.getName());
 
-			if (workbenchDelegate.createWorkbench(workbench, userId) != null) {
-				return workbench;
-			} else {
-				return null;
-			}
+    @RequestMapping(value = "/workbench", method = RequestMethod.POST, headers = {"Content-type=application/json"})
+    @ResponseBody
+    public Workbench createWorkbench(HttpServletRequest request,@RequestBody String workbenchJson) throws  IOException { 
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
 
-	}
-	
+        Workbench workbench = new ObjectMapper().readValue(workbenchJson, Workbench.class);
+        User user = (User) request.getSession().getAttribute("LOGGEDIN_USER");
+        String userId = user.getEmailId();
+        try {
+
+            if (workbenchDelegate.createWorkbench(workbench, userId) != null) {
+                return workbench;
+            } else {
+                return null;
+            }
+
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE,e.getMessage(),e);
+        }
+        return null;
+
+    }
 	@RequestMapping(value = "/workbenchupdate", method = RequestMethod.POST, headers = {"Content-type=application/json"})
 	public @ResponseBody Workbench updateWorkbench(@RequestBody String workbenchJson) throws JsonParseException, JsonMappingException, IOException {
 
@@ -64,5 +68,5 @@ public class WorkbenchController {
 		return null;
 
 	}
-	
+
 }

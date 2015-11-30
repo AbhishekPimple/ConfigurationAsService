@@ -1,57 +1,59 @@
 package com.cas.controller;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.cas.delegate.ProjectDelegate;
 import com.cas.model.Project;
+import com.fasterxml.jackson.core.JsonParseException;
+
 
 @Controller
 public class ProjectController {
-	@Autowired
-	private ProjectDelegate projectDelegate;
+    @Autowired
+    private ProjectDelegate projectDelegate;
+    private  static final Logger LOGGER = Logger.getLogger(ProjectController.class.getName()); 
 
-	@RequestMapping(value = "/getprojects", method = RequestMethod.GET)
-	public ModelAndView getProjectInfo(HttpServletRequest request, HttpServletResponse response) {
-		ModelAndView model = new ModelAndView("welcomepage");
-		Project project = new Project();
 
-		model.addObject("project", project);
-		return model;
-	}
+    @RequestMapping(value = "/getprojects", method = RequestMethod.GET)
+    public ModelAndView getProjectInfo() {
+        ModelAndView model = new ModelAndView("welcomepage");
+        Project project = new Project();
 
-	@RequestMapping(value = "/project", method = RequestMethod.POST, headers = {"Content-type=application/json"})
-	public @ResponseBody Project createProject(@RequestBody String projectJson) throws JsonParseException, JsonMappingException, IOException {
+        model.addObject("project", project);
+        return model;
+    }
 
-		Project project = new ObjectMapper().readValue(projectJson, Project.class);
-		
-		try {
+    @RequestMapping(value = "/project", method = RequestMethod.POST, headers = {"Content-type=application/json"})
+    @ResponseBody
+    public  Project createProject(@RequestBody String projectJson) throws  IOException {
 
-			if (projectDelegate.createProject(project) != null) {
-				return project;
-			} else {
-				return null;
-			}
+        Project project = new ObjectMapper().readValue(projectJson, Project.class);
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
+        try {
+
+            if (projectDelegate.createProject(project) != null) {
+                return project;
+            } else {
+                return null;
+            }
+
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE,e.getMessage(),e);
+        }
+        return null;
+
 
 	}
 	
@@ -94,4 +96,5 @@ public class ProjectController {
 		return null;
 
 	}
+
 }

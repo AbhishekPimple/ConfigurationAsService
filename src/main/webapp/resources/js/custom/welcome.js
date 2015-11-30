@@ -56,9 +56,11 @@ $(document).ready(
 					//console.log("here");
 					var parent=null,parentparent=null;
 					var child = tree.dataItem(event.node);
+
 					//console.log("child",child);
 					var level=0;
 					while(!(child.parentNode() == undefined)){
+						console.log("child",child);
 						parent = child.parentNode();
 						child=parent;
 						level++;
@@ -150,15 +152,15 @@ $(document).ready(
 			var workbenchData = "[";
 			console.log("treeview profile", temp.length);
 			console.log("here");
-
+			console.log("temp is here ", temp);
 			for(var i =0; i<temp.length;i++){
 				if(i<temp.length-1){
 					workbenchData += "{ \"text\" : "+"\""+temp[i].id+"\""+", \"value\" : "+"\""+temp[i].workbenchid+"\""+"},";
 				}else{
-					workbenchData += "{ \"text\" : "+"\""+temp[i].id+"\""+", \"value\" : "+"\""+temp[i].workbenchid+"\""+"}]";
+					workbenchData += "{ \"text\" : "+"\""+temp[i].id+"\""+", \"value\" : "+"\""+temp[i].workbenchid+"\""+"}";
 				}
 			}
-
+			workbenchData += "]"
 			var projectData="[";
 			var projectMap = new Object();
 			var count = 1;

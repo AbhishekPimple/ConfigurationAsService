@@ -4,6 +4,7 @@ import com.cas.model.Workbench;
 import com.cas.service.WorkbenchService;
 
 public class WorkbenchDelegate {
+
 	WorkbenchService workbenchService;
 	
 	public WorkbenchService getWorkbenchService() {
@@ -21,4 +22,5 @@ public class WorkbenchDelegate {
 	public Object updateWorkbench(Workbench workbench) {
 		return workbenchService.updateWorkbench(workbench);
 	};
+
 }

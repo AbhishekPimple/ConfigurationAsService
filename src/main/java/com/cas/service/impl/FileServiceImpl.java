@@ -15,270 +15,293 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.cas.dao.FileDao;
 import com.cas.service.FileService;
-import com.sun.org.apache.xerces.internal.impl.xpath.regex.ParseException;
 
 public class FileServiceImpl implements FileService {
-	FileDao fileDao;
 
+    FileDao fileDao;
+    private static final Logger LOGGER = Logger.getLogger(FileServiceImpl.class.getName());
+    public static final int START = 8;
+    public static final int END = 27;
+    public static final int BEGINING = 0;
+    public static final String SCRIPT_HOME = "SCRIPT_HOME";
+    public static final String PASSWD = "password";
+    public static final String HOSTNAME = "hostname";
+    public static final String USERNAME = "username";
+    public static final String SCRIPT_FILE = "launchExpect.sh";
 
-	public FileDao getFileDao() {
-		return fileDao;
-	}
+    public FileDao getFileDao() {
+        return fileDao;
+    }
 
-	public void setFileDao(FileDao fileDao) {
-		this.fileDao = fileDao;
-	}
+    public void setFileDao(FileDao fileDao) {
+        this.fileDao = fileDao;
+    }
 
-	public List<String> getFile(int fileId) {
-		 
-		List<String> fileContent = new ArrayList<String>();
-		Map<String, String> fileData = new HashMap<String, String>();
-		String propertyHome = System.getenv("PROPERTY_HOME");
-		String scriptHome = System.getenv("SCRIPT_HOME");
+    @Override
+    public List<String> getFile(int fileId) {
 
-		String baseFileName = null;
-		try {
-			fileData = fileDao.getFileData(fileId);
-			baseFileName = fileId + "_" + fileData.get("filename");
-		} catch (SQLException e1) {
-			e1.printStackTrace();
-		}
+        List<String> fileContent = new ArrayList<String>();
+        Map<String, String> fileData = new HashMap<String, String>();
+        String propertyHome = System.getenv("PROPERTY_HOME");
+        String scriptHome = System.getenv(SCRIPT_HOME);
 
-		/*
-		 * sh launchExpect.sh parag ubuntu.local root pull /home/parag/abc.txt
-		 * /home/prasad/CAS/
-		 */
-		Timestamp filetimestamp;
+        String baseFileName = null;
+        try {
+            fileData = fileDao.getFileData(fileId);
+            baseFileName = fileId + "_" + fileData.get("filename");
+        } catch (SQLException e1) {
+            LOGGER.log(Level.SEVERE, e1.getMessage(), e1);
 
-		try {
+        }
 
-			String cmd = "sh " + scriptHome + "launchExpect.sh" + " " +scriptHome+" "+fileData.get("username") + " "
-					+ fileData.get("hostname") + " " + fileData.get("password") + " pull" + " "
-					+ fileData.get("configfilepath") + " " + propertyHome;
+        try {
 
-			System.out.println("Get Command is :"+cmd);
-			Process p = Runtime.getRuntime().exec(cmd);
-			p.waitFor();
+            String cmd = "sh " + scriptHome + SCRIPT_FILE + " " + scriptHome + " " + fileData.get(USERNAME) + " "
+                    + fileData.get(HOSTNAME) + " " + fileData.get(PASSWD) + " pull" + " "
+                    + fileData.get("configfilepath") + " " + propertyHome;
 
-			BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));
-			BufferedReader r2 = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+            Process p = Runtime.getRuntime().exec(cmd);
+            p.waitFor();
 
-			while (r.ready()) {
-				String readLine = r.readLine();
-				//System.out.println("success:");
-				System.out.println(readLine);
-				if (readLine.startsWith("Modify: ")) {
-					
-					
-					try {
-						SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-						Date parsedDate = dateFormat.parse(readLine.substring(8, 27));
-						filetimestamp = new java.sql.Timestamp(parsedDate.getTime());
-						fileDao.insertFileTimeStamp(filetimestamp, fileId);
+            BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            BufferedReader r2 = new BufferedReader(new InputStreamReader(p.getErrorStream()));
 
-					} catch (java.text.ParseException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-			}
-			while (r2.ready()) {
-				System.out.println(r2.readLine());
-			}
-			
+            while (r.ready()) {
+                String readLine = r.readLine();
+                if (readLine.startsWith("Modify: ")) {
+                    insertFileStamp(readLine.substring(START, END), fileId);
+                }
+            }
+            while (r2.ready()) {
+                LOGGER.log(Level.ALL, r2.readLine());
+            }
+            r.close();
+            r2.close();
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
 
-		} catch (Throwable t) {
-			t.printStackTrace();
-		}
+        }
 
-		File oldFile = new File(propertyHome + fileData.get("filename"));
-		File newFile = new File(propertyHome + baseFileName);
+        File oldFile = new File(propertyHome + fileData.get("filename"));
+        File newFile = new File(propertyHome + baseFileName);
 
-		oldFile.renameTo(newFile);
+        oldFile.renameTo(newFile);
 
-		fileContent.add(baseFileName);
-		Scanner s = null;
+        fileContent.add(baseFileName);
+        Scanner s = null;
 
-		try {
-			/* File myfile = new File(filename.toURI()); */
-			s = new Scanner(newFile);
-			while (s.hasNextLine()) {
-				fileContent.add(s.nextLine());
-			}
+        try {
 
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} finally {
-			if (s != null) {
-				s.close();
-			}
+            s = new Scanner(newFile);
+            while (s.hasNextLine()) {
+                fileContent.add(s.nextLine());
+            }
 
-		}
+        } catch (FileNotFoundException e) {
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+        } finally {
+            if (s != null) {
+                s.close();
+            }
 
-		return fileContent;
+        }
 
-	}
+        return fileContent;
 
-	public boolean saveFile(String name, String content, String serverId, String isRestart) {
-		 
-		String propertyHome = System.getenv("PROPERTY_HOME");
-		String scriptHome = System.getenv("SCRIPT_HOME");
-		content = content.replaceAll("<br><br>", "\n");
-		content = content.replaceAll("<div>", "");
-		content = content.replaceAll("</div>", "");
-		content = content.replaceAll("<br>", "\n");
-		
-		try{
-			String filename = propertyHome + name;
-			int splitIndex = name.indexOf("_");
-			int fileId = Integer.parseInt(name.substring(0, splitIndex));
-			String oldFileName = name.substring(splitIndex + 1, name.length());
-			File thisFile = new File(filename);
-			File oldFile = new File(propertyHome + oldFileName);
-			thisFile.renameTo(oldFile);
+    }
 
-			try {
+    @Override
+    public boolean saveFile(String name, String content, String serverId, String isRestart) {
 
-				FileWriter fileWriter = new FileWriter(oldFile, false);
-				fileWriter.write(content);
-				fileWriter.close();
+        String newContent = content;
+        String propertyHome = System.getenv("PROPERTY_HOME");
+        String scriptHome = System.getenv(SCRIPT_HOME);
+        Map<String, String> replaceMap = new HashMap<String, String>();
+        replaceMap.put("<br><br>", "\n");
+        replaceMap.put("<div>", "");
+        replaceMap.put("</div>", "");
+        replaceMap.put("<br>", "\n");
 
-				// Scp file to required server
-				/*
-				 * Map<String, String> serverData = fileDao.getServerData(name,
-				 * Integer.parseInt(serverId));
-				 */
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException io) {
-				io.printStackTrace();
-			}
-				Map<String, String> serverData = fileDao.getServerData(fileId, Integer.parseInt(serverId));
-				String remotePath = serverData.get("remotefilepath");
-				remotePath = remotePath.substring(0, remotePath.lastIndexOf("/") + 1);
-				String cmd = "sh " + scriptHome + "launchExpect.sh" + " " + scriptHome+" "+serverData.get("username") + " "
-						+ serverData.get("hostname") + " " + serverData.get("password") + " push" + " " + propertyHome
-						+ oldFileName + " " + remotePath;
+        for (Map.Entry<String, String> entry : replaceMap.entrySet()) {
+            newContent = newContent.replaceAll(entry.getKey(), entry.getValue());
+        }
 
-				Process p = Runtime.getRuntime().exec(cmd);
-				p.waitFor();
+        try {
+            String filename = propertyHome + name;
+            int splitIndex = name.indexOf("_");
+            int fileId = Integer.parseInt(name.substring(BEGINING, splitIndex));
+            String oldFileName = name.substring(splitIndex + 1, name.length());
+            File thisFile = new File(filename);
+            File oldFile = new File(propertyHome + oldFileName);
+            thisFile.renameTo(oldFile);
+            writeDataToFile(oldFile, newContent);
 
-				BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));
-				BufferedReader r2 = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+            Map<String, String> serverData = fileDao.getServerData(fileId, Integer.parseInt(serverId));
+            String remotePath = serverData.get("remotefilepath");
+            remotePath = remotePath.substring(BEGINING, remotePath.lastIndexOf("/") + 1);
+            String cmd = "sh " + scriptHome + SCRIPT_FILE + " " + scriptHome + " " + serverData.get(USERNAME) + " "
+                    + serverData.get(HOSTNAME) + " " + serverData.get(PASSWD) + " push" + " " + propertyHome
+                    + oldFileName + " " + remotePath;
 
-				while (r.ready()) {
-					System.out.println("Success");
-					System.out.println(r.readLine());
-				}
-				while (r2.ready()) {
-					System.out.println("Error!");
-					System.out.println(r2.readLine());
-				}
-				
-				if(isRestart.equals("true")){
-					String restartCommand = "sh " + scriptHome + "launchExpect.sh" + " " + scriptHome+" "+serverData.get("username") + " "
-							+ serverData.get("hostname") + " " + serverData.get("password") + " restart " + serverData.get("restartcommand");
-					
-					System.out.println("Final Restart Command is :"+restartCommand);
-					Process processRestart = Runtime.getRuntime().exec(restartCommand);//new ProcessBuilder(restartCommand, serverData.get("restartcommand")).start();//Runtime.getRuntime().exec(new String[]{restartCommand, serverData.get("restartcommand")});
-					processRestart.waitFor();
+            Process p = Runtime.getRuntime().exec(cmd);
 
-	
-					BufferedReader iStream = new BufferedReader(new InputStreamReader(processRestart.getInputStream()));
-					BufferedReader eStream = new BufferedReader(new InputStreamReader(processRestart.getErrorStream()));
-	
-					while (iStream.ready()) {
-						System.out.println("success");
-						System.out.println(iStream.readLine());
-					}
-					while (eStream.ready()) {
-						System.out.println("Error");
-						System.out.println(eStream.readLine());
-					}
-				
-				}
-				return false;
+            p.waitFor();
 
-		} catch (Throwable t) {
-			t.printStackTrace();
-		}
-		return false;
+            BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            BufferedReader r2 = new BufferedReader(new InputStreamReader(p.getErrorStream()));
 
-	}
+            while (r.ready()) {
+                LOGGER.log(Level.ALL, r.readLine());
+            }
+            while (r2.ready()) {
+                LOGGER.log(Level.ALL, r2.readLine());
+            }
 
-	private boolean checkifModified(String substring, int fileId) {
-		try {
-			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-			Date parsedDate = dateFormat.parse(substring);
-			Timestamp timestamp = new java.sql.Timestamp(parsedDate.getTime());
-			Timestamp firstTimeStamp = fileDao.getRetrievedTimestamp(fileId);
+            if ("true".equals(isRestart)) {
+                String restartCommand = "sh " + scriptHome + SCRIPT_FILE + " " + scriptHome + " "
+                        + serverData.get(USERNAME) + " " + serverData.get(HOSTNAME) + " " + serverData.get(PASSWD)
+                        + " restart ";
 
-			if (timestamp.after(firstTimeStamp)) {
-				return true;
-			}
+                Process processRestart = new ProcessBuilder(restartCommand, serverData.get("restartcommand")).start();
+                processRestart.waitFor();
 
-		} catch (java.text.ParseException e) {
-			e.printStackTrace();
-		}
-		return false;
-	}
+                BufferedReader iStream = new BufferedReader(new InputStreamReader(processRestart.getInputStream()));
+                BufferedReader eStream = new BufferedReader(new InputStreamReader(processRestart.getErrorStream()));
 
-	public boolean checkModified(String name, String content, String serverId) {
-		String propertyHome = System.getenv("PROPERTY_HOME");
-		String scriptHome = System.getenv("SCRIPT_HOME");
-		String filename = propertyHome + name;
-		int splitIndex = name.indexOf("_");
-		int fileId = Integer.parseInt(name.substring(0, splitIndex));
-		String oldFileName = name.substring(splitIndex + 1, name.length());
+                while (iStream.ready()) {
+                    LOGGER.log(Level.ALL, iStream.readLine());
+                }
+                while (eStream.ready()) {
+                    LOGGER.log(Level.ALL, eStream.readLine());
+                }
+                iStream.close();
+                eStream.close();
 
-		
-		boolean isModified = false;
-		Map<String, String> serverData = fileDao.getServerData(fileId, Integer.parseInt(serverId));
+            }
+            r.close();
+            r2.close();
+            return false;
 
-		try {
-			String remotePath = serverData.get("remotefilepath");
-			remotePath = remotePath.substring(0, remotePath.lastIndexOf("/") + 1);
+        } catch (FileNotFoundException e) {
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
 
-			String remotePathCheck = serverData.get("remotefilepath");
+        } catch (IOException e) {
 
-			String checkCommand = "sh " + scriptHome + "launchExpect.sh" + " " + scriptHome+" "+serverData.get("username") + " "
-					+ serverData.get("hostname") + " " + serverData.get("password") + " getModTime" + " "
-					+ remotePathCheck;
-			
-			System.out.println("Modified time script command is :"+checkCommand);
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
 
-			Process checkProc = Runtime.getRuntime().exec(checkCommand);
-			checkProc.waitFor();
+        } catch (InterruptedException e) {
 
-			BufferedReader iStream = new BufferedReader(new InputStreamReader(checkProc.getInputStream()));
-			BufferedReader eStream = new BufferedReader(new InputStreamReader(checkProc.getErrorStream()));
-			
-			while (iStream.ready()) {
-				String readLine = iStream.readLine();
-				if (readLine.startsWith("Modify: ")) {
+            LOGGER.log(Level.SEVERE, e.toString());
 
-					isModified = checkifModified(readLine.substring(8, 27), fileId);
+        }
 
-				}
+        return false;
 
-			}
-			while (eStream.ready()) {
-					System.out.println(eStream.readLine());
-			}
-		} catch (Throwable t) {
-			t.printStackTrace();
-		}
+    }
 
-		return isModified;
-	}
+    public void writeDataToFile(File oldFile, String content) {
+        try {
 
-	public com.cas.model.File addFile(com.cas.model.File file) {
-		 
-		return fileDao.addFile(file);
-	}
+            FileWriter fileWriter = new FileWriter(oldFile, false);
+            fileWriter.write(content);
+            fileWriter.close();
+
+        } catch (FileNotFoundException e) {
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+
+        }
+    }
+
+    public void insertFileStamp(String timestampString, int fileId) {
+        try {
+            Timestamp filetimestamp;
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+            Date parsedDate = dateFormat.parse(timestampString);
+            filetimestamp = new java.sql.Timestamp(parsedDate.getTime());
+            fileDao.insertFileTimeStamp(filetimestamp, fileId);
+
+        } catch (java.text.ParseException e) {
+
+            LOGGER.log(Level.SEVERE, e.toString());
+        }
+    }
+
+    private boolean checkifModified(String substring, int fileId) {
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+            Date parsedDate = dateFormat.parse(substring);
+            Timestamp timestamp = new java.sql.Timestamp(parsedDate.getTime());
+            Timestamp firstTimeStamp = fileDao.getRetrievedTimestamp(fileId);
+
+            if (timestamp.after(firstTimeStamp)) {
+                return true;
+            }
+
+        } catch (java.text.ParseException e) {
+            LOGGER.log(Level.SEVERE, e.toString());
+        }
+        return false;
+    }
+
+    @Override
+    public boolean checkModified(String name, String content, String serverId) {
+
+        String scriptHome = System.getenv(SCRIPT_HOME);
+        int splitIndex = name.indexOf("_");
+        int fileId = Integer.parseInt(name.substring(BEGINING, splitIndex));
+
+        boolean isModified = false;
+        Map<String, String> serverData = fileDao.getServerData(fileId, Integer.parseInt(serverId));
+
+        try {
+
+            String remotePathCheck = serverData.get("remotefilepath");
+
+            String checkCommand = "sh " + scriptHome + SCRIPT_FILE + " " + scriptHome + " " + serverData.get(USERNAME)
+            + " " + serverData.get(HOSTNAME) + " " + serverData.get(PASSWD) + " getModTime" + " "
+            + remotePathCheck;
+
+            Process checkProc = Runtime.getRuntime().exec(checkCommand);
+            checkProc.waitFor();
+
+            BufferedReader iStream = new BufferedReader(new InputStreamReader(checkProc.getInputStream()));
+            BufferedReader eStream = new BufferedReader(new InputStreamReader(checkProc.getErrorStream()));
+
+            while (iStream.ready()) {
+                String readLine = iStream.readLine();
+                if (readLine.startsWith("Modify: ")) {
+
+                    isModified = checkifModified(readLine.substring(START, END), fileId);
+
+                }
+
+            }
+            while (eStream.ready()) {
+                LOGGER.log(Level.ALL, eStream.readLine());
+            }
+            iStream.close();
+            eStream.close();
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+
+        }
+
+        return isModified;
+    }
+
+    @Override
+    public com.cas.model.File addFile(com.cas.model.File file) {
+
+        return fileDao.addFile(file);
+    }
+
 
 }

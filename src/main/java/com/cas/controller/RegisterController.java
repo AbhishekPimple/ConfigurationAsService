@@ -1,7 +1,9 @@
 package com.cas.controller;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,40 +17,42 @@ import com.cas.model.User;
 
 @Controller
 public class RegisterController {
-	@Autowired
-	private RegisterDelegate registerDelegate;
+    @Autowired
+    private RegisterDelegate registerDelegate;
+    private static final Logger LOGGER = Logger.getLogger(RegisterController.class.getName());
+    private static final String REGISTER = "register";
+    @RequestMapping(value = "/register", method = RequestMethod.GET)
+    public ModelAndView displayRegistrationPage() {
+        ModelAndView model = new ModelAndView(REGISTER);
+        User user = new User();
+        model.addObject("user", user);
+        return model;
+    }
 
-	@RequestMapping(value = "/register", method = RequestMethod.GET)
-	public ModelAndView displayRegistrationPage(HttpServletRequest request, HttpServletResponse response) {
-		ModelAndView model = new ModelAndView("register");
-		User user = new User();
-		model.addObject("user", user);
-		return model;
-	}
+    @RequestMapping(value = "/performregister", method = RequestMethod.POST)
+    public ModelAndView performRegistration(HttpServletRequest request,
+            @ModelAttribute("user") User user) {
+        ModelAndView model = null;
+        try {
 
-	@RequestMapping(value = "/performregister", method = RequestMethod.POST)
-	public ModelAndView performRegistration(HttpServletRequest request, HttpServletResponse response,
-			@ModelAttribute("user") User User) {
-		ModelAndView model = null;
-		try {
-			
-			boolean isUserExists = registerDelegate.register(User.getEmailId(), User.getUsername(), User.getPassword());
-			if (!isUserExists) {
-				User user = new User();
-				user.setEmailId(user.getEmailId());
-				model = new ModelAndView("register");
-				request.setAttribute("message", "Succesfully registered!");
-				model.addObject("user", user);
-				
-			} else {
-				model = new ModelAndView("register");
-				request.setAttribute("message", "You have already registered!");
-			}
+            boolean isUserExists = registerDelegate.register(user.getEmailId(), user.getUsername(), user.getPassword());
+            if (!isUserExists) {
+                User userNew = new User();
+                userNew.setEmailId(user.getEmailId());
+                model = new ModelAndView(REGISTER);
+                request.setAttribute("message", "Succesfully registered!");
+                model.addObject("user", userNew);
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+            } else {
+                model = new ModelAndView(REGISTER);
+                request.setAttribute("message", "You have already registered!");
+            }
 
-		return model;
-	}
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE,e.getMessage(),e);
+
+        }
+
+        return model;
+    }
 }

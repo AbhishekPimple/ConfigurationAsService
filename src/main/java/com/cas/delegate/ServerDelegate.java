@@ -4,6 +4,7 @@ import com.cas.model.Server;
 import com.cas.service.ServerService;
 
 public class ServerDelegate {
+
 	
 	ServerService serverService;
 	
@@ -23,4 +24,5 @@ public class ServerDelegate {
 	public Object updateServer(Server server) {
 		return serverService.updateServer(server);
 	}
+
 }

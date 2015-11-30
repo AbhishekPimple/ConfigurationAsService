@@ -1,49 +1,47 @@
 package com.cas.controller;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.cas.delegate.ServerDelegate;
 import com.cas.model.Server;
+import com.fasterxml.jackson.core.JsonParseException;
 
 
 @Controller
 public class ServerController {
-	@Autowired
-	private ServerDelegate serverDelegate;
+    @Autowired
+    private ServerDelegate serverDelegate;
+    private static final Logger LOGGER = Logger.getLogger(ServerController.class.getName());
 
-	@RequestMapping(value = "/server", method = RequestMethod.POST, headers = {"Content-type=application/json"})
-	public @ResponseBody Server createServer(@RequestBody String serverJson) throws JsonParseException, JsonMappingException, IOException {
+    @RequestMapping(value = "/server", method = RequestMethod.POST, headers = {"Content-type=application/json"})
+    @ResponseBody
+    public Server createServer(@RequestBody String serverJson) throws  IOException {
 
-		Server server = new ObjectMapper().readValue(serverJson, Server.class);
+        Server server = new ObjectMapper().readValue(serverJson, Server.class);
 
-		try {
+        try {
 
-			if (serverDelegate.createServer(server) != null) {
-				return server;
-			} else {
-				return null;
-			}
+            if (serverDelegate.createServer(server) != null) {
+                return server;
+            } else {
+                return null;
+            }
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE,e.getMessage(),e);
+        }
+        return null;
 
 	}
 	
@@ -66,4 +64,5 @@ public class ServerController {
 		return null;
 
 	}
+
 }

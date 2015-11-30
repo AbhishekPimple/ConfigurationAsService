@@ -5,20 +5,20 @@ import com.cas.model.Workbench;
 import com.cas.service.WorkbenchService;
 
 public class WorkbenchServiceImpl implements WorkbenchService{
-		WorkbenchDao workbenchDao;
-		
-		public WorkbenchDao getWorkbenchDao() {
-			return workbenchDao;
-		}
+    WorkbenchDao workbenchDao;
 
-		public void setWorkbenchDao(WorkbenchDao workbenchDao) {
-			this.workbenchDao = workbenchDao;
-		}
+    public WorkbenchDao getWorkbenchDao() {
+        return workbenchDao;
+    }
 
-	public Workbench createWorkbench(Workbench workbench, String emailId) {
-		 
-		return workbenchDao.createWorkbench(workbench, emailId);
-	}
+    public void setWorkbenchDao(WorkbenchDao workbenchDao) {
+        this.workbenchDao = workbenchDao;
+    }
+    @Override
+    public Workbench createWorkbench(Workbench workbench, String emailId) {
+
+        return workbenchDao.createWorkbench(workbench, emailId);
+    }
 
 	public Workbench updateWorkbench(Workbench workbench) {
 		return workbenchDao.updateWorkbench(workbench);
