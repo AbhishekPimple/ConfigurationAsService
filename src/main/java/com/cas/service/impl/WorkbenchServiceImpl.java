@@ -20,8 +20,8 @@ public class WorkbenchServiceImpl implements WorkbenchService{
         return workbenchDao.createWorkbench(workbench, emailId);
     }
 
-	public Workbench updateWorkbench(Workbench workbench) {
-		return workbenchDao.updateWorkbench(workbench);
-	}
+    public Workbench updateWorkbench(Workbench workbench) {
+        return workbenchDao.updateWorkbench(workbench);
+    }
 
 }

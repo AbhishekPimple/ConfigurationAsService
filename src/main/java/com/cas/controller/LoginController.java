@@ -39,7 +39,7 @@ public class LoginController {
         try {
             User returnedUser = loginDelegate.isValidUser(user.getEmailId(), user.getPassword());
             if (returnedUser != null) {
-                request.getSession().setAttribute("LOGGEDIN_USER", user);
+                request.getSession().setAttribute("LOGGEDIN_USER", returnedUser);
                 redirectAttributes.addFlashAttribute("loggedInUser", returnedUser.getUsername());
                 return "redirect:/welcome";
             } else {
@@ -54,5 +54,6 @@ public class LoginController {
         return "redirect:/";
 
     }
+
 
 }

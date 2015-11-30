@@ -14,7 +14,7 @@ import com.mysql.jdbc.PreparedStatement;
 public class ServerDaoImpl implements ServerDao {
     DataSource dataSource;
     private static final Logger LOGGER = Logger.getLogger(ServerDaoImpl.class.getName());
-    
+
     private static final int ZERO = 0;
     private static final int ONE = 1;
     private static final int TWO = 2;
@@ -74,16 +74,6 @@ public class ServerDaoImpl implements ServerDao {
             } catch (SQLException e) {
                 LOGGER.log(Level.SEVERE, e.getMessage(), e);
 
-            } finally {
-                if (resultSet != null) {
-                    try {
-                        resultSet.close();
-                    } catch (SQLException e) {
-
-                        LOGGER.log(Level.SEVERE, e.getMessage(), e);
-
-                    }
-                }
             }
 
         }
@@ -92,44 +82,36 @@ public class ServerDaoImpl implements ServerDao {
 
     }
 
+    public Server updateServer(Server server) {
+        int projId = ZERO;
+        projId = Integer.parseInt(server.getProjectId());
+        int servId = ZERO;
+        servId = Integer.parseInt(server.getServerId());
+        if (server != null) {
+            try {
 
-	public Server updateServer(Server server) {
-		//boolean isServerExists = false;
-		PreparedStatement pstmt = null;
-		ResultSet resultSet = null;
-		int proj_id=0;
-		proj_id=Integer.parseInt(server.getProjectId());
-		int serv_id=0;
-		serv_id=Integer.parseInt(server.getServerId());
-		if(server != null){
-			try{
+                String updateTableSQL = "UPDATE server set" + " server_name = ?," + " server_desc = ?,"
+                        + " server_username = ?," + " server_password = ?," + " server_ipaddress = ?,"
+                        + " server_logfile_path = ?," + " server_type = ?," + " server_restart_cmd = ? "
+                        + " where server_id = ?";
+                PreparedStatement preparedStatement = (PreparedStatement) dataSource.getConnection()
+                        .prepareStatement(updateTableSQL);
+                preparedStatement.setString(ONE, server.getServerName());
+                preparedStatement.setString(TWO, server.getServerDesc());
+                preparedStatement.setString(THREE, server.getUsername());
+                preparedStatement.setString(FOUR, server.getPassword());
+                preparedStatement.setString(FIVE, server.getHostIP());
+                preparedStatement.setString(SIX, server.getLogFilePath());
+                preparedStatement.setString(SEVEN, server.getServerType());
+                preparedStatement.setString(EIGHT, server.getRestartCmd());
+                preparedStatement.setInt(NINE, servId);
 
-				String updateTableSQL = "UPDATE server set"
-						+ " server_name = ?," +" server_desc = ?,"+ " server_username = ?," + " server_password = ?," + " server_ipaddress = ?," 
-						+ " server_logfile_path = ?," + " server_type = ?," + " server_restart_cmd = ? "
-						+ " where server_id = ?" ;
-				System.out.println(updateTableSQL);
-				PreparedStatement preparedStatement = (PreparedStatement) dataSource.getConnection().prepareStatement(updateTableSQL);
-				preparedStatement.setString(1, server.getServerName());
-				preparedStatement.setString(2, server.getServerDesc());
-				preparedStatement.setString(3, server.getUsername());
-				preparedStatement.setString(4, server.getPassword());
-				preparedStatement.setString(5, server.getHostIP());
-				preparedStatement.setString(6, server.getLogFilePath());
-				preparedStatement.setString(7, server.getServerType());
-				preparedStatement.setString(8, server.getRestartCmd());
-				preparedStatement.setInt(9, serv_id);
-
-				preparedStatement .executeUpdate();
-				return server;
-			}
-
-			catch(SQLException e){
-				e.printStackTrace();
-			}
-		}
-		return null;
-	}
+                preparedStatement.executeUpdate();
+                return server;
+            } catch (SQLException e) {
+                LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            }
+        }
+        return null;
+    }
 }
-
-

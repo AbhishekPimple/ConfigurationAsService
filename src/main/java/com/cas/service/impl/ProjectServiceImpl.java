@@ -22,12 +22,12 @@ public class ProjectServiceImpl implements ProjectService{
         return projectDao.createProject(project);
     }
 
-	public Project updateProject(Project project) {
-		return projectDao.updateProject(project);
-	}
+    public Project updateProject(Project project) {
+        return projectDao.updateProject(project);
+    }
 
-	public Project deleteProject(Project project) {
-		return projectDao.deleteProject(project);
-	}
+    public Project deleteProject(Project project) {
+        return projectDao.deleteProject(project);
+    }
 
 }

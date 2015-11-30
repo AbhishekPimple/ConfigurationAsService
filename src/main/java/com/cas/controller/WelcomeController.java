@@ -24,9 +24,11 @@ public class WelcomeController {
     private static final Logger LOGGER = Logger.getLogger(WelcomeController.class.getName());
 
     @RequestMapping(value = "/welcome", method = RequestMethod.GET)
-    public ModelAndView displayHomepage() {
-         
-        return new ModelAndView("welcomepage");
+    public ModelAndView displayHomepage(HttpServletRequest request) {
+        ModelAndView model = new ModelAndView("welcomepage");
+        User user = (User) request.getSession().getAttribute("LOGGEDIN_USER");
+        model.addObject("loggedInUser", user.getUsername());
+        return model;
     }
 
     @RequestMapping(value = "/loadProfile", method = RequestMethod.POST)

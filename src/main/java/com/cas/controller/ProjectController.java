@@ -55,46 +55,48 @@ public class ProjectController {
         return null;
 
 
-	}
-	
-	@RequestMapping(value = "/projectupdate", method = RequestMethod.POST, headers = {"Content-type=application/json"})
-	public @ResponseBody Project updateProject(@RequestBody String projectJson) throws JsonParseException, JsonMappingException, IOException {
+    }
 
-		Project project = new ObjectMapper().readValue(projectJson, Project.class);
+    @RequestMapping(value = "/projectupdate", method = RequestMethod.POST, headers = {"Content-type=application/json"})
+    @ResponseBody
+    public  Project updateProject(@RequestBody String projectJson) throws IOException {
 
-		try {
+        Project project = new ObjectMapper().readValue(projectJson, Project.class);
 
-			if (projectDelegate.updateProject(project) != null) {
-				return project;
-			} else {
-				return null;
-			}
+        try {
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
+            if (projectDelegate.updateProject(project) != null) {
+                return project;
+            } else {
+                return null;
+            }
 
-	}
-	
-	@RequestMapping(value = "/projectdelete", method = RequestMethod.POST, headers = {"Content-type=application/json"})
-	public @ResponseBody Project deleteProject(@RequestBody String projectJson) throws JsonParseException, JsonMappingException, IOException {
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE,e.getMessage(),e);
+        }
+        return null;
 
-		Project project = new ObjectMapper().readValue(projectJson, Project.class);
+    }
 
-		try {
+    @RequestMapping(value = "/projectdelete", method = RequestMethod.POST, headers = {"Content-type=application/json"})
+    @ResponseBody
+    public  Project deleteProject(@RequestBody String projectJson) throws IOException {
 
-			if (projectDelegate.deleteProject(project) != null) {
-				return project;
-			} else {
-				return null;
-			}
+        Project project = new ObjectMapper().readValue(projectJson, Project.class);
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
+        try {
 
-	}
+            if (projectDelegate.deleteProject(project) != null) {
+                return project;
+            } else {
+                return null;
+            }
+
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE,e.getMessage(),e);
+        }
+        return null;
+
+    }
 
 }

@@ -73,64 +73,51 @@ public class ProjectDaoImpl implements ProjectDao {
         return null;
     }
 
-	public Project updateProject(Project project) {
-		//boolean isProjectExists = false;
-		PreparedStatement pstmt = null;
-		ResultSet resultSet = null;
+    public Project updateProject(Project project) {
 
-		int proj_id=0;
-		proj_id=Integer.parseInt(project.getProjectId());
-		if(project != null){
-			try{
+        int projId = ZERO;
+        projId = Integer.parseInt(project.getProjectId());
+        if (project != null) {
+            try {
 
-				String updateTableSQL = "UPDATE project set"
-						+ " project_name = ?," +" project_desc = ?"
-						+ " where project_id = ?" ;
-				System.out.println(updateTableSQL);
-				PreparedStatement preparedStatement = (PreparedStatement) dataSource.getConnection().prepareStatement(updateTableSQL);
-				preparedStatement.setString(1, project.getProjectName());
-				preparedStatement.setString(2, project.getProjectDesc());
-				preparedStatement.setInt(3, proj_id);
-				System.out.println(preparedStatement);
+                String updateTableSQL = "UPDATE project set" + " project_name = ?," + " project_desc = ?"
+                        + " where project_id = ?";
 
-				preparedStatement .executeUpdate();
-				return project;
-			}
+                PreparedStatement preparedStatement = (PreparedStatement) dataSource.getConnection()
+                        .prepareStatement(updateTableSQL);
+                preparedStatement.setString(ONE, project.getProjectName());
+                preparedStatement.setString(TWO, project.getProjectDesc());
+                preparedStatement.setInt(THREE, projId);
 
-			catch(SQLException e){
-				e.printStackTrace();
-			}
-		}
-		return null;
-	}
-	
-	public Project deleteProject(Project project) {
-		//boolean isProjectExists = false;
-		PreparedStatement pstmt = null;
-		ResultSet resultSet = null;
+                preparedStatement.executeUpdate();
+                return project;
+            }catch (SQLException e) {
+                LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            }
+        }
+        return null;
+    }
 
-		int proj_id=0;
-		proj_id=Integer.parseInt(project.getProjectId());
-		if(project != null){
-			try{
+    public Project deleteProject(Project project) {
+        int projId = ZERO;
+        projId = Integer.parseInt(project.getProjectId());
+        if (project != null) {
+            try {
 
-				String deleteTableSQL = "delete from project where project_id= ?";
+                String deleteTableSQL = "delete from project where project_id= ?";
 
-				System.out.println(deleteTableSQL);
-				PreparedStatement preparedStatement = (PreparedStatement) dataSource.getConnection().prepareStatement(deleteTableSQL);
+                PreparedStatement preparedStatement = (PreparedStatement) dataSource.getConnection()
+                        .prepareStatement(deleteTableSQL);
 
-				preparedStatement.setInt(1, proj_id);
-				System.out.println(preparedStatement);
+                preparedStatement.setInt(ONE, projId);
 
-				preparedStatement .executeUpdate();
-				return project;
-			}
-
-			catch(SQLException e){
-				e.printStackTrace();
-			}
-		}
-		return null;
-	}
+                preparedStatement.executeUpdate();
+                return project;
+            }catch (SQLException e) {
+                LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            }
+        }
+        return null;
+    }
 
 }
