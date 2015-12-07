@@ -15,24 +15,24 @@ import com.cas.dao.FileDao;
 import com.cas.model.File;
 
 public class FileDaoImpl implements FileDao {
-    DataSource dataSource;
-    private static final Logger LOGGER = Logger.getLogger(FileDaoImpl.class.getName());
+	DataSource dataSource;
+	private static final Logger LOGGER = Logger.getLogger(FileDaoImpl.class.getName());
 
-    private static final int ZERO = 0;
-    private static final int ONE = 1;
-    private static final int TWO = 2;
-    private static final int THREE = 3;
-    private static final int FOUR = 4;
- 
-    public DataSource getDataSource() {
-        return dataSource;
-    }
+	private static final int ZERO = 0;
+	private static final int ONE = 1;
+	private static final int TWO = 2;
+	private static final int THREE = 3;
+	private static final int FOUR = 4;
 
-    public void setDataSource(DataSource dataSource) {
-        this.dataSource = dataSource;
-    }
-    
-    @Override
+	public DataSource getDataSource() {
+		return dataSource;
+	}
+
+	public void setDataSource(DataSource dataSource) {
+		this.dataSource = dataSource;
+	}
+
+
     public File addFile(File file) {
 
         boolean isFileExists = false;
@@ -87,104 +87,104 @@ public class FileDaoImpl implements FileDao {
         return null;
     }
 
-    @Override
-    public Map<String, String> getFileData(int fileId) throws SQLException {
+	@Override
+	public Map<String, String> getFileData(int fileId) throws SQLException {
 
-        Map<String, String> fileData = new HashMap<String, String>();
-        String query = "Select * from config where config_id=?";
-        PreparedStatement pstmt = dataSource.getConnection().prepareStatement(query);
-        pstmt.setInt(ONE, fileId);
-        ResultSet resultSet = pstmt.executeQuery();
-        if (resultSet.next()) {
+		Map<String, String> fileData = new HashMap<String, String>();
+		String query = "Select * from config where config_id=?";
+		PreparedStatement pstmt = dataSource.getConnection().prepareStatement(query);
+		pstmt.setInt(ONE, fileId);
+		ResultSet resultSet = pstmt.executeQuery();
+		if (resultSet.next()) {
 
-            fileData.put("configfilepath", resultSet.getString("config_file_path"));
-            fileData.put("serverid", resultSet.getString("server_id"));
-        }
+			fileData.put("configfilepath", resultSet.getString("config_file_path"));
+			fileData.put("serverid", resultSet.getString("server_id"));
+		}
 
-        String filePath = fileData.get("configfilepath");
-        String fileName = filePath.substring(filePath.lastIndexOf("/") + ONE, filePath.length());
-        fileData.put("filename", fileName);
+		String filePath = fileData.get("configfilepath");
+		String fileName = filePath.substring(filePath.lastIndexOf("/") + ONE, filePath.length());
+		fileData.put("filename", fileName);
 
-        int serverId = Integer.parseInt(fileData.get("serverid"));
+		int serverId = Integer.parseInt(fileData.get("serverid"));
 
-        String query1 = "Select * from server where server_id=?";
-        PreparedStatement pstmt1 = dataSource.getConnection().prepareStatement(query1);
-        pstmt1.setInt(ONE, serverId);
-        ResultSet resultSet1 = pstmt1.executeQuery();
-        if (resultSet1.next()) {
-            fileData.put("username", resultSet1.getString("server_username"));
-            fileData.put("hostname", resultSet1.getString("server_ipaddress"));
-            fileData.put("password", resultSet1.getString("server_password"));
-        }
+		String query1 = "Select * from server where server_id=?";
+		PreparedStatement pstmt1 = dataSource.getConnection().prepareStatement(query1);
+		pstmt1.setInt(ONE, serverId);
+		ResultSet resultSet1 = pstmt1.executeQuery();
+		if (resultSet1.next()) {
+			fileData.put("username", resultSet1.getString("server_username"));
+			fileData.put("hostname", resultSet1.getString("server_ipaddress"));
+			fileData.put("password", resultSet1.getString("server_password"));
+		}
 
-        return fileData;
-    }
+		return fileData;
+	}
 
-    @Override
-    public Map<String, String> getServerData(int fileId, int serverId) {
+	@Override
+	public Map<String, String> getServerData(int fileId, int serverId) {
 
-        Map<String, String> serverData = new HashMap<String, String>();
+		Map<String, String> serverData = new HashMap<String, String>();
 
-        try {
-            String query = "Select * from config where config_id=?";
-            PreparedStatement pstmt = dataSource.getConnection().prepareStatement(query);
-            pstmt.setInt(ONE, fileId);
-            ResultSet resultSet = pstmt.executeQuery();
-            if (resultSet.next()) {
-                serverData.put("remotefilepath", resultSet.getString("config_file_path"));
-            }
+		try {
+			String query = "Select * from config where config_id=?";
+			PreparedStatement pstmt = dataSource.getConnection().prepareStatement(query);
+			pstmt.setInt(ONE, fileId);
+			ResultSet resultSet = pstmt.executeQuery();
+			if (resultSet.next()) {
+				serverData.put("remotefilepath", resultSet.getString("config_file_path"));
+			}
 
-            String query1 = "Select * from server where server_id=?";
-            PreparedStatement pstmt1 = dataSource.getConnection().prepareStatement(query1);
-            pstmt1.setInt(ONE, serverId);
-            ResultSet resultSet1 = pstmt1.executeQuery();
-            if (resultSet1.next()) {
-                serverData.put("username", resultSet1.getString("server_username"));
-                serverData.put("hostname", resultSet1.getString("server_ipaddress"));
-                serverData.put("password", resultSet1.getString("server_password"));
-                String serverRestartCommand = "\"" + resultSet1.getString("server_restart_cmd") + "\"";
-                serverData.put("restartcommand", serverRestartCommand);
-            }
-        } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, e.getMessage(), e);
-        }
+			String query1 = "Select * from server where server_id=?";
+			PreparedStatement pstmt1 = dataSource.getConnection().prepareStatement(query1);
+			pstmt1.setInt(ONE, serverId);
+			ResultSet resultSet1 = pstmt1.executeQuery();
+			if (resultSet1.next()) {
+				serverData.put("username", resultSet1.getString("server_username"));
+				serverData.put("hostname", resultSet1.getString("server_ipaddress"));
+				serverData.put("password", resultSet1.getString("server_password"));
+				String serverRestartCommand = "\"" + resultSet1.getString("server_restart_cmd") + "\"";
+				serverData.put("restartcommand", serverRestartCommand);
+			}
+		} catch (SQLException e) {
+			LOGGER.log(Level.SEVERE, e.getMessage(), e);
+		}
 
-        return serverData;
-    }
-
-
-    @Override
-    public Timestamp getRetrievedTimestamp(int fileId) {
-        Timestamp tStamp = null;
-        try {
-            String query = "Select * from fileoperations where config_id=?";
-            PreparedStatement pstmt = dataSource.getConnection().prepareStatement(query);
-            pstmt.setInt(ONE, fileId);
-            ResultSet resultSet = pstmt.executeQuery();
-            if (resultSet.next()) {
-                tStamp = resultSet.getTimestamp("retrieved_at");
-            }
-        } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, e.getMessage(), e);
-        }
-        return tStamp;
-    }
+		return serverData;
+	}
 
 
-    @Override
-    public void insertFileTimeStamp(Timestamp timestamp, int fileId) {
+	@Override
+	public Timestamp getRetrievedTimestamp(int fileId) {
+		Timestamp tStamp = null;
+		try {
+			String query = "Select * from fileoperations where config_id=?";
+			PreparedStatement pstmt = dataSource.getConnection().prepareStatement(query);
+			pstmt.setInt(ONE, fileId);
+			ResultSet resultSet = pstmt.executeQuery();
+			if (resultSet.next()) {
+				tStamp = resultSet.getTimestamp("retrieved_at");
+			}
+		} catch (SQLException e) {
+			LOGGER.log(Level.SEVERE, e.getMessage(), e);
+		}
+		return tStamp;
+	}
 
-        try {
-            String insertTableSQL = "INSERT INTO fileoperations" + "(config_id, retrieved_at) VALUES"
-                    + "(?,?) ON DUPLICATE KEY UPDATE retrieved_at=values(retrieved_at)";
-            PreparedStatement preparedStatement = dataSource.getConnection().prepareStatement(insertTableSQL);
-            preparedStatement.setInt(ONE, fileId);
-            preparedStatement.setTimestamp(TWO, timestamp);
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, e.getMessage(), e);
-        }
 
-    }
+	@Override
+	public void insertFileTimeStamp(Timestamp timestamp, int fileId) {
+
+		try {
+			String insertTableSQL = "INSERT INTO fileoperations" + "(config_id, retrieved_at) VALUES"
+					+ "(?,?) ON DUPLICATE KEY UPDATE retrieved_at=values(retrieved_at)";
+			PreparedStatement preparedStatement = dataSource.getConnection().prepareStatement(insertTableSQL);
+			preparedStatement.setInt(ONE, fileId);
+			preparedStatement.setTimestamp(TWO, timestamp);
+			preparedStatement.executeUpdate();
+		} catch (SQLException e) {
+			LOGGER.log(Level.SEVERE, e.getMessage(), e);
+		}
+
+	}
 
 }

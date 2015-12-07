@@ -45,11 +45,22 @@ $(document).ready(
 				}
 			});
 
-
+/*			$("#treeview-left").kendoTreeView({
+				  template: "#= item.text # color:#: item.color #",
+				  dataSource: [
+				    { text: "green", color: "green", items: [
+				      { text: "yellow", color: "yellow" },
+				      { text: "red", color: "red" }
+				    ]},{
+				    text: "blue", color: "blue"
+				    }
+				  ]
+				});*/
 
 
 
 			var tree = $("#treeview-left").kendoTreeView({
+				
 				dataSource : inlineDefault,
 				dataTextField : "id",
 				select : function(event) {
