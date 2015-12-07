@@ -11,7 +11,7 @@ set destination_dir [lindex $argv 5]
 match_max 100000
 
 set prompt "#|>|\\$"
-log_user 0
+#log_user 0
 
 switch -glob $cmd {
 ssh { spawn "$cmd" "$user@$ip" }                                               

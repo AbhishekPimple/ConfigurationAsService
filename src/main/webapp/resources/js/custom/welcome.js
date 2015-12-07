@@ -82,14 +82,14 @@ $(document).ready(
 					if(level==4) {
 						//console.log("fileID", child);
 						var fileId=parseInt(child.ConfigID,10);
-						var fileWindow = window.open("http://localhost:8080/ConfigAsService/getfile?fileid="+fileId, null, null, null);
+						var fileWindow = window.open("http://71.186.217.29:8080/ConfigAsService/getfile?fileid="+fileId, null, null, null);
 						fileWindow.servers = servers;
 						//console.log("Sending to showfile window", servers);
 					} else if(level==3) {
 						var tab = $("#tserver");
 						$("#tabstrip").data("kendoTabStrip").select(tab.index());
 						$("#updateserverbutton").show();
-						$("#deleteserverbutton").show();
+						//$("#deleteserverbutton").show();
 						$("#createserverbutton").hide();
 						
 						//console.log("index", tab.index());
@@ -115,7 +115,7 @@ $(document).ready(
 						var tab = $("#tproject");
 						$("#tabstrip").data("kendoTabStrip").select(tab.index());
 						$("#updateprojectbutton").show();
-						$("#deleteprojectbutton").show();
+						//$("#deleteprojectbutton").show();
 						$("#createprojectbutton").hide();
 						
 						
@@ -135,7 +135,7 @@ $(document).ready(
 						var tab = $("#tworkbench");
 						$("#tabstrip").data("kendoTabStrip").select(tab.index());
 						$("#updateworkbenchbutton").show();
-						$("#deleteworkbenchbutton").show();
+						//$("#deleteworkbenchbutton").show();
 						$("#createworkbenchbutton").hide();
 						
 						

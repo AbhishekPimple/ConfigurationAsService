@@ -42,6 +42,40 @@ public class FileServiceImpl implements FileService {
         this.fileDao = fileDao;
     }
 
+    public static void utilityReadInputStream(BufferedReader br, int fileId) {
+        try {
+            FileServiceImpl fileServiceImpl = new FileServiceImpl();
+            while (br.ready()) {
+                String readLine = br.readLine();
+                if (readLine.startsWith("Modify: ")) {
+                    fileServiceImpl.insertFileStamp(readLine.substring(START, END), fileId);
+                }
+                LOGGER.log(Level.ALL, readLine);
+            }
+            br.close();
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+        }
+    }
+
+    public static boolean utilityCheckIfModified(BufferedReader br, int fileId) {
+        boolean isModified = false;
+        try {
+            FileServiceImpl fileServiceImpl = new FileServiceImpl();
+            while (br.ready()) {
+                String readLine = br.readLine();
+                if (readLine.startsWith("Modify: ")) {
+                    isModified = fileServiceImpl.checkifModified(readLine.substring(START, END), fileId);
+                }
+                LOGGER.log(Level.ALL, readLine);
+            }
+            br.close();
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+        }
+        return isModified;
+    }
+
     @Override
     public List<String> getFile(int fileId) {
 
@@ -49,17 +83,11 @@ public class FileServiceImpl implements FileService {
         Map<String, String> fileData = new HashMap<String, String>();
         String propertyHome = System.getenv("PROPERTY_HOME");
         String scriptHome = System.getenv(SCRIPT_HOME);
-
+        Scanner s = null;
         String baseFileName = null;
         try {
             fileData = fileDao.getFileData(fileId);
             baseFileName = fileId + "_" + fileData.get("filename");
-        } catch (SQLException e1) {
-            LOGGER.log(Level.SEVERE, e1.getMessage(), e1);
-
-        }
-
-        try {
 
             String cmd = "sh " + scriptHome + SCRIPT_FILE + " " + scriptHome + " " + fileData.get(USERNAME) + " "
                     + fileData.get(HOSTNAME) + " " + fileData.get(PASSWD) + " pull" + " "
@@ -71,46 +99,34 @@ public class FileServiceImpl implements FileService {
             BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));
             BufferedReader r2 = new BufferedReader(new InputStreamReader(p.getErrorStream()));
 
-            while (r.ready()) {
-                String readLine = r.readLine();
-                if (readLine.startsWith("Modify: ")) {
-                    insertFileStamp(readLine.substring(START, END), fileId);
-                }
-            }
-            while (r2.ready()) {
-                LOGGER.log(Level.ALL, r2.readLine());
-            }
-            r.close();
-            r2.close();
-        } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            utilityReadInputStream(r, fileId);
+            utilityReadInputStream(r2, 0);
 
-        }
+            File oldFile = new File(propertyHome + fileData.get("filename"));
+            File newFile = new File(propertyHome + baseFileName);
 
-        File oldFile = new File(propertyHome + fileData.get("filename"));
-        File newFile = new File(propertyHome + baseFileName);
+            oldFile.renameTo(newFile);
 
-        oldFile.renameTo(newFile);
-
-        fileContent.add(baseFileName);
-        Scanner s = null;
-
-        try {
+            fileContent.add(baseFileName);
 
             s = new Scanner(newFile);
             while (s.hasNextLine()) {
                 fileContent.add(s.nextLine());
             }
 
+        } catch (SQLException e1) {
+            LOGGER.log(Level.SEVERE, e1.getMessage(), e1);
         } catch (FileNotFoundException e) {
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+        } catch (InterruptedException e) {
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+        } catch (IOException e) {
             LOGGER.log(Level.SEVERE, e.getMessage(), e);
         } finally {
             if (s != null) {
                 s.close();
             }
-
         }
-
         return fileContent;
 
     }
@@ -154,37 +170,11 @@ public class FileServiceImpl implements FileService {
 
             BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));
             BufferedReader r2 = new BufferedReader(new InputStreamReader(p.getErrorStream()));
-
-            while (r.ready()) {
-                LOGGER.log(Level.ALL, r.readLine());
-            }
-            while (r2.ready()) {
-                LOGGER.log(Level.ALL, r2.readLine());
-            }
-
+            utilityReadInputStream(r, 0);
+            utilityReadInputStream(r2, 0);
             if ("true".equals(isRestart)) {
-                String restartCommand = "sh " + scriptHome + SCRIPT_FILE + " " + scriptHome + " "
-                        + serverData.get(USERNAME) + " " + serverData.get(HOSTNAME) + " " + serverData.get(PASSWD)
-                        + " restart ";
-
-                Process processRestart = new ProcessBuilder(restartCommand, serverData.get("restartcommand")).start();
-                processRestart.waitFor();
-
-                BufferedReader iStream = new BufferedReader(new InputStreamReader(processRestart.getInputStream()));
-                BufferedReader eStream = new BufferedReader(new InputStreamReader(processRestart.getErrorStream()));
-
-                while (iStream.ready()) {
-                    LOGGER.log(Level.ALL, iStream.readLine());
-                }
-                while (eStream.ready()) {
-                    LOGGER.log(Level.ALL, eStream.readLine());
-                }
-                iStream.close();
-                eStream.close();
-
+                performRestartFunctionality(scriptHome, serverData);
             }
-            r.close();
-            r2.close();
             return false;
 
         } catch (FileNotFoundException e) {
@@ -203,7 +193,30 @@ public class FileServiceImpl implements FileService {
         return false;
 
     }
+    
+    
+    public void performRestartFunctionality(String scriptHome, Map<String, String> serverData){
+        String restartCommand = "sh " + scriptHome + SCRIPT_FILE + " " + scriptHome + " "
+                + serverData.get(USERNAME) + " " + serverData.get(HOSTNAME) + " " + serverData.get(PASSWD)
+                + " restart ";
 
+        Process processRestart = null;
+        try {
+            processRestart = new ProcessBuilder(restartCommand, serverData.get("restartcommand")).start();
+            processRestart.waitFor();
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, e.toString());
+        } catch (InterruptedException e) {
+            LOGGER.log(Level.SEVERE, e.toString());
+        }
+        
+
+        BufferedReader iStream = new BufferedReader(new InputStreamReader(processRestart.getInputStream()));
+        BufferedReader eStream = new BufferedReader(new InputStreamReader(processRestart.getErrorStream()));
+        utilityReadInputStream(iStream, 0);
+        utilityReadInputStream(eStream, 0);
+    }
+    
     public void writeDataToFile(File oldFile, String content) {
         try {
 
@@ -266,29 +279,16 @@ public class FileServiceImpl implements FileService {
             String remotePathCheck = serverData.get("remotefilepath");
 
             String checkCommand = "sh " + scriptHome + SCRIPT_FILE + " " + scriptHome + " " + serverData.get(USERNAME)
-            + " " + serverData.get(HOSTNAME) + " " + serverData.get(PASSWD) + " getModTime" + " "
-            + remotePathCheck;
+                    + " " + serverData.get(HOSTNAME) + " " + serverData.get(PASSWD) + " getModTime" + " "
+                    + remotePathCheck;
 
             Process checkProc = Runtime.getRuntime().exec(checkCommand);
             checkProc.waitFor();
 
             BufferedReader iStream = new BufferedReader(new InputStreamReader(checkProc.getInputStream()));
             BufferedReader eStream = new BufferedReader(new InputStreamReader(checkProc.getErrorStream()));
-
-            while (iStream.ready()) {
-                String readLine = iStream.readLine();
-                if (readLine.startsWith("Modify: ")) {
-
-                    isModified = checkifModified(readLine.substring(START, END), fileId);
-
-                }
-
-            }
-            while (eStream.ready()) {
-                LOGGER.log(Level.ALL, eStream.readLine());
-            }
-            iStream.close();
-            eStream.close();
+            isModified = utilityCheckIfModified(iStream, fileId);
+            utilityReadInputStream(eStream, 0);
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, e.getMessage(), e);
 
@@ -302,6 +302,5 @@ public class FileServiceImpl implements FileService {
 
         return fileDao.addFile(file);
     }
-
 
 }

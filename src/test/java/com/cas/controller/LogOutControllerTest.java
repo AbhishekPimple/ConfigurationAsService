@@ -69,8 +69,8 @@ public class LogOutControllerTest {
             
     }
     
-    /* Ref:http://stackoverflow.com/questions/17834034/spring-mockmvc-redirectedurl-with-pattern */    
-    
+    /* Ref:http://stackoverflow.com/questions/17834034/spring-mockmvc-redirectedurl-with-pattern     
+*/    
     private static ResultMatcher redirectedUrlPattern(final String expectedUrlPattern) {
         return new ResultMatcher() {
             public void match(MvcResult result) {
