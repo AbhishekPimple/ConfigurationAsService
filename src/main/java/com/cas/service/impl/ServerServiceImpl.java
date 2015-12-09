@@ -21,8 +21,13 @@ public class ServerServiceImpl implements ServerService{
         return serverDao.createServer(server);
     }
 
-	public Server updateServer(Server server) {
-		return serverDao.updateServer(server);
+    public Server updateServer(Server server) {
+        return serverDao.updateServer(server);
+    }
+
+	@Override
+	public Server deleteServer(Server server) {
+		return serverDao.deleteServer(server);
 	}
 
 }

@@ -1,15 +1,16 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
-<%@include file="springtabinclude.jsp"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 <%@taglib prefix="welcome" tagdir="/WEB-INF/tags"%>
 
 
 <welcome:loginheader />
-<a href="/ConfigAsService">Login Page</a>
+<a style="color: #3f51b5; font-size:medium;" href="/ConfigAsService">Login Page</a>
 
-<h3 align="center">Registration Page</h3>
-<h4>${message}</h4>
+<center>
+<h3 style="color: red">${message}</h3>
+</center>
 <script>
 	function validateForm() {
 		var emailid = document.forms["registerForm"]["emailid"].value;
@@ -38,26 +39,32 @@
 		}
 	}
 </script>
+
+<br>
+<br>
+<br>
+<br>
+<center>
 <form:form id="registerForm" action="performregister"
 	onsubmit="return validateForm()" method="POST" modelAttribute="user">
 	<ul class="fieldlist">
 
-		<li><label for="emailid">Email ID*</label> <form:input
-				id="emailid" type="text" class="k-textbox" style="width: 100%;"
+		<li> <form:input
+				id="emailid" type="text" placeholder="Email ID" class="k-textbox" style="width: 30%;"
 				path="emailId" /></li>
-		<li><label for="username">Username*</label> <form:input
-				id="username" type="text" class="k-textbox" style="width: 100%;"
+		<li> <form:input
+				id="username" type="text" placeholder="Name" class="k-textbox" style="width: 30%;"
 				path="username" /></li>
-		<li><label for="password">Password*</label> <form:input
-				id="password" type="password" class="k-textbox" style="width: 100%;"
+		<li><form:input
+				id="password" type="password" placeholder="Password" class="k-textbox" style="width: 30%;"
 				path="password" /></li>
-		<li><label for="confirmpassword">Confirm Password*</label> <input
-			id="confirmpassword" type="password" class="k-textbox"
-			style="width: 100%;" /></li>
+		<li><input
+			id="confirmpassword" placeholder="Confirm Password" type="password" class="k-textbox"
+			style="width: 30%;" /></li>
 		<li><input type="submit" class="k-button k-primary"
-			value="Register" /></li>
+			value="Register Me" /></li>
 	</ul>
 </form:form>
-
+</center>
 
 <welcome:footer />

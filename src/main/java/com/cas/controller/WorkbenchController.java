@@ -49,24 +49,46 @@ public class WorkbenchController {
         return null;
 
     }
-	@RequestMapping(value = "/workbenchupdate", method = RequestMethod.POST, headers = {"Content-type=application/json"})
-	public @ResponseBody Workbench updateWorkbench(@RequestBody String workbenchJson) throws JsonParseException, JsonMappingException, IOException {
+    @RequestMapping(value = "/workbenchupdate", method = RequestMethod.POST, headers = {"Content-type=application/json"})
+    @ResponseBody
+    public  Workbench updateWorkbench(@RequestBody String workbenchJson) throws IOException {
 
-		Workbench workbench = new ObjectMapper().readValue(workbenchJson, Workbench.class);
+        Workbench workbench = new ObjectMapper().readValue(workbenchJson, Workbench.class);
 
-		try {
+        try {
 
-			if (workbenchDelegate.updateWorkbench(workbench) != null) {
-				return workbench;
-			} else {
-				return null;
-			}
+            if (workbenchDelegate.updateWorkbench(workbench) != null) {
+                return workbench;
+            } else {
+                return null;
+            }
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE,e.getMessage(),e);
+        }
+        return null;
 
-	}
+    }
+    
+    @RequestMapping(value = "/workbenchdelete", method = RequestMethod.POST, headers = {"Content-type=application/json"})
+    @ResponseBody
+    public  Workbench deleteWorkbench(@RequestBody String workbenchJson) throws IOException {
+
+        Workbench workbench = new ObjectMapper().readValue(workbenchJson, Workbench.class);
+
+        try {
+
+            if (workbenchDelegate.deleteWorkbench(workbench) != null) {
+                return workbench;
+            } else {
+                return null;
+            }
+
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE,e.getMessage(),e);
+        }
+        return null;
+
+    }
 
 }

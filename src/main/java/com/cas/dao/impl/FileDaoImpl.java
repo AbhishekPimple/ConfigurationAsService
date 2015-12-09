@@ -32,60 +32,60 @@ public class FileDaoImpl implements FileDao {
 		this.dataSource = dataSource;
 	}
 
+	@Override
+	public File addFile(File file) {
 
-    public File addFile(File file) {
+		boolean isFileExists = false;
+		PreparedStatement pstmt = null;
+		ResultSet resultSet = null;
+		if (file != null) {
+			try {
 
-        boolean isFileExists = false;
-        PreparedStatement pstmt = null;
-        ResultSet resultSet = null;
-        if (file != null) {
-            try {
+				for (int i = ZERO; i < file.getServerId().length; i++) {
+					int serverId = Integer.parseInt(file.getServerId()[i]);
 
-                for (int i = ZERO; i < file.getServerId().length; i++) {
-                    int serverId = Integer.parseInt(file.getServerId()[i]);
+					String query = "Select count(1) from config where config_file_path = ? and server_id = ?";
+					pstmt = dataSource.getConnection().prepareStatement(query);
+					pstmt.setString(ONE, file.getFilePath());
+					pstmt.setInt(TWO, serverId);
+					resultSet = pstmt.executeQuery();
+					if (resultSet.next()) {
+						isFileExists = resultSet.getInt(ONE) > ZERO;
+					}
+					if (isFileExists) {
+						return null;
+					}
+					if (!(resultSet.getInt(ONE) > ZERO)) {
+						String insertTableSQL = "INSERT INTO config"
+								+ "(config_name, config_desc,config_file_path,server_id) VALUES" + "(?,?,?,?)";
+						PreparedStatement preparedStatement = dataSource.getConnection()
+								.prepareStatement(insertTableSQL);
+						preparedStatement.setString(ONE, file.getFileName());
+						preparedStatement.setString(TWO, file.getFileDesc());
+						preparedStatement.setString(THREE, file.getFilePath());
+						preparedStatement.setInt(FOUR, serverId);
+						preparedStatement.executeUpdate();
 
-                    String query = "Select count(1) from config where config_file_path = ? and server_id = ?";
-                    pstmt = dataSource.getConnection().prepareStatement(query);
-                    pstmt.setString(ONE, file.getFilePath());
-                    pstmt.setInt(TWO, serverId);
-                    resultSet = pstmt.executeQuery();
-                    if (resultSet.next()) {
-                        isFileExists = resultSet.getInt(ONE) > ZERO;
-                    }
-                    if (isFileExists) {
-                        return null;
-                    }
-                    if (!(resultSet.getInt(ONE) > ZERO)) {
-                        String insertTableSQL = "INSERT INTO config"
-                                + "(config_name, config_desc,config_file_path,server_id) VALUES" + "(?,?,?,?)";
-                        PreparedStatement preparedStatement = dataSource.getConnection()
-                                .prepareStatement(insertTableSQL);
-                        preparedStatement.setString(ONE, file.getFileName());
-                        preparedStatement.setString(TWO, file.getFileDesc());
-                        preparedStatement.setString(THREE, file.getFilePath());
-                        preparedStatement.setInt(FOUR, serverId);
-                        preparedStatement.executeUpdate();
+					}
 
-                    }
+				}
+				return file;
+			} catch (SQLException e) {
+				LOGGER.log(Level.SEVERE, e.getMessage(), e);
+			} finally {
+				if (resultSet != null) {
+					try {
+						resultSet.close();
+					} catch (SQLException e) {
+						LOGGER.log(Level.SEVERE, e.getMessage(), e);
+					}
+				}
+			}
 
-                }
-                return file;
-            } catch (SQLException e) {
-                LOGGER.log(Level.SEVERE, e.getMessage(), e);
-            } finally {
-                if (resultSet != null) {
-                    try {
-                        resultSet.close();
-                    } catch (SQLException e) {
-                        LOGGER.log(Level.SEVERE, e.getMessage(), e);
-                    }
-                }
-            }
+		}
 
-        }
-
-        return null;
-    }
+		return null;
+	}
 
 	@Override
 	public Map<String, String> getFileData(int fileId) throws SQLException {
@@ -185,6 +185,32 @@ public class FileDaoImpl implements FileDao {
 			LOGGER.log(Level.SEVERE, e.getMessage(), e);
 		}
 
+	}
+
+	@Override
+	public File deleteFile(File file) {
+		/*if (file != null) {
+			int fileId = Integer.parseInt(file.getFileId());
+			if(deleteConfig(fileId)==0)
+				return null;
+
+			return file;
+		}
+*/		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	public int deleteConfig(int configId) {
+		String query = "DELETE from config where config_id=?";
+		try {
+			PreparedStatement pstmt = dataSource.getConnection().prepareStatement(query);
+			pstmt.setInt(ONE, configId);
+			System.out.println(pstmt);
+			return pstmt.executeUpdate();
+		} catch (SQLException e) {
+			LOGGER.log(Level.SEVERE, e.getMessage(), e);
+		}
+		return 0;
 	}
 
 }

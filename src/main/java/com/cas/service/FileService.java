@@ -13,4 +13,6 @@ public interface FileService {
     public boolean saveFile(String name, String content, String serverId, String isRestart);
     public boolean checkModified(String name, String content, String serverId);
 
+	public File deleteFile(File file);
+
 }

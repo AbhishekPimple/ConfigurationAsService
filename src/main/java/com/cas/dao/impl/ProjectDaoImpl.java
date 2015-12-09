@@ -73,64 +73,115 @@ public class ProjectDaoImpl implements ProjectDao {
         return null;
     }
 
-	public Project updateProject(Project project) {
-		//boolean isProjectExists = false;
-		PreparedStatement pstmt = null;
-		ResultSet resultSet = null;
+    public Project updateProject(Project project) {
 
-		int proj_id=0;
-		proj_id=Integer.parseInt(project.getProjectId());
-		if(project != null){
-			try{
+        int projId = ZERO;
+        projId = Integer.parseInt(project.getProjectId());
+        if (project != null) {
+            try {
 
-				String updateTableSQL = "UPDATE project set"
-						+ " project_name = ?," +" project_desc = ?"
-						+ " where project_id = ?" ;
-				System.out.println(updateTableSQL);
-				PreparedStatement preparedStatement = (PreparedStatement) dataSource.getConnection().prepareStatement(updateTableSQL);
-				preparedStatement.setString(1, project.getProjectName());
-				preparedStatement.setString(2, project.getProjectDesc());
-				preparedStatement.setInt(3, proj_id);
-				System.out.println(preparedStatement);
+                String updateTableSQL = "UPDATE project set" + " project_name = ?," + " project_desc = ?"
+                        + " where project_id = ?";
 
-				preparedStatement .executeUpdate();
-				return project;
-			}
+                PreparedStatement preparedStatement = (PreparedStatement) dataSource.getConnection()
+                        .prepareStatement(updateTableSQL);
+                preparedStatement.setString(ONE, project.getProjectName());
+                preparedStatement.setString(TWO, project.getProjectDesc());
+                preparedStatement.setInt(THREE, projId);
 
-			catch(SQLException e){
-				e.printStackTrace();
-			}
+                preparedStatement.executeUpdate();
+                return project;
+            }catch (SQLException e) {
+                LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            }
+        }
+        return null;
+    }
+
+    public Project deleteProject(Project project) {
+		if (project != null) {
+			int projectId = Integer.parseInt(project.getProjectId());
+			if(deleteProjectQuery(projectId)==0)
+				return null;
+
+			return project;
 		}
+		// TODO Auto-generated method stub
 		return null;
 	}
-	
-	public Project deleteProject(Project project) {
-		//boolean isProjectExists = false;
-		PreparedStatement pstmt = null;
-		ResultSet resultSet = null;
-
-		int proj_id=0;
-		proj_id=Integer.parseInt(project.getProjectId());
-		if(project != null){
-			try{
-
-				String deleteTableSQL = "delete from project where project_id= ?";
-
-				System.out.println(deleteTableSQL);
-				PreparedStatement preparedStatement = (PreparedStatement) dataSource.getConnection().prepareStatement(deleteTableSQL);
-
-				preparedStatement.setInt(1, proj_id);
-				System.out.println(preparedStatement);
-
-				preparedStatement .executeUpdate();
-				return project;
+    
+    private int deleteProjectQuery(int projectId) {
+    	try {
+			String query = "Select server_id from server where project_id = ?";
+			PreparedStatement pstmt = (PreparedStatement) dataSource.getConnection().prepareStatement(query);
+			pstmt.setInt(ONE, projectId);
+			System.out.println(pstmt);
+			ResultSet resultSet = pstmt.executeQuery();
+			
+			while(resultSet.next()) {	
+				if(deleteServerQuery(resultSet.getInt(ONE)) == 0)
+					return 0;
+				
 			}
-
-			catch(SQLException e){
-				e.printStackTrace();
+			String query1 = "DELETE from project where project_id=?";
+			try {
+				PreparedStatement pstmt1 = (PreparedStatement) dataSource.getConnection().prepareStatement(query1);
+				pstmt1.setInt(ONE, projectId);
+				System.out.println(pstmt1);
+				if(pstmt1.executeUpdate()==0)
+					return 0;
+			} catch (SQLException e) {
+				LOGGER.log(Level.SEVERE, e.getMessage(), e);
 			}
+		} catch (SQLException e) {
+			LOGGER.log(Level.SEVERE, e.getMessage(), e);
+
 		}
-		return null;
+		return 1;
+	}
+
+	public int deleteServerQuery(int serverId) {
+		try {
+			String query = "Select config_id from config where server_id = ?";
+			PreparedStatement pstmt = (PreparedStatement) dataSource.getConnection().prepareStatement(query);
+			pstmt.setInt(ONE, serverId);
+			System.out.println(pstmt);
+			ResultSet resultSet = pstmt.executeQuery();
+			//FileDaoImpl fileDaoImpl = new FileDaoImpl();
+			while(resultSet.next()) {	
+				if(deleteConfig(resultSet.getInt(ONE)) == 0)
+					return 0;
+				//deleteConfig(resultSet.getInt(ONE));
+			}
+			String query1 = "DELETE from server where server_id=?";
+			try {
+				PreparedStatement pstmt1 = (PreparedStatement) dataSource.getConnection().prepareStatement(query1);
+				pstmt1.setInt(ONE, serverId);
+				System.out.println(pstmt1);
+				if(pstmt1.executeUpdate()==0)
+					return 0;
+			} catch (SQLException e) {
+				LOGGER.log(Level.SEVERE, e.getMessage(), e);
+			}
+		} catch (SQLException e) {
+			LOGGER.log(Level.SEVERE, e.getMessage(), e);
+
+		}
+		return 1;
+
+	}
+
+	public int deleteConfig(int configId) {
+		String query = "DELETE from config where config_id=?";
+		try {
+			PreparedStatement pstmt = (PreparedStatement) dataSource.getConnection().prepareStatement(query);
+			pstmt.setInt(ONE, configId);
+			System.out.println(pstmt);
+			return pstmt.executeUpdate();
+		} catch (SQLException e) {
+			LOGGER.log(Level.SEVERE, e.getMessage(), e);
+		}
+		return 0;
 	}
 
 }

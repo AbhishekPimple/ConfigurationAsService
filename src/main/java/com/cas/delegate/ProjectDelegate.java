@@ -19,12 +19,12 @@ public class ProjectDelegate {
     }
 
 
-	public Project updateProject(Project project) {
-		return projectService.updateProject(project);
-	}
+    public Project updateProject(Project project) {
+        return projectService.updateProject(project);
+    }
 
-	public Project deleteProject(Project project) {
-		return projectService.deleteProject(project);
-	}
+    public Project deleteProject(Project project) {
+        return projectService.deleteProject(project);
+    }
 
 }

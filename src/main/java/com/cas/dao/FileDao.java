@@ -18,5 +18,6 @@ public interface FileDao {
 
     public void insertFileTimeStamp(Timestamp timestamp, int fileId);
 
+	public File deleteFile(File file);
 
 }

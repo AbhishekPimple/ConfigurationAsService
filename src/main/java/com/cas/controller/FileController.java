@@ -127,6 +127,28 @@ public class FileController {
         return null;
 
     }
+    
+    @RequestMapping(value = "/filedelete", method = RequestMethod.POST, headers = {"Content-type=application/json"})
+    @ResponseBody
+    public  File deleteFile(@RequestBody String fileJson) throws IOException {
+
+        File file = new ObjectMapper().readValue(fileJson, File.class);
+
+        try {
+
+            if (filedelegate.deleteFile(file) != null) {
+                return file;
+            } else {
+                return null;
+            }
+
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE,e.getMessage(),e);
+        }
+        return null;
+
+    }
+    
 
 
 }

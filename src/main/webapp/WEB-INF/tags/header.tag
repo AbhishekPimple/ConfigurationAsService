@@ -13,7 +13,7 @@
 		
 		<script src="<c:url value='/resources/shared/js/prettify.js'/>"></script>
     </head>
-    <body>
-    		<h3 align="left">Welcome to Configuration as Service</h3>
+    <body >
+    		<h1 align="center" style="color: #3f51b5">Welcome to Configuration as Service</h1>
     		
 

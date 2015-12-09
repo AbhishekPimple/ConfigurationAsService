@@ -44,4 +44,10 @@ public class FileDelegate {
     public File addFile(File file) {
         return fileService.addFile(file);
     }
+
+
+
+	public File deleteFile(File file) {
+		return fileService.deleteFile(file);
+	}
 }

@@ -70,16 +70,7 @@ public class LoginControllerTest {
     	User returnedUser = this.loginDelegate.isValidUser(user.getEmailId(), user.getPassword());
     	
     	assertNotNull(returnedUser);
-    	/*	this.mockMvc.perform(post("/performlogin")
-    			.param("username", user.getEmailId())
-    			.param("password", user.getPassword()))
-    				.andExpect(status().isOk());
-    */
-    	
-    	/*RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/performlogin")
-    			.flashAttr("user", user);
-        
-    	this.mockMvc.perform(requestBuilder);*/
+
            
     }
     
@@ -93,16 +84,6 @@ public class LoginControllerTest {
     	
     	assertEquals(returnedUser, null);
   
-    	/*	this.mockMvc.perform(post("/performlogin")
-    			.param("username", user.getEmailId())
-    			.param("password", user.getPassword()))
-    				.andExpect(status().isOk());
-    */
-    	
-    	/*RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/performlogin")
-    			.flashAttr("user", user);
-        
-    	this.mockMvc.perform(requestBuilder);*/
            
     }
    

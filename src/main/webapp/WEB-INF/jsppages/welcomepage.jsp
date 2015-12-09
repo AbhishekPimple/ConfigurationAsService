@@ -4,15 +4,15 @@
 <%@taglib prefix="welcome" tagdir="/WEB-INF/tags"%>
 <%@taglib prefix="kendo" uri="http://www.kendoui.com/jsp/tags"%>
 <%@include file="springtabinclude.jsp"%>
-<welcome:header />
+<welcome:welcomeheader />
 
-<h3 align="left">Welcome ${loggedInUser}</h3>
+<h3 style="color: #3f51b5" align="left">Welcome ${loggedInUser}</h3>
 
 <a class="logout" href="logout">Log Out</a>
 
 <div style="float: left; width: 20%;">
-	<h3 align="left">My Profile</h3>
-	<div id="treeview-left"></div>
+	<h3 style="color: #3f51b5" align="left">My Profile</h3>
+	<div id="treeview-left" style="color: #3f51b5"></div>
 </div>
 
 <div style="float: left; width: 80%;">
@@ -20,28 +20,15 @@
 		<div class="demo-section k-content">
 			<div id="tabstrip">
 				<ul>
-					<li id="tprof" class="k-state-active">My Profile</li>
 					<li id="tserver">Server</li>
 					<li id="tfile">Config Files</li>
 					<li id="tproject">Project</li>
-					<li id="tworkbench">Workbench</li>
+					<li id="tworkbench" class="k-state-active">Workbench</li>
 				</ul>
-				<div>
-					<span class="myprofiletab">&nbsp;</span>
-					<div class="myprofile">
-						<form id="profile_form" action="getfile" method="GET">
-							<ul class="fieldlist">
-								<li><label for="name">File ID</label> <input id="fileid"
-									name="fileid" type="text" class="k-textbox"
-									style="width: 100%;" /></li>
-								<li><input type="button" id="getfile"
-									class="k-button k-primary" value="Get File"></li>
-							</ul>
-						</form>
-					</div>
-				</div>
+				
+		
 
-				<div>
+				<div class="whichtabs">
 					<span class="servertab">&nbsp;</span>
 					<div class="server" id="myserver">
 						<form id="server_form" action="server" method="POST">
@@ -82,7 +69,7 @@
 						</form>
 					</div>
 				</div>
-				<div>
+				<div class="whichtabs">
 					<span class="filestab">&nbsp;</span>
 					<div class="files">
 
@@ -103,7 +90,7 @@
 
 					</div>
 				</div>
-				<div>
+				<div class="whichtabs">
 					<span class="projecttab">&nbsp;</span>
 					<div class="project">
 
@@ -126,7 +113,7 @@
 
 					</div>
 				</div>
-				<div>
+				<div class="whichtabs">
 					<span class="workbenchtab">&nbsp;</span>
 					<div class="workbench">
 
@@ -151,6 +138,7 @@
 		</div>
 
 	</div>
+</div>
 
 
 	<welcome:footer />

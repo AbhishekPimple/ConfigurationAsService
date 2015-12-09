@@ -6,7 +6,9 @@
 <%@taglib prefix="welcome" tagdir="/WEB-INF/tags"%>
 
 <welcome:loginheader />
-<h2>${message}</h2>
+<center>
+<h3 style="color: red">${message}</h3>
+</center>
 <script>
 
 
@@ -31,20 +33,23 @@ function validateForm() {
 }
 
 </script>
+<br> <br> <br> <br> <br>
+<center>
+<!-- <img src="resources/images/Background.jpg" /> -->
 <form:form id="loginForm" action="performlogin"
 	onsubmit="return validateForm()" method="POST" modelAttribute="user">
 	<ul class="fieldlist">
 
-		<li><label for="emailid">Email ID*</label> <form:input
-				id="emailid" type="text" class="k-textbox" style="width: 100%;"
+		<li> <form:input
+				id="emailid" type="text" placeholder="Email ID" class="k-textbox" style="width: 30%;"
 				path="emailId" /></li>
-		<li><label for="password">Password*</label> <form:input
-				id="password" type="password" class="k-textbox" style="width: 100%;"
+		<li> <form:input
+				id="password" type="password" placeholder="Password" class="k-textbox" style="width: 30%;"
 				path="password" /></li>
 		<li><a href="register"> New User?</a></li>
-		<li><input type="submit" class="k-button k-primary"
-			value="Log In" /></li>
+		<li><input type="submit" class="k-button k-primary"  value="Log In" /></li>
 	</ul>
 </form:form>
+</center>
 
 <welcome:footer />

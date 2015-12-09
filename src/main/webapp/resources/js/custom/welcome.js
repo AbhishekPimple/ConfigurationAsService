@@ -4,6 +4,12 @@ $(document).ready(
 			
 			$("#updateserverbutton").hide();
 			$("#deleteserverbutton").hide();
+			
+			$("#updateprojectbutton").hide();
+			$("#deleteprojectbutton").hide();
+			
+			$("#updateworkbenchbutton").hide();
+			$("#deleteworkbenchbutton").hide();
 			$(document).bind("contextmenu", function(e) {
 				return false;
 			});
@@ -18,14 +24,14 @@ $(document).ready(
 					treeViewdata = result;
 				},
 				error: function (e) {
-					console.log(e);
+					//console.log(e);
 					alert("error"+e);
 				}
 			});
 
-			console.log("After ajax call, treeview is ", treeViewdata);
+			//console.log("After ajax call, treeview is ", treeViewdata);
 			var profilearr = treeViewdata.UserProfile[0].Profile;
-			console.log(profilearr);
+			//console.log(profilearr);
 			//var profiledata = $.parseJSON(profilearr[0]);
 
 
@@ -71,33 +77,34 @@ $(document).ready(
 					//console.log("child",child);
 					var level=0;
 					while(!(child.parentNode() == undefined)){
-						console.log("child",child);
+						//console.log("child",child);
 						parent = child.parentNode();
 						child=parent;
 						level++;
 					}
 					child = tree.dataItem(event.node);
 					parent = child.parentNode();
-					console.log("Level",level);
-					console.log("child", child);
-					console.log("parent", parent);
+					//console.log("Level",level);
+					//console.log("child", child);
+					//console.log("parent", parent);
 					//console.log("parentparent", parentparent);
 					//alert("check");
 					//alert("node: " + JSON.stringify(child)+ "\nparent: "+ JSON.stringify(parent)+ "\nparentparent: "+ JSON.stringify(parentparent) /* + " parent:" +JSON.stringify(tree.dataItem(event.node)).parent()*/);
 					if(level==4) {
-						console.log("fileID", child);
+						//console.log("fileID", child);
 						var fileId=parseInt(child.ConfigID,10);
 						var fileWindow = window.open("http://localhost:8080/ConfigAsService/getfile?fileid="+fileId, null, null, null);
 						fileWindow.servers = servers;
-						console.log("Sending to showfile window", servers);
-					}
-					if(level==3) {
+						//console.log("Sending to showfile window", servers);
+					} else if(level==3) {
+						var tab = $("#tserver");
+						$("#tabstrip").data("kendoTabStrip").select(tab.index());
 						$("#updateserverbutton").show();
 						$("#deleteserverbutton").show();
 						$("#createserverbutton").hide();
-						var tab = $("#tserver");
-						console.log("index", tab.index());
-						$("#tabstrip").data("kendoTabStrip").select(tab.index());
+						
+						//console.log("index", tab.index());
+						
 						$( "#tprof" ).removeClass("k-state-active");
 						$( "#tfile" ).removeClass("k-state-active");
 						$( "#tproject" ).removeClass("k-state-active");
@@ -115,16 +122,16 @@ $(document).ready(
 						$("#selectproject").val(parent.ProjectID);
 						serverId = child.ServerID;
 
-					}
-					
-					if(level==2) {
+					} else if(level==2) {
+						var tab = $("#tproject");
+						$("#tabstrip").data("kendoTabStrip").select(tab.index());
 						$("#updateprojectbutton").show();
 						$("#deleteprojectbutton").show();
 						$("#createprojectbutton").hide();
 						
-						var tab = $("#tproject");
-						console.log("index", tab.index());
-						$("#tabstrip").data("kendoTabStrip").select(tab.index());
+						
+						//console.log("index", tab.index());
+						
 						$( "#tprof" ).removeClass("k-state-active");
 						$( "#tfile" ).removeClass("k-state-active");
 						$( "#tserver" ).removeClass("k-state-active");
@@ -135,16 +142,16 @@ $(document).ready(
 						$("#projectdescription").val(child.projectDesc);
 						projectId = child.ProjectID;
 						
-					}
-					
-					if(level==1) {
+					}else if(level==1) {
+						var tab = $("#tworkbench");
+						$("#tabstrip").data("kendoTabStrip").select(tab.index());
 						$("#updateworkbenchbutton").show();
 						$("#deleteworkbenchbutton").show();
 						$("#createworkbenchbutton").hide();
 						
-						var tab = $("#tworkbench");
-						console.log("index", tab.index());
-						$("#tabstrip").data("kendoTabStrip").select(tab.index());
+						
+						//console.log("index", tab.index());
+						
 						$( "#tprof" ).removeClass("k-state-active");
 						$( "#tfile" ).removeClass("k-state-active");
 						$( "#tserver" ).removeClass("k-state-active");
@@ -161,9 +168,9 @@ $(document).ready(
 
 			var temp = treeViewdata.UserProfile[0].Profile;
 			var workbenchData = "[";
-			console.log("treeview profile", temp.length);
-			console.log("here");
-			console.log("temp is here ", temp);
+			//console.log("treeview profile", temp.length);
+			//console.log("here");
+			//console.log("temp is here ", temp);
 			for(var i =0; i<temp.length;i++){
 				if(i<temp.length-1){
 					workbenchData += "{ \"text\" : "+"\""+temp[i].id+"\""+", \"value\" : "+"\""+temp[i].workbenchid+"\""+"},";
@@ -192,7 +199,7 @@ $(document).ready(
 
 			for (var i in projectMap){
 				if (projectMap.hasOwnProperty(i)) {
-					console.log(i, projectMap[i]);
+					//console.log(i, projectMap[i]);
 					projectMapSize++;
 				}
 			}
@@ -207,7 +214,7 @@ $(document).ready(
 				m++;
 			}
 			projectData +="]"; 
-			console.log("project data ", projectData);
+			//console.log("project data ", projectData);
 
 			var serverMap = new Object();
 			var serverData="[";
@@ -229,7 +236,7 @@ $(document).ready(
 
 			for (var i in serverMap){
 				if (serverMap.hasOwnProperty(i)) {
-					console.log(i, serverMap[i]);
+					//console.log(i, serverMap[i]);
 					size++;
 				}
 			}
@@ -244,7 +251,7 @@ $(document).ready(
 				j++;
 			}
 			serverData+="]";
-			console.log("server data ", serverData);
+			//console.log("server data ", serverData);
 
 
 			function projectvalidateFields() {
@@ -274,7 +281,7 @@ $(document).ready(
 							workbenchId: workbencId
 					};
 
-					console.log(JSON.stringify(jsonString));
+					//console.log(JSON.stringify(jsonString));
 					$.ajax({
 						url: "project",
 						type: 'POST',
@@ -284,11 +291,11 @@ $(document).ready(
 						},
 						data: JSON.stringify(jsonString),
 						beforeSend: function() {
-							console.log("Before", JSON.stringify(jsonString));  
+							//console.log("Before", JSON.stringify(jsonString));  
 						},
 						success: function (result) {
 							alert("Project has been created successfully");
-							console.log("data", result);
+							//console.log("data", result);
 							 location.reload();
 						},
 						error: function () {
@@ -312,7 +319,7 @@ $(document).ready(
 							workbenchId: workbencId,
 					};
 
-					console.log(JSON.stringify(jsonString));
+					//console.log(JSON.stringify(jsonString));
 					$.ajax({
 						url: "projectupdate",
 						type: 'POST',
@@ -322,11 +329,11 @@ $(document).ready(
 						},
 						data: JSON.stringify(jsonString),
 						beforeSend: function() {
-							console.log("Before", JSON.stringify(jsonString));  
+							//console.log("Before", JSON.stringify(jsonString));  
 						},
 						success: function (result) {
 							alert("Project has been updated successfully");
-							console.log("data", result);
+							//console.log("data", result);
 							location.reload();
 						},
 						error: function () {
@@ -350,7 +357,7 @@ $(document).ready(
 							workbenchId: workbencId,
 					};
 
-					console.log(JSON.stringify(jsonString));
+					//console.log(JSON.stringify(jsonString));
 					$.ajax({
 						url: "projectdelete",
 						type: 'POST',
@@ -360,11 +367,11 @@ $(document).ready(
 						},
 						data: JSON.stringify(jsonString),
 						beforeSend: function() {
-							console.log("Before", JSON.stringify(jsonString));  
+							//console.log("Before", JSON.stringify(jsonString));  
 						},
 						success: function (result) {
 							alert("Project has been deleted successfully");
-							console.log("data", result);
+							//console.log("data", result);
 							location.reload();
 						},
 						error: function () {
@@ -403,7 +410,7 @@ $(document).ready(
 							//workbenchId: workbencId
 					};
 
-					console.log(JSON.stringify(jsonString));
+					//console.log(JSON.stringify(jsonString));
 					$.ajax({
 						url: "workbench",
 						type: 'POST',
@@ -413,11 +420,11 @@ $(document).ready(
 						},
 						data: JSON.stringify(jsonString),
 						beforeSend: function() {
-							console.log("Before", JSON.stringify(jsonString));  
+							//console.log("Before", JSON.stringify(jsonString));  
 						},
 						success: function (result) {
 							alert("Workbench has been created successfully.");
-							console.log("data", result);
+							//console.log("data", result);
 							location.reload();
 						},
 						error: function () {
@@ -442,7 +449,7 @@ $(document).ready(
 							
 					};
 
-					console.log(JSON.stringify(jsonString));
+					//console.log(JSON.stringify(jsonString));
 					$.ajax({
 						url: "workbenchupdate",
 						type: 'POST',
@@ -452,11 +459,11 @@ $(document).ready(
 						},
 						data: JSON.stringify(jsonString),
 						beforeSend: function() {
-							console.log("Before", JSON.stringify(jsonString));  
+							//console.log("Before", JSON.stringify(jsonString));  
 						},
 						success: function (result) {
 							alert("Workbench has been updated successfully");
-							console.log("data", result);
+							//console.log("data", result);
 							location.reload();
 						},
 						error: function () {
@@ -467,6 +474,45 @@ $(document).ready(
 
 			});
 
+			$("#deleteworkbenchbutton").click(function() {
+				if(workbenchvalidateFields()) {
+					
+					var workbenchName = $("#workbenchname").val();
+					var workbenchDesc = $("#workbenchdescription").val();
+
+					var jsonString = {
+							workbenchId: workbenchId,
+							workbenchName: workbenchName,
+							workbenchDesc: workbenchDesc,
+							
+					};
+
+					//console.log(JSON.stringify(jsonString));
+					$.ajax({
+						url: "workbenchdelete",
+						type: 'POST',
+						dataType: 'json',
+						headers: { 
+							'Content-Type': 'application/json' 
+						},
+						data: JSON.stringify(jsonString),
+						beforeSend: function() {
+							//console.log("Before", JSON.stringify(jsonString));  
+						},
+						success: function (result) {
+							alert("Workbench has been deleted successfully");
+							//console.log("data", result);
+							location.reload();
+						},
+						error: function () {
+							alert("error");
+						}
+					});
+				}
+
+			});
+			
+			
 			function servervalidateFields() {
 
 				var serverName = $("#servername").val();
@@ -513,7 +559,7 @@ $(document).ready(
 							projectId: projectId
 					};
 
-					console.log(JSON.stringify(jsonString));
+					//console.log(JSON.stringify(jsonString));
 					$.ajax({
 						url: "server",
 						type: 'POST',
@@ -523,11 +569,11 @@ $(document).ready(
 						},
 						data: JSON.stringify(jsonString),
 						beforeSend: function() {
-							console.log("Before", JSON.stringify(jsonString));  
+							//console.log("Before", JSON.stringify(jsonString));  
 						},
 						success: function (result) {
 							alert("Server has been created successfully");
-							console.log("data", result);
+							//console.log("data", result);
 							location.reload();
 						},
 						error: function () {
@@ -564,7 +610,7 @@ $(document).ready(
 							projectId: projectId
 					};
 
-					console.log(JSON.stringify(jsonString));
+					//console.log(JSON.stringify(jsonString));
 					$.ajax({
 						url: "serverupdate",
 						type: 'POST',
@@ -574,11 +620,11 @@ $(document).ready(
 						},
 						data: JSON.stringify(jsonString),
 						beforeSend: function() {
-							console.log("Before", JSON.stringify(jsonString));  
+							//console.log("Before", JSON.stringify(jsonString));  
 						},
 						success: function (result) {
 							alert("Server has been updated successfully");
-							console.log("data", result);
+							//console.log("data", result);
 							location.reload();
 						},
 						error: function () {
@@ -586,6 +632,57 @@ $(document).ready(
 						}
 					});
 				}
+
+			});
+			
+			
+			$("#deleteserverbutton").click(function() {
+				//if(servervalidateFields()) {
+					var projectId = $("#selectproject").val();
+					var serverName = $("#servername").val();
+					var serverDesc = $("#serverdescription").val();
+					var hostIP = $("#hostnameip").val();
+					var username = $("#username").val();
+					var password = $("#password").val();
+					var serverType = $("#servertype").val();
+					var logFilePath = $("#logfilepath").val();
+					var restartCmd = $("#restartCommand").val();
+
+					var jsonString = {
+							serverId: serverId,
+							serverName: serverName,
+							serverDesc: serverDesc,
+							hostIP: hostIP,
+							username: username,
+							password: password,
+							serverType: serverType,
+							logFilePath: logFilePath,
+							restartCmd: restartCmd,
+							projectId: projectId
+					};
+
+					//console.log(JSON.stringify(jsonString));
+					$.ajax({
+						url: "serverdelete",
+						type: 'POST',
+						dataType: 'json',
+						headers: { 
+							'Content-Type': 'application/json' 
+						},
+						data: JSON.stringify(jsonString),
+						beforeSend: function() {
+							//console.log("Before", JSON.stringify(jsonString));  
+						},
+						success: function (result) {
+							alert("Server has been deleted successfully");
+							//console.log("data", result);
+							location.reload();
+						},
+						error: function () {
+							alert("error");
+						}
+					});
+				//}
 
 			});
 			
@@ -624,7 +721,7 @@ $(document).ready(
 							serverId: serverId
 					};
 
-					console.log(JSON.stringify(jsonString));
+					//console.log(JSON.stringify(jsonString));
 					$.ajax({
 						url: "addfile",
 						type: 'POST',
@@ -634,11 +731,11 @@ $(document).ready(
 						},
 						data: JSON.stringify(jsonString),
 						beforeSend: function() {
-							console.log("Before", JSON.stringify(jsonString));  
+							//console.log("Before", JSON.stringify(jsonString));  
 						},
 						success: function (result) {
 							alert("File has been addd successfully");
-							console.log("data", result);
+							//console.log("data", result);
 							location.reload();
 						},
 						error: function () {
@@ -650,7 +747,7 @@ $(document).ready(
 
 
 			var workbenches = JSON.parse(workbenchData);
-			console.log("workbenches", workbenches);/*[ {
+			/*console.log("workbenches", workbenches);*//*[ {
 				text : "DEV",
 				value : "1"
 			}, {
@@ -690,15 +787,41 @@ $(document).ready(
 			$("#getfile").click(function() {
 				//var fileWindow = window.open("getfile", null, null, null);
 				var fileID = $("#fileid").val();
-				console.log("fileId", fileID);
+				//console.log("fileId", fileID);
 				var fileWindow = window.open("http://localhost:8080/ConfigAsService/getfile?fileid="+fileID, null, null, null);
 				fileWindow.servers = servers;
-				console.log("Sending to showfile window", servers);
+				//console.log("Sending to showfile window", servers);
 			});
 			
 			var onTabSelect = function(e) {
 		        // access the selected item via e.item (Element)
-				console.log("Selected :"+e);
+			/*	console.log("Selected :"+e[0]);
+				console.log("Selected :"+e[1]);*/
+				//console.log("Selected "+e.item);
+				//console.log("Selected index "+$(e.item).index()); 
+				var selectedIndex = $(e.item).index();
+				if(selectedIndex == 0){
+					//clear all fields of server
+					$("#servername").val("");
+					$("#serverdescription").val("");
+					$("#hostnameip").val("");
+					$("#username").val("");
+					$("#password").val("");
+					$("#servertype").val("");
+					$("#logfilepath").val("");
+					$("#restartCommand").val("");
+					
+				} else if(selectedIndex == 2){
+					//clear all fields of project
+					$("#projectname").val("");
+					$("#projectdescription").val("");
+					
+				} else if(selectedIndex == 3){
+					
+					//clear all fields of workbench
+					$("#workbenchname").val("");
+					$("#workbenchdescription").val("");
+				}
 				$("#updateserverbutton").hide();
 				$("#deleteserverbutton").hide();
 				$("#createserverbutton").show();
