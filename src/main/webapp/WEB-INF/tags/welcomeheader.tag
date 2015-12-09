@@ -6,9 +6,13 @@
 		<link href="<c:url value='/resources/styles/kendo.common-material.min.css'/>" rel="stylesheet" />
 		<link href="<c:url value='/resources/styles/kendo.material.min.css'/>" rel="stylesheet" />
 		<link href="<c:url value='/resources/styles/welcomecustom.css'/>" rel="stylesheet" />
+		<link href="<c:url value='/resources/styles/alertify.core.css'/>" rel="stylesheet" />
+		<link href="<c:url value='/resources/styles/alertify.default.css'/>" rel="stylesheet" />
+		<%-- <link href="<c:url value='/resources/styles/alertify.bootstrap.css'/>" rel="stylesheet" /> --%>
 		
 		<script src="<c:url value='/resources/js/jquery.min.js' />"></script>
 		<script src="<c:url value='/resources/js/custom/welcome.js' />"></script>
+		<script src="<c:url value='/resources/js/custom/alertify.min.js' />"></script>
 		<script src="<c:url value='/resources/js/kendo.all.min.js' />"></script>
 		
 		<script src="<c:url value='/resources/shared/js/prettify.js'/>"></script>

@@ -13,6 +13,11 @@ body {
 	height: 8px;
 }
 
+textarea {
+	background-color: black;	
+}
+
+
 #savefile {
 	position: fixed;
 	bottom: 0px;

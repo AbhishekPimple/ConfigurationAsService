@@ -1,13 +1,13 @@
 $(document).ready(
 		function() {
 			var serverId,projectId;
-			
+
 			$("#updateserverbutton").hide();
 			$("#deleteserverbutton").hide();
-			
+
 			$("#updateprojectbutton").hide();
 			$("#deleteprojectbutton").hide();
-			
+
 			$("#updateworkbenchbutton").hide();
 			$("#deleteworkbenchbutton").hide();
 			$(document).bind("contextmenu", function(e) {
@@ -66,7 +66,7 @@ $(document).ready(
 
 
 			var tree = $("#treeview-left").kendoTreeView({
-				
+				template:"<span style='color: 40FF00'>#= item.id# </span>",
 				dataSource : inlineDefault,
 				dataTextField : "id",
 				select : function(event) {
@@ -102,15 +102,15 @@ $(document).ready(
 						$("#updateserverbutton").show();
 						$("#deleteserverbutton").show();
 						$("#createserverbutton").hide();
-						
+
 						//console.log("index", tab.index());
-						
+
 						$( "#tprof" ).removeClass("k-state-active");
 						$( "#tfile" ).removeClass("k-state-active");
 						$( "#tproject" ).removeClass("k-state-active");
 						$( "#tworkbench" ).removeClass("k-state-active");
 						$( "#tserver" ).addClass("k-state-active");
-						
+
 						$("#servername").val(child.id);
 						$("#serverdescription").val(child.serverDesc);
 						$("#hostnameip").val(child.serverIP);
@@ -128,36 +128,36 @@ $(document).ready(
 						$("#updateprojectbutton").show();
 						$("#deleteprojectbutton").show();
 						$("#createprojectbutton").hide();
-						
-						
+
+
 						//console.log("index", tab.index());
-						
+
 						$( "#tprof" ).removeClass("k-state-active");
 						$( "#tfile" ).removeClass("k-state-active");
 						$( "#tserver" ).removeClass("k-state-active");
 						$( "#tworkbench" ).removeClass("k-state-active");
 						$( "#tproject" ).addClass("k-state-active");
-						
+
 						$("#projectname").val(child.id);
 						$("#projectdescription").val(child.projectDesc);
 						projectId = child.ProjectID;
-						
+
 					}else if(level==1) {
 						var tab = $("#tworkbench");
 						$("#tabstrip").data("kendoTabStrip").select(tab.index());
 						$("#updateworkbenchbutton").show();
 						$("#deleteworkbenchbutton").show();
 						$("#createworkbenchbutton").hide();
-						
-						
+
+
 						//console.log("index", tab.index());
-						
+
 						$( "#tprof" ).removeClass("k-state-active");
 						$( "#tfile" ).removeClass("k-state-active");
 						$( "#tserver" ).removeClass("k-state-active");
 						$( "#tproject" ).removeClass("k-state-active");
 						$( "#tworkbench" ).addClass("k-state-active");
-						
+
 						$("#workbenchname").val(child.id);
 						$("#workbenchdescription").val(child.workbenchDesc);
 						workbenchId = child.workbenchid;
@@ -165,53 +165,57 @@ $(document).ready(
 				}
 			}).data("kendoTreeView");
 //			treeview implementation 
-
+			tree.expand(".k-item");
 			var temp = treeViewdata.UserProfile[0].Profile;
 			var workbenchData = "[";
 			//console.log("treeview profile", temp.length);
 			//console.log("here");
 			//console.log("temp is here ", temp);
-			for(var i =0; i<temp.length;i++){
-				if(i<temp.length-1){
-					workbenchData += "{ \"text\" : "+"\""+temp[i].id+"\""+", \"value\" : "+"\""+temp[i].workbenchid+"\""+"},";
-				}else{
-					workbenchData += "{ \"text\" : "+"\""+temp[i].id+"\""+", \"value\" : "+"\""+temp[i].workbenchid+"\""+"}";
+			if(temp != undefined){
+				for(var i =0; i<temp.length;i++){
+					if(i<temp.length-1){
+						workbenchData += "{ \"text\" : "+"\""+temp[i].id+"\""+", \"value\" : "+"\""+temp[i].workbenchid+"\""+"},";
+					}else{
+						workbenchData += "{ \"text\" : "+"\""+temp[i].id+"\""+", \"value\" : "+"\""+temp[i].workbenchid+"\""+"}";
+					}
 				}
 			}
 			workbenchData += "]"
-			var projectData="[";
+				var projectData="[";
 			var projectMap = new Object();
 			var count = 1;
-			for(var i = 0 ; i<temp.length ; i++){
-				var tempProjectdata  = temp[i].items;
-				for( var j = 0 ; j < tempProjectdata.length ; j++){
-					projectMap[tempProjectdata[j].id]=tempProjectdata[j].ProjectID;
-					count++;
-					/*projectData += "{ \"text\" : "+"\""+tempProjectdata[j].id+"\""+", \"value\" : "+"\""+count+"\""+"},";
+			if(temp != undefined){
+				for(var i = 0 ; i<temp.length ; i++){
+					var tempProjectdata  = temp[i].items;
+					for( var j = 0 ; j < tempProjectdata.length ; j++){
+						projectMap[tempProjectdata[j].id]=tempProjectdata[j].ProjectID;
+						count++;
+						/*projectData += "{ \"text\" : "+"\""+tempProjectdata[j].id+"\""+", \"value\" : "+"\""+count+"\""+"},";
 					}else{
 						projectData += "{ \"text\" : "+"\""+tempProjectdata[j].id+"\""+", \"value\" : "+"\""+count+"\""+"}]";
 					}	*/
 
+					}
 				}
-			}
 
-			var projectMapSize = 0;
+				var projectMapSize = 0;
 
-			for (var i in projectMap){
-				if (projectMap.hasOwnProperty(i)) {
-					//console.log(i, projectMap[i]);
-					projectMapSize++;
+				for (var i in projectMap){
+					if (projectMap.hasOwnProperty(i)) {
+						//console.log(i, projectMap[i]);
+						projectMapSize++;
+					}
 				}
-			}
-			var m=0;
-			for(var i =0 in projectMap){
+				var m=0;
+				for(var i =0 in projectMap){
 
-				if(m<projectMapSize-1){
-					projectData += "{ \"text\" : "+"\""+i+"\""+", \"value\" : "+"\""+projectMap[i]+"\""+"},";
-				}else{
-					projectData += "{ \"text\" : "+"\""+i+"\""+", \"value\" : "+"\""+projectMap[i]+"\""+"}";
+					if(m<projectMapSize-1){
+						projectData += "{ \"text\" : "+"\""+i+"\""+", \"value\" : "+"\""+projectMap[i]+"\""+"},";
+					}else{
+						projectData += "{ \"text\" : "+"\""+i+"\""+", \"value\" : "+"\""+projectMap[i]+"\""+"}";
+					}
+					m++;
 				}
-				m++;
 			}
 			projectData +="]"; 
 			//console.log("project data ", projectData);
@@ -219,36 +223,38 @@ $(document).ready(
 			var serverMap = new Object();
 			var serverData="[";
 			var count = 1;
-			for(var i = 0 ; i<temp.length ; i++){
-				var tempProjectdata  = temp[i].items;
-				for( var j = 0 ; j < tempProjectdata.length ; j++){
-					var tempServerdata = tempProjectdata[j].items;
-					for( var k = 0 ; k < tempServerdata.length ; k++){
-						if(serverMap[tempServerdata[k].id] == undefined){
-							serverMap[tempServerdata[k].id] = tempServerdata[k].ServerID;
-							count++;
+			if(temp != undefined){
+				for(var i = 0 ; i<temp.length ; i++){
+					var tempProjectdata  = temp[i].items;
+					for( var j = 0 ; j < tempProjectdata.length ; j++){
+						var tempServerdata = tempProjectdata[j].items;
+						for( var k = 0 ; k < tempServerdata.length ; k++){
+							if(serverMap[tempServerdata[k].id] == undefined){
+								serverMap[tempServerdata[k].id] = tempServerdata[k].ServerID;
+								count++;
+							}
 						}
 					}
 				}
-			}
 
-			var size = 0;
+				var size = 0;
 
-			for (var i in serverMap){
-				if (serverMap.hasOwnProperty(i)) {
-					//console.log(i, serverMap[i]);
-					size++;
+				for (var i in serverMap){
+					if (serverMap.hasOwnProperty(i)) {
+						//console.log(i, serverMap[i]);
+						size++;
+					}
 				}
-			}
-			var j=0;
-			for(var i =0 in serverMap){
+				var j=0;
+				for(var i =0 in serverMap){
 
-				if(j<size-1){
-					serverData += "{ \"name\" : "+"\""+ i +"\""+", \"id\" : "+"\""+ serverMap[i]+"\""+", \"checked\" : "+"\""+"false"+"\""+ "},";
-				}else{
-					serverData += "{ \"name\" : "+"\""+ i +"\""+", \"id\" : "+"\""+ serverMap[i]+"\""+", \"checked\" : "+"\""+"true"+"\""+ "}";
+					if(j<size-1){
+						serverData += "{ \"name\" : "+"\""+ i +"\""+", \"id\" : "+"\""+ serverMap[i]+"\""+", \"checked\" : "+"\""+"false"+"\""+ "},";
+					}else{
+						serverData += "{ \"name\" : "+"\""+ i +"\""+", \"id\" : "+"\""+ serverMap[i]+"\""+", \"checked\" : "+"\""+"true"+"\""+ "}";
+					}
+					j++;
 				}
-				j++;
 			}
 			serverData+="]";
 			//console.log("server data ", serverData);
@@ -294,9 +300,11 @@ $(document).ready(
 							//console.log("Before", JSON.stringify(jsonString));  
 						},
 						success: function (result) {
+							
+							//alertify.alert("Project has been created successfully");
 							alert("Project has been created successfully");
 							//console.log("data", result);
-							 location.reload();
+							location.reload();
 						},
 						error: function () {
 							alert("error");
@@ -305,7 +313,7 @@ $(document).ready(
 
 				}
 			});
-			
+
 			$("#updateprojectbutton").click(function() {
 				if(projectvalidateFields()) {
 					var workbencId = $("#selectworkbench").val();
@@ -343,7 +351,7 @@ $(document).ready(
 				}
 
 			});
-			
+
 			$("#deleteprojectbutton").click(function() {
 				if(projectvalidateFields()) {
 					var workbencId = $("#selectworkbench").val();
@@ -435,10 +443,10 @@ $(document).ready(
 				}
 
 			});
-			
+
 			$("#updateworkbenchbutton").click(function() {
 				if(workbenchvalidateFields()) {
-					
+
 					var workbenchName = $("#workbenchname").val();
 					var workbenchDesc = $("#workbenchdescription").val();
 
@@ -446,7 +454,7 @@ $(document).ready(
 							workbenchId: workbenchId,
 							workbenchName: workbenchName,
 							workbenchDesc: workbenchDesc,
-							
+
 					};
 
 					//console.log(JSON.stringify(jsonString));
@@ -584,7 +592,7 @@ $(document).ready(
 
 			});
 
-			
+
 			$("#updateserverbutton").click(function() {
 				if(servervalidateFields()) {
 					var projectId = $("#selectproject").val();
@@ -792,10 +800,10 @@ $(document).ready(
 				fileWindow.servers = servers;
 				//console.log("Sending to showfile window", servers);
 			});
-			
+
 			var onTabSelect = function(e) {
-		        // access the selected item via e.item (Element)
-			/*	console.log("Selected :"+e[0]);
+				// access the selected item via e.item (Element)
+				/*	console.log("Selected :"+e[0]);
 				console.log("Selected :"+e[1]);*/
 				//console.log("Selected "+e.item);
 				//console.log("Selected index "+$(e.item).index()); 
@@ -810,14 +818,14 @@ $(document).ready(
 					$("#servertype").val("");
 					$("#logfilepath").val("");
 					$("#restartCommand").val("");
-					
+
 				} else if(selectedIndex == 2){
 					//clear all fields of project
 					$("#projectname").val("");
 					$("#projectdescription").val("");
-					
+
 				} else if(selectedIndex == 3){
-					
+
 					//clear all fields of workbench
 					$("#workbenchname").val("");
 					$("#workbenchdescription").val("");
@@ -825,21 +833,21 @@ $(document).ready(
 				$("#updateserverbutton").hide();
 				$("#deleteserverbutton").hide();
 				$("#createserverbutton").show();
-				
+
 				$("#updateprojectbutton").hide();
 				$("#deleteprojectbutton").hide();
 				$("#createprojectbutton").show();
-				
+
 				$("#updateworkbenchbutton").hide();
 				$("#deleteworkbenchbutton").hide();
 				$("#createworkbenchbutton").show();
 				//$(e.contentElement).html("");
-				
-		        // detach select event handler via unbind()
-		        //tabStrip.unbind("select", onTabSelect);
-		    };
 
-			
+				// detach select event handler via unbind()
+				//tabStrip.unbind("select", onTabSelect);
+			};
+
+
 			var tabStrip = $("#tabstrip").kendoTabStrip({
 				select: onTabSelect,
 				animation : {
@@ -848,10 +856,10 @@ $(document).ready(
 					}
 				}
 			});
-			
+
 			//tabStrip.bind("select", onTabSelect);
-			
-			
+
+
 			/*{
 					"GetMenu" : [ {
 						"OutletCode" : "BOL",

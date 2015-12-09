@@ -61,7 +61,7 @@ public class TreeViewDaoImpl implements TreeViewDao {
         String workbenchDesc;
         JSONArray workbenches;
         pstmt = dataSource.getConnection().prepareStatement(workbench);
-        pstmt.setString(1, String.valueOf(userID));
+        pstmt.setInt(1, userID);
         resultSet = pstmt.executeQuery();
         workbenches = new JSONArray();
         JSONObject jsontemp;
@@ -128,7 +128,7 @@ public class TreeViewDaoImpl implements TreeViewDao {
         Map<String, Map<String, String>> projectMap = new HashMap<String, Map<String, String>> ();
         Map<String, String> tempServerMap;
         String serverID, serverName, serverUsername, serverIP, serverLogPath, serverType, serverStatus, serverDesc,
-                serverRestartCmd;
+        serverRestartCmd;
         JSONObject jsonServerTemp;
         JSONArray jsonServerTempArray;
 
@@ -174,6 +174,7 @@ public class TreeViewDaoImpl implements TreeViewDao {
                     jsonServerTemp.put("serverStatus", serverStatus);
                     jsonServerTemp.put("serverDesc", serverDesc);
                     jsonServerTemp.put("serverRestartCmd", serverRestartCmd);
+                    jsonServerTemp.put(ITEMS, new JSONArray());
                     tempServerMap.put(serverID, serverName);
                     jsonServerTempArray.put(jsonServerTemp);
                 }
@@ -204,72 +205,72 @@ public class TreeViewDaoImpl implements TreeViewDao {
         String configID, configName;
         pstmt = dataSource.getConnection().prepareStatement(config);
         for (Map.Entry<String, Map<String, String>> iter : projectMap.entrySet()) {
-            String tempServerID = iter.getKey();
-            pstmt.setString(1, tempServerID);
-            resultSet = pstmt.executeQuery();
-            tempServerMap = new HashMap<String, String>();
+            for(Map.Entry<String, String> iter1 : iter.getValue().entrySet()){
+                String tempServerID = iter1.getKey();
+                if(tempServerID.equals("4")){
+                    System.out.println("");
+                }
+                pstmt.setString(1, tempServerID);
+                resultSet = pstmt.executeQuery();
+                tempServerMap = new HashMap<String, String>();
 
-            jsonConfigTempArray = new JSONArray();
+                jsonConfigTempArray = new JSONArray();
 
-            int locationi = -1, locationj = -1, locationk = -1;
-            for (int i = 0; i < objecttemp.length(); i++) {
-                JSONObject tempjs = (JSONObject) objecttemp.get(i);
+                int locationi = -1, locationj = -1, locationk = -1;
+                for (int i = 0; i < objecttemp.length(); i++) {
+                    JSONObject tempjs = (JSONObject) objecttemp.get(i);
 
-                JSONArray tempjsArr = tempjs.getJSONArray(ITEMS);
-                for (int j = 0; j < tempjsArr.length(); j++) {
-                    JSONObject tempProjectLevel = (JSONObject) tempjsArr.get(j);
+                    JSONArray tempjsArr = tempjs.getJSONArray(ITEMS);
+                    for (int j = 0; j < tempjsArr.length(); j++) {
+                        JSONObject tempProjectLevel = (JSONObject) tempjsArr.get(j);
 
-                    JSONArray tempJsonArrayServer = tempProjectLevel.getJSONArray(ITEMS);
-                    for (int k = 0; k < tempJsonArrayServer.length(); k++) {
-                        JSONObject tempServerLevel = (JSONObject) tempJsonArrayServer.get(k);
-                        if (tempServerLevel.get("ServerID").equals(tempServerID)) {
-                            locationj = j;
-                            locationi = i;
-                            locationk = k;
+                        JSONArray tempJsonArrayServer = tempProjectLevel.getJSONArray(ITEMS);
+                        for (int k = 0; k < tempJsonArrayServer.length(); k++) {
+                            JSONObject tempServerLevel = (JSONObject) tempJsonArrayServer.get(k);
+                            if (tempServerLevel.get("ServerID").equals(tempServerID)) {
+                                locationj = j;
+                                locationi = i;
+                                locationk = k;
+                            }
                         }
                     }
                 }
-            }
 
-            while (resultSet.next()) {
-                jsonConfigTemp = new JSONObject();
-                configID = String.valueOf(resultSet.getInt("config_id"));
-                configName = resultSet.getString("config_name");
-                jsonConfigTemp.put("ConfigID", configID);
+                while (resultSet.next()) {
+                    jsonConfigTemp = new JSONObject();
+                    configID = String.valueOf(resultSet.getInt("config_id"));
+                    configName = resultSet.getString("config_name");
+                    jsonConfigTemp.put("ConfigID", configID);
 
-                jsonConfigTemp.put("id", configName);
-                jsonConfigTempArray.put(jsonConfigTemp);
+                    jsonConfigTemp.put("id", configName);
+                    jsonConfigTempArray.put(jsonConfigTemp);
 
-            }
-
-            JSONObject tempjs;
-            JSONArray tempjsArr;
-            if (locationi > -1) {
-                tempjs = (JSONObject) objecttemp.get(locationi);
-
-                tempjsArr = tempjs.getJSONArray(ITEMS);
-                JSONObject tempProjectLevel;
-                JSONArray tempjsArrServer;
-                JSONObject tempServerLevel;
-                if (locationj > -1) {
-                    tempProjectLevel = (JSONObject) tempjsArr.get(locationj);
-
-                    tempjsArrServer = tempProjectLevel.getJSONArray(ITEMS);
-                    if (locationk > -1) {
-                        tempServerLevel = (JSONObject) tempjsArrServer.get(locationk);
-
-                        tempServerLevel.put(ITEMS, jsonConfigTempArray);
-                        tempjsArrServer.put(locationk, tempServerLevel);
-                    }
-                    tempProjectLevel.put(ITEMS, tempjsArrServer);
-
-                    tempjsArr.put(locationj, tempProjectLevel);
                 }
-                tempjs.put(ITEMS, tempjsArr);
-
-                objecttemp.put(locationi, tempjs);
+                LOGGER.info(jsonConfigTempArray.toString());
+                JSONObject tempjs;
+                JSONArray tempjsArr;
+                if (locationi > -1) {
+                    tempjs = (JSONObject) objecttemp.get(locationi);
+                    tempjsArr = tempjs.getJSONArray(ITEMS);
+                    JSONObject tempProjectLevel;
+                    JSONArray tempjsArrServer;
+                    JSONObject tempServerLevel;
+                    if (locationj > -1) {
+                        tempProjectLevel = (JSONObject) tempjsArr.get(locationj);
+                        tempjsArrServer = tempProjectLevel.getJSONArray(ITEMS);
+                        if (locationk > -1) {
+                            tempServerLevel = (JSONObject) tempjsArrServer.get(locationk);
+                            tempServerLevel.put(ITEMS, jsonConfigTempArray);
+                            tempjsArrServer.put(locationk, tempServerLevel);
+                        }
+                        tempProjectLevel.put(ITEMS, tempjsArrServer);
+                        tempjsArr.put(locationj, tempProjectLevel);
+                    }
+                    tempjs.put(ITEMS, tempjsArr);
+                    objecttemp.put(locationi, tempjs);
+                }
+                serverMap.put(tempServerID, tempServerMap);
             }
-            serverMap.put(tempServerID, tempServerMap);
         }
 
         profile.put(PROFILE, objecttemp);
