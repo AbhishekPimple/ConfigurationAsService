@@ -63,7 +63,7 @@
 									class="k-button k-primary" value="Add Server"></li>
 								<li><input type="button" id="updateserverbutton"
 									class="k-button k-primary" value="Update Server"></li>
-								<li><input type="button" id="deleteserverbutton"
+								<li><input type="button" id="deleteserverbutton" style="background-color: red"
 									class="k-button k-primary" value="Delete Server"></li>
 							</ul>
 						</form>
@@ -107,7 +107,7 @@
 								class="k-button k-primary" value="Create Project"></li>
 							<li><input type="button" id="updateprojectbutton"
 								class="k-button k-primary" value="Update Project"></li>
-							<li><input type="button" id="deleteprojectbutton"
+							<li><input type="button" id="deleteprojectbutton" style="background-color: red"
 								class="k-button k-primary" value="Delete Project"></li>
 						</ul>
 
@@ -128,7 +128,7 @@
 								class="k-button k-primary" value="Create Workbench"></li>
 							<li><input type="button" id="updateworkbenchbutton"
 								class="k-button k-primary" value="Update Workbench"></li>
-							<li><input type="button" id="deleteworkbenchbutton"
+							<li><input type="button" id="deleteworkbenchbutton" style="background-color: red"
 								class="k-button k-primary" value="Delete Workbench"></li>
 						</ul>
 

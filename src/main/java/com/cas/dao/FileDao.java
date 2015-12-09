@@ -14,9 +14,11 @@ public interface FileDao {
 
     public Map<String, String> getServerData(int fileId, int serverId);
 
-    public Timestamp getRetrievedTimestamp(int fileId);
+    public Timestamp getRetrievedTimestamp(int fileId, String serverId);
 
     public void insertFileTimeStamp(Timestamp timestamp, int fileId);
+
+    public String deletefile(String fileId);
 
 
 }

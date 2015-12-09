@@ -155,7 +155,7 @@ $(document).ready(
 				}
 			}).data("kendoTreeView");
 //			treeview implementation 
-
+			tree.expand(".k-item");
 			var temp = treeViewdata.UserProfile[0].Profile;
 			var workbenchData = "[";
 			//console.log("treeview profile", temp.length);
@@ -290,6 +290,8 @@ $(document).ready(
 							//console.log("Before", JSON.stringify(jsonString));  
 						},
 						success: function (result) {
+							
+							//alertify.alert("Project has been created successfully");
 							alert("Project has been created successfully");
 							//console.log("data", result);
 							location.reload();

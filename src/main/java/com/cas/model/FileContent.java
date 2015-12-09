@@ -9,7 +9,7 @@ public class FileContent implements Serializable{
     private static final long serialVersionUID = 1L;
     String name;
     String content;
-    String serverId;
+    String[] serverIds;
     String isRestart;
 
     public FileContent(){
@@ -29,14 +29,13 @@ public class FileContent implements Serializable{
         this.isRestart = isRestart;
     }
 
-
-    public String getServerId() {
-        return serverId;
-    }
-    public void setServerId(String serverId) {
-        this.serverId = serverId;
+    public String[] getServerIds() {
+        return serverIds;
     }
 
+    public void setServerIds(String[] serverIds) {
+        this.serverIds = serverIds;
+    }
 
     public String getName() {
         return name;

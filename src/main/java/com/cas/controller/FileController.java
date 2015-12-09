@@ -102,9 +102,9 @@ public class FileController {
 
             String name = fileContent.getName();
             String content = fileContent.getContent();
-            String serverId = fileContent.getServerId();
+            String[] serverIds = fileContent.getServerIds();
             String isRestart = fileContent.getIsRestart();
-            filedelegate.saveFile(name, content, serverId, isRestart);
+            filedelegate.saveFile(name, content, serverIds, isRestart);
             returnText = "{}";
             return returnText;
 
@@ -126,8 +126,8 @@ public class FileController {
 
             String name = fileContent.getName();
             String content = fileContent.getContent();
-            String serverId = fileContent.getServerId();
-            boolean isModified = filedelegate.checkModified(name, content, serverId);
+            String[] serverIds = fileContent.getServerIds();
+            boolean isModified = filedelegate.checkModified(name, content, serverIds);
             if(isModified){
                 returnText = "modified";
                 return returnText;
@@ -155,6 +155,27 @@ public class FileController {
                 return file;
             } else {
                 return null;
+            }
+
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE,e.getMessage(),e);
+        }
+        return null;
+
+    }
+    
+    @RequestMapping(value = "/deletefile", method = RequestMethod.POST, headers = {"Content-type=application/json"})
+    @ResponseBody public String deletefile(@RequestBody String fileJson) throws   IOException {
+
+       JSONObject newObj = new JSONObject(fileJson);
+       String fileId = newObj.getString("fileId");
+
+        try {
+
+            if (filedelegate.deletefile(fileId) != null) {
+                return "{}";
+            } else {
+                return "Failure";
             }
 
         } catch (Exception e) {

@@ -43,9 +43,6 @@
 	
 	</script>
 
-
-	
-		
 	
 	<%-- <div id="filecontent" contenteditable="true">
 		<c:if test="${not empty filecontent}">
@@ -54,11 +51,15 @@
 		</c:if>
 	</div> --%>
 	<div id="savefile">
-		<label for="selectserver"><b>Push this file to server</b></label> <input
-			id="selectserver" value="1" style="width: 100%;" /> <br> <input
-			type="button" class="k-button k-primary" id="savebutton"
-			value="Push File" /> <input type="button" class="k-button k-primary"
-			id="saveandrestartbutton" value="Push File and Restart Server" />
+		<label for="selectserver"><b>Push this file to server</b></label><br>
+		<input type="checkbox" id="checkAll"/> Select all<br>
+		<div id="serverlist">
+			
+		</div>
+		<!--  <input id="selectserver" value="1" style="width: 100%;" /> --> <br> 
+			<input type="button" class="k-button k-primary" id="savebutton" value="Push File" /> 
+			<input type="button" class="k-button k-primary" id="saveandrestartbutton" value="Push File and Restart Server" />
+			<input type="button" style="background-color: red" class="k-button k-primary" id="deletefilebutton" value="Delete this file" />
 
 
 	</div>

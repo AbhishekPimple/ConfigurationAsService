@@ -28,20 +28,26 @@ public class FileDelegate {
 
     }
 
-    public boolean saveFile(String name, String content, String serverId, String isRestart){
-        return fileService.saveFile(name, content, serverId, isRestart);
+    public boolean saveFile(String name, String content, String[] serverIds, String isRestart){
+        return fileService.saveFile(name, content, serverIds, isRestart);
     }
 
 
 
 
-    public boolean checkModified(String name, String content, String serverId) {
-        return fileService.checkModified(name, content, serverId);
+    public boolean checkModified(String name, String content, String[] serverIds) {
+        return fileService.checkModified(name, content, serverIds);
     }
 
 
 
     public File addFile(File file) {
         return fileService.addFile(file);
+    }
+
+
+
+    public String deletefile(String fileId) {
+        return fileService.deletefile(fileId);
     }
 }
