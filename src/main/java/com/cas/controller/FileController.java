@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 
 
 import org.codehaus.jackson.map.ObjectMapper;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.cas.delegate.FileDelegate;
 import com.cas.model.File;
@@ -31,9 +33,7 @@ public class FileController {
     @SuppressWarnings("unchecked")
     @RequestMapping(value = "/getfile", method = RequestMethod.GET)
     public ModelAndView getFile(HttpServletRequest request) {
-
-
-        ModelAndView model = new ModelAndView("showfile");
+        ModelAndView model = null;
         String fileId = request.getParameter("fileid");
         List<String> fileContent ;
         int intfileId = 0;
@@ -41,19 +41,55 @@ public class FileController {
             intfileId = Integer.parseInt(fileId);
         }
         fileContent = filedelegate.getFile(intfileId);
-        String filename = fileContent.get(0);
-
-        fileContent.remove(0);
-
-
-        model.addObject("filename", filename);
-        //model.ad
-        model.addObject("filecontent", fileContent);
-
-
+        if(fileContent == null){
+            model = new ModelAndView("error");
+            model.addObject("message", "This file does not exist on remote server");
+            
+        }else{
+            model = new ModelAndView("showfile");
+            String filename = fileContent.get(0);
+            fileContent.remove(0);
+            model.addObject("filename", filename);
+            model.addObject("filecontents", fileContent.get(0));
+        }
         return model;
+        
+        
+
+
+        
     }
 
+  /*  @RequestMapping(value = "/getfile", method = RequestMethod.POST)
+    @ResponseBody
+    public String getFile(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+        JSONObject filedata = new JSONObject();
+        String fileId = request.getParameter("fileid");
+        List<String> fileContent ;
+        int intfileId = 0;
+        if(fileId != null){
+            intfileId = Integer.parseInt(fileId);
+        }
+        fileContent = filedelegate.getFile(intfileId);
+        if(fileContent == null){
+            redirectAttributes.addFlashAttribute("message", "This file does not exist on remote server");
+            return "redirect:/error";
+        }else{
+            
+            String filename = fileContent.get(0);
+            fileContent.remove(0);
+           
+            filedata.put("filename", filename);
+            filedata.put("filecontent", fileContent.get(0));
+            
+        }
+        return filedata.toString();
+        
+        
+
+
+        
+    }*/
 
 
     @RequestMapping(value = "/savefile", method = RequestMethod.POST, headers = {"Content-type=application/json"})

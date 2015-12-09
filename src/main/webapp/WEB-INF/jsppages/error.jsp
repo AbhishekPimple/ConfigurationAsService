@@ -1,7 +1,7 @@
 <%@page session="false"%>
 <html>
 <head>
-<title>${title}</title>
+<title>Error</title>
 </head>
 <body>
    <h2>${message}</h2>

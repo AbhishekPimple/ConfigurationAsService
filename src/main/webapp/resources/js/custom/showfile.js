@@ -1,5 +1,9 @@
+var myeditor;
 $(document).ready(function() {
 	/* console.log($("#filecontent").text()) */
+	
+	
+
 	var servers = window.servers;
 	console.log("In Show file", servers);
 	//var serverData = JSON.parse(servers);
@@ -16,6 +20,28 @@ $(document).ready(function() {
 		var value = $("#selectserver").val();
 	}
 	
+	
+	
+/*	$.ajax({
+		url: "getfile",
+		type: 'POST',
+		async: false,
+		dataType: "json",
+		success: function (result) {
+			console.log("Got result: "+result);
+			
+			var editor = CodeMirror.fromTextArea(document.getElementById("filecontent"), {
+		        value: '${filecontent}',
+				mode: "xml",
+		        lineNumbers: true,
+		    });
+		},
+		error: function (e) {
+			//console.log(e);
+			alert("error"+e);
+		}
+	});*/
+	
 
 	$('div[contenteditable]').keydown(function(e) {
 	    // trap the return key being pressed
@@ -30,8 +56,9 @@ $(document).ready(function() {
 	$("#savebutton").click(function() {
 		var filename = document.title;
 		/*var regex = /<br\s*[\/]?>/gi;*/
-		console.log("before", $("#filecontent").html());
-		var filecontent = $("#filecontent").html();
+		//console.log("before", $("#filecontent").html());
+		//var filecontent = $("#filecontent").val();
+		var filecontent = myeditor.getValue();
 		console.log(filecontent);
 		var serverId = $("#selectserver").val();
 		

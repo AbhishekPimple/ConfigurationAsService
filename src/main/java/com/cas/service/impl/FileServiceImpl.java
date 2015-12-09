@@ -18,12 +18,17 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringEscapeUtils;
+
 import com.cas.dao.FileDao;
 import com.cas.service.FileService;
+import com.google.common.base.Charsets;
+import com.google.common.io.Files;
 
 public class FileServiceImpl implements FileService {
 
-    FileDao fileDao;
+    static FileDao fileDao;
     private static final Logger LOGGER = Logger.getLogger(FileServiceImpl.class.getName());
     public static final int START = 8;
     public static final int END = 27;
@@ -33,6 +38,7 @@ public class FileServiceImpl implements FileService {
     public static final String HOSTNAME = "hostname";
     public static final String USERNAME = "username";
     public static final String SCRIPT_FILE = "launchExpect.sh";
+    public static final String FILE_NOT_EXISTS_ERROR = "ERROR:File does not exist.";
 
     public FileDao getFileDao() {
         return fileDao;
@@ -42,20 +48,30 @@ public class FileServiceImpl implements FileService {
         this.fileDao = fileDao;
     }
 
-    public static void utilityReadInputStream(BufferedReader br, int fileId) {
+    public static boolean utilityReadInputStream(BufferedReader br, int fileId) {
+        boolean isFileExists = true;
         try {
-            FileServiceImpl fileServiceImpl = new FileServiceImpl();
+            
+           
             while (br.ready()) {
                 String readLine = br.readLine();
-                if (readLine.startsWith("Modify: ")) {
-                    fileServiceImpl.insertFileStamp(readLine.substring(START, END), fileId);
+                if(FILE_NOT_EXISTS_ERROR.equals(readLine)){
+                    isFileExists = false;
+                    return isFileExists;
                 }
-                LOGGER.log(Level.ALL, readLine);
+                if (readLine.startsWith("Modify: ")) {
+                   insertFileStamp(readLine.substring(START, END), fileId);
+                }
+         
+                System.out.println(readLine);
+                //LOGGER.log(Level.ALL, readLine);
             }
             br.close();
+            
         } catch (IOException e) {
             LOGGER.log(Level.SEVERE, e.getMessage(), e);
         }
+        return isFileExists;
     }
 
     public static boolean utilityCheckIfModified(BufferedReader br, int fileId) {
@@ -98,21 +114,33 @@ public class FileServiceImpl implements FileService {
 
             BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));
             BufferedReader r2 = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+            boolean isFileExists = false;
+            isFileExists = utilityReadInputStream(r, fileId);
+            
+            if(!isFileExists){
+                return null;
+            }else{
+                utilityReadInputStream(r2, 0);
 
-            utilityReadInputStream(r, fileId);
-            utilityReadInputStream(r2, 0);
+                File oldFile = new File(propertyHome + fileData.get("filename"));
+                File newFile = new File(propertyHome + baseFileName);
 
-            File oldFile = new File(propertyHome + fileData.get("filename"));
-            File newFile = new File(propertyHome + baseFileName);
+                oldFile.renameTo(newFile);
 
-            oldFile.renameTo(newFile);
+                fileContent.add(baseFileName);
 
-            fileContent.add(baseFileName);
-
-            s = new Scanner(newFile);
-            while (s.hasNextLine()) {
-                fileContent.add(s.nextLine());
+                s = new Scanner(newFile);
+               
+                String data = Files.toString(newFile, Charsets.UTF_8);
+                String refineddata = StringEscapeUtils.escapeJavaScript(data);
+                System.out.println(refineddata);
+                fileContent.add(refineddata);
+                /*while (s.hasNextLine()) {
+                    fileContent.add(s.nextLine());
+                }*/
             }
+            
+            
 
         } catch (SQLException e1) {
             LOGGER.log(Level.SEVERE, e1.getMessage(), e1);
@@ -232,8 +260,9 @@ public class FileServiceImpl implements FileService {
 
         }
     }
+    
 
-    public void insertFileStamp(String timestampString, int fileId) {
+    public static void insertFileStamp(String timestampString, int fileId) {
         try {
             Timestamp filetimestamp;
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
