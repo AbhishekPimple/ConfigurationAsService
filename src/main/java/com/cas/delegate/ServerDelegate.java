@@ -21,8 +21,12 @@ public class ServerDelegate {
 
     }
 
-    public Object updateServer(Server server) {
+    public Server updateServer(Server server) {
         return serverService.updateServer(server);
     }
+
+	public Server deleteServer(Server server) {
+		return serverService.deleteServer(server);
+	}
 
 }

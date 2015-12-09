@@ -24,4 +24,9 @@ public class WorkbenchServiceImpl implements WorkbenchService{
         return workbenchDao.updateWorkbench(workbench);
     }
 
+	@Override
+	public Workbench deleteWorkbench(Workbench workbench) {
+		return workbenchDao.deleteWorkbench(workbench);
+	}
+
 }

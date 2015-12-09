@@ -63,5 +63,26 @@ public class ServerController {
         return null;
 
     }
+    
+    @RequestMapping(value = "/serverdelete", method = RequestMethod.POST, headers = {"Content-type=application/json"})
+    @ResponseBody
+    public  Server deleteServer(@RequestBody String serverJson) throws IOException {
+
+        Server server = new ObjectMapper().readValue(serverJson, Server.class);
+
+        try {
+
+            if (serverDelegate.deleteServer(server) != null) {
+                return server;
+            } else {
+                return null;
+            }
+
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE,e.getMessage(),e);
+        }
+        return null;
+
+    }
 
 }

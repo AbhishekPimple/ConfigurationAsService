@@ -7,4 +7,6 @@ public interface ServerDao {
 
     public Server updateServer(Server server);
 
+	public Server deleteServer(Server server);
+
 }

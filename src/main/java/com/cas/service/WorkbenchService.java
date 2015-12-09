@@ -9,4 +9,6 @@ public interface WorkbenchService {
 
     public Workbench updateWorkbench(Workbench workbench);
 
+	public Workbench deleteWorkbench(Workbench workbench);
+
 }

@@ -69,5 +69,26 @@ public class WorkbenchController {
         return null;
 
     }
+    
+    @RequestMapping(value = "/workbenchdelete", method = RequestMethod.POST, headers = {"Content-type=application/json"})
+    @ResponseBody
+    public  Workbench deleteWorkbench(@RequestBody String workbenchJson) throws IOException {
+
+        Workbench workbench = new ObjectMapper().readValue(workbenchJson, Workbench.class);
+
+        try {
+
+            if (workbenchDelegate.deleteWorkbench(workbench) != null) {
+                return workbench;
+            } else {
+                return null;
+            }
+
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE,e.getMessage(),e);
+        }
+        return null;
+
+    }
 
 }

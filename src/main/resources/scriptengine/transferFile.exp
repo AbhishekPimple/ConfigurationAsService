@@ -53,7 +53,7 @@ exit 1;
 }
 
 if { $cmd == "restart" } {
-   set timeout 2;
+   set timeout 4;
    exp_send "$filepath\r"
    expect {
           timeout {exit 1;}

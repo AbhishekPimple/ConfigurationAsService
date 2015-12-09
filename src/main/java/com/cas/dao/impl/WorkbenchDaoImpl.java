@@ -100,4 +100,121 @@ public class WorkbenchDaoImpl implements WorkbenchDao {
         return null;
     }
 
+	@Override
+	public Workbench deleteWorkbench(Workbench workbench) {
+		if (workbench != null) {
+			int workbenchId = Integer.parseInt(workbench.getWorkbenchId());
+			if(deleteWorkbenchQuery(workbenchId)==0)
+				return null;
+
+			return workbench;
+		}
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	   private int deleteWorkbenchQuery(int workbenchId) {
+		   try {
+				String query = "Select project_id from project where workbench_id = ?";
+				PreparedStatement pstmt = (PreparedStatement) dataSource.getConnection().prepareStatement(query);
+				pstmt.setInt(ONE, workbenchId);
+				System.out.println(pstmt);
+				ResultSet resultSet = pstmt.executeQuery();
+				
+				while(resultSet.next()) {	
+					if(deleteProjectQuery(resultSet.getInt(ONE)) == 0)
+						return 0;
+					
+				}
+				String query1 = "DELETE from workbench where workbench_id=?";
+				try {
+					PreparedStatement pstmt1 = (PreparedStatement) dataSource.getConnection().prepareStatement(query1);
+					pstmt1.setInt(ONE, workbenchId);
+					System.out.println(pstmt1);
+					if(pstmt1.executeUpdate()==0)
+						return 0;
+				} catch (SQLException e) {
+					LOGGER.log(Level.SEVERE, e.getMessage(), e);
+				}
+			} catch (SQLException e) {
+				LOGGER.log(Level.SEVERE, e.getMessage(), e);
+
+			}
+			return 1;
+	}
+
+	private int deleteProjectQuery(int projectId) {
+	    	try {
+				String query = "Select server_id from server where project_id = ?";
+				PreparedStatement pstmt = (PreparedStatement) dataSource.getConnection().prepareStatement(query);
+				pstmt.setInt(ONE, projectId);
+				System.out.println(pstmt);
+				ResultSet resultSet = pstmt.executeQuery();
+				
+				while(resultSet.next()) {	
+					if(deleteServerQuery(resultSet.getInt(ONE)) == 0)
+						return 0;
+					
+				}
+				String query1 = "DELETE from project where project_id=?";
+				try {
+					PreparedStatement pstmt1 = (PreparedStatement) dataSource.getConnection().prepareStatement(query1);
+					pstmt1.setInt(ONE, projectId);
+					System.out.println(pstmt1);
+					if(pstmt1.executeUpdate()==0)
+						return 0;
+				} catch (SQLException e) {
+					LOGGER.log(Level.SEVERE, e.getMessage(), e);
+				}
+			} catch (SQLException e) {
+				LOGGER.log(Level.SEVERE, e.getMessage(), e);
+
+			}
+			return 1;
+		}
+
+		public int deleteServerQuery(int serverId) {
+			try {
+				String query = "Select config_id from config where server_id = ?";
+				PreparedStatement pstmt = (PreparedStatement) dataSource.getConnection().prepareStatement(query);
+				pstmt.setInt(ONE, serverId);
+				System.out.println(pstmt);
+				ResultSet resultSet = pstmt.executeQuery();
+				//FileDaoImpl fileDaoImpl = new FileDaoImpl();
+				while(resultSet.next()) {	
+					if(deleteConfig(resultSet.getInt(ONE)) == 0)
+						return 0;
+					//deleteConfig(resultSet.getInt(ONE));
+				}
+				String query1 = "DELETE from server where server_id=?";
+				try {
+					PreparedStatement pstmt1 = (PreparedStatement) dataSource.getConnection().prepareStatement(query1);
+					pstmt1.setInt(ONE, serverId);
+					System.out.println(pstmt1);
+					if(pstmt1.executeUpdate()==0)
+						return 0;
+				} catch (SQLException e) {
+					LOGGER.log(Level.SEVERE, e.getMessage(), e);
+				}
+			} catch (SQLException e) {
+				LOGGER.log(Level.SEVERE, e.getMessage(), e);
+
+			}
+			return 1;
+
+		}
+
+		public int deleteConfig(int configId) {
+			String query = "DELETE from config where config_id=?";
+			try {
+				PreparedStatement pstmt = (PreparedStatement) dataSource.getConnection().prepareStatement(query);
+				pstmt.setInt(ONE, configId);
+				System.out.println(pstmt);
+				return pstmt.executeUpdate();
+			} catch (SQLException e) {
+				LOGGER.log(Level.SEVERE, e.getMessage(), e);
+			}
+			return 0;
+		}
+
 }

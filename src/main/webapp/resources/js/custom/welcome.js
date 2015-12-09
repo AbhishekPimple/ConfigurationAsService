@@ -51,7 +51,17 @@ $(document).ready(
 				}
 			});
 
-
+/*			$("#treeview-left").kendoTreeView({
+				  template: "#= item.text # color:#: item.color #",
+				  dataSource: [
+				    { text: "green", color: "green", items: [
+				      { text: "yellow", color: "yellow" },
+				      { text: "red", color: "red" }
+				    ]},{
+				    text: "blue", color: "blue"
+				    }
+				  ]
+				});*/
 
 
 
@@ -83,14 +93,14 @@ $(document).ready(
 					if(level==4) {
 						//console.log("fileID", child);
 						var fileId=parseInt(child.ConfigID,10);
-						var fileWindow = window.open("http://71.186.217.29:8080/ConfigAsService/getfile?fileid="+fileId, null, null, null);
+						var fileWindow = window.open("http://localhost:8080/ConfigAsService/getfile?fileid="+fileId, null, null, null);
 						fileWindow.servers = servers;
 						//console.log("Sending to showfile window", servers);
 					} else if(level==3) {
 						var tab = $("#tserver");
 						$("#tabstrip").data("kendoTabStrip").select(tab.index());
 						$("#updateserverbutton").show();
-						//$("#deleteserverbutton").show();
+						$("#deleteserverbutton").show();
 						$("#createserverbutton").hide();
 
 						//console.log("index", tab.index());
@@ -116,7 +126,7 @@ $(document).ready(
 						var tab = $("#tproject");
 						$("#tabstrip").data("kendoTabStrip").select(tab.index());
 						$("#updateprojectbutton").show();
-						//$("#deleteprojectbutton").show();
+						$("#deleteprojectbutton").show();
 						$("#createprojectbutton").hide();
 
 
@@ -136,7 +146,7 @@ $(document).ready(
 						var tab = $("#tworkbench");
 						$("#tabstrip").data("kendoTabStrip").select(tab.index());
 						$("#updateworkbenchbutton").show();
-						//$("#deleteworkbenchbutton").show();
+						$("#deleteworkbenchbutton").show();
 						$("#createworkbenchbutton").hide();
 
 
@@ -472,6 +482,45 @@ $(document).ready(
 
 			});
 
+			$("#deleteworkbenchbutton").click(function() {
+				if(workbenchvalidateFields()) {
+					
+					var workbenchName = $("#workbenchname").val();
+					var workbenchDesc = $("#workbenchdescription").val();
+
+					var jsonString = {
+							workbenchId: workbenchId,
+							workbenchName: workbenchName,
+							workbenchDesc: workbenchDesc,
+							
+					};
+
+					//console.log(JSON.stringify(jsonString));
+					$.ajax({
+						url: "workbenchdelete",
+						type: 'POST',
+						dataType: 'json',
+						headers: { 
+							'Content-Type': 'application/json' 
+						},
+						data: JSON.stringify(jsonString),
+						beforeSend: function() {
+							//console.log("Before", JSON.stringify(jsonString));  
+						},
+						success: function (result) {
+							alert("Workbench has been deleted successfully");
+							//console.log("data", result);
+							location.reload();
+						},
+						error: function () {
+							alert("error");
+						}
+					});
+				}
+
+			});
+			
+			
 			function servervalidateFields() {
 
 				var serverName = $("#servername").val();
@@ -593,8 +642,59 @@ $(document).ready(
 				}
 
 			});
+			
+			
+			$("#deleteserverbutton").click(function() {
+				//if(servervalidateFields()) {
+					var projectId = $("#selectproject").val();
+					var serverName = $("#servername").val();
+					var serverDesc = $("#serverdescription").val();
+					var hostIP = $("#hostnameip").val();
+					var username = $("#username").val();
+					var password = $("#password").val();
+					var serverType = $("#servertype").val();
+					var logFilePath = $("#logfilepath").val();
+					var restartCmd = $("#restartCommand").val();
 
+					var jsonString = {
+							serverId: serverId,
+							serverName: serverName,
+							serverDesc: serverDesc,
+							hostIP: hostIP,
+							username: username,
+							password: password,
+							serverType: serverType,
+							logFilePath: logFilePath,
+							restartCmd: restartCmd,
+							projectId: projectId
+					};
 
+					//console.log(JSON.stringify(jsonString));
+					$.ajax({
+						url: "serverdelete",
+						type: 'POST',
+						dataType: 'json',
+						headers: { 
+							'Content-Type': 'application/json' 
+						},
+						data: JSON.stringify(jsonString),
+						beforeSend: function() {
+							//console.log("Before", JSON.stringify(jsonString));  
+						},
+						success: function (result) {
+							alert("Server has been deleted successfully");
+							//console.log("data", result);
+							location.reload();
+						},
+						error: function () {
+							alert("error");
+						}
+					});
+				//}
+
+			});
+			
+			
 			function filevalidateFields() {
 
 				var filePath = $("#filepath").val();

@@ -8,4 +8,6 @@ public interface ServerService {
 
     public Server updateServer(Server server);
 
+	public Server deleteServer(Server server);
+
 }

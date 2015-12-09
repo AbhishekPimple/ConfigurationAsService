@@ -8,4 +8,6 @@ public interface WorkbenchDao {
 
     public Workbench updateWorkbench(Workbench workbench);
 
+	public Workbench deleteWorkbench(Workbench workbench);
+
 }
