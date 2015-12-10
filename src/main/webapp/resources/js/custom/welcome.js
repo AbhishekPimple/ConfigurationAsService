@@ -93,7 +93,8 @@ $(document).ready(
 					if(level==4) {
 						//console.log("fileID", child);
 						var fileId=parseInt(child.ConfigID,10);
-						var fileWindow = window.open("http://localhost:8080/ConfigAsService/getfile?fileid="+fileId, null, null, null);
+						var fileWindow = window.open("http://52.35.157.35:8080/ConfigAsService/getfile?fileid="+fileId, null, null, null);
+						//var fileWindow = window.open("http://71.186.217.29:8080/ConfigAsService/getfile?fileid="+fileId, null, null, null);
 						fileWindow.servers = servers;
 						//console.log("Sending to showfile window", servers);
 					} else if(level==3) {
@@ -288,28 +289,31 @@ $(document).ready(
 					};
 
 					//console.log(JSON.stringify(jsonString));
-					$.ajax({
-						url: "project",
-						type: 'POST',
-						dataType: 'json',
-						headers: { 
-							'Content-Type': 'application/json' 
-						},
-						data: JSON.stringify(jsonString),
-						beforeSend: function() {
-							//console.log("Before", JSON.stringify(jsonString));  
-						},
-						success: function (result) {
-							
-							//alertify.alert("Project has been created successfully");
-							alert("Project has been created successfully");
-							//console.log("data", result);
-							location.reload();
-						},
-						error: function () {
-							alert("error");
-						}
-					});
+					
+						$.ajax({
+							url: "project",
+							type: 'POST',
+							dataType: 'json',
+							headers: { 
+								'Content-Type': 'application/json' 
+							},
+							data: JSON.stringify(jsonString),
+							beforeSend: function() {
+								//console.log("Before", JSON.stringify(jsonString));  
+							},
+							success: function (result) {
+								
+								//alertify.alert("Project has been created successfully");
+								alert("Project has been created successfully");
+								//console.log("data", result);
+								location.reload();
+							},
+							error: function () {
+								alert("error");
+							}
+						});
+					
+					
 
 				}
 			});
@@ -366,26 +370,29 @@ $(document).ready(
 					};
 
 					//console.log(JSON.stringify(jsonString));
-					$.ajax({
-						url: "projectdelete",
-						type: 'POST',
-						dataType: 'json',
-						headers: { 
-							'Content-Type': 'application/json' 
-						},
-						data: JSON.stringify(jsonString),
-						beforeSend: function() {
-							//console.log("Before", JSON.stringify(jsonString));  
-						},
-						success: function (result) {
-							alert("Project has been deleted successfully");
-							//console.log("data", result);
-							location.reload();
-						},
-						error: function () {
-							alert("error");
-						}
-					});
+					if (confirm('Are you sure you want to delete this Project?. This will delete all servers and files under this project.')){
+						$.ajax({
+							url: "projectdelete",
+							type: 'POST',
+							dataType: 'json',
+							headers: { 
+								'Content-Type': 'application/json' 
+							},
+							data: JSON.stringify(jsonString),
+							beforeSend: function() {
+								//console.log("Before", JSON.stringify(jsonString));  
+							},
+							success: function (result) {
+								alert("Project has been deleted successfully");
+								//console.log("data", result);
+								location.reload();
+							},
+							error: function () {
+								alert("error");
+							}
+						});
+					}
+					
 				}
 
 			});
@@ -496,26 +503,29 @@ $(document).ready(
 					};
 
 					//console.log(JSON.stringify(jsonString));
-					$.ajax({
-						url: "workbenchdelete",
-						type: 'POST',
-						dataType: 'json',
-						headers: { 
-							'Content-Type': 'application/json' 
-						},
-						data: JSON.stringify(jsonString),
-						beforeSend: function() {
-							//console.log("Before", JSON.stringify(jsonString));  
-						},
-						success: function (result) {
-							alert("Workbench has been deleted successfully");
-							//console.log("data", result);
-							location.reload();
-						},
-						error: function () {
-							alert("error");
-						}
-					});
+					if (confirm('Are you sure you want to delete this Workbench?. This will delete all projects, servers and files under this workbench!')){
+						$.ajax({
+							url: "workbenchdelete",
+							type: 'POST',
+							dataType: 'json',
+							headers: { 
+								'Content-Type': 'application/json' 
+							},
+							data: JSON.stringify(jsonString),
+							beforeSend: function() {
+								//console.log("Before", JSON.stringify(jsonString));  
+							},
+							success: function (result) {
+								alert("Workbench has been deleted successfully");
+								//console.log("data", result);
+								location.reload();
+							},
+							error: function () {
+								alert("error");
+							}
+						});
+					}
+					
 				}
 
 			});
@@ -670,26 +680,29 @@ $(document).ready(
 					};
 
 					//console.log(JSON.stringify(jsonString));
-					$.ajax({
-						url: "serverdelete",
-						type: 'POST',
-						dataType: 'json',
-						headers: { 
-							'Content-Type': 'application/json' 
-						},
-						data: JSON.stringify(jsonString),
-						beforeSend: function() {
-							//console.log("Before", JSON.stringify(jsonString));  
-						},
-						success: function (result) {
-							alert("Server has been deleted successfully");
-							//console.log("data", result);
-							location.reload();
-						},
-						error: function () {
-							alert("error");
-						}
-					});
+					if (confirm('Are you sure you want to delete this Server?. This will delete all files under this Server!')){
+						$.ajax({
+							url: "serverdelete",
+							type: 'POST',
+							dataType: 'json',
+							headers: { 
+								'Content-Type': 'application/json' 
+							},
+							data: JSON.stringify(jsonString),
+							beforeSend: function() {
+								//console.log("Before", JSON.stringify(jsonString));  
+							},
+							success: function (result) {
+								alert("Server has been deleted successfully");
+								//console.log("data", result);
+								location.reload();
+							},
+							error: function () {
+								alert("error");
+							}
+						});
+					}
+					
 				//}
 
 			});
@@ -718,9 +731,10 @@ $(document).ready(
 					var fileDesc = $("#filedescription").val();
 					var filePath = $("#filepath").val();
 					var serverId = [];
-					$('#servercheckboxes input:checked').each(function() {
+					serverId.push($("#servercheckboxes :radio:checked").attr('id'));
+					/*$('#servercheckboxes input:checked').each(function() {
 						serverId.push($(this).attr('id'));
-					});
+					});*/
 
 					var jsonString = {
 							fileName: fileName,
@@ -796,7 +810,7 @@ $(document).ready(
 				//var fileWindow = window.open("getfile", null, null, null);
 				var fileID = $("#fileid").val();
 				//console.log("fileId", fileID);
-				var fileWindow = window.open("http://localhost:8080/ConfigAsService/getfile?fileid="+fileID, null, null, null);
+				var fileWindow = window.open("http://52.35.157.35:8080/ConfigAsService/getfile?fileid="+fileID, null, null, null);
 				fileWindow.servers = servers;
 				//console.log("Sending to showfile window", servers);
 			});
@@ -926,7 +940,7 @@ $(document).ready(
 				.append(
 						$("<p>").text(this.name).prepend(
 
-								$("<input>").attr({'type':'checkbox','id':this.id})
+								$("<input>").attr({'type':'radio','name':'servername','id':this.id})
 
 								.val(this.id)));
 			});

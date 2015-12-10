@@ -2,7 +2,7 @@ var myeditor;
 $(document).ready(function() {
 	/* console.log($("#filecontent").text()) */
 	console.log("In showfile.js");
-	
+	$('#loader').hide();
 
 	var servers = window.servers;
 	//console.log("In Show file", servers);
@@ -28,7 +28,7 @@ $(document).ready(function() {
 	$.each(servers, function(index, item){
 		//console.log("item "+item.name);
 		//console.log("item "+item.id);
-		var toAppend = '<input type="checkbox" class="server" name="servers" id="'+item.id+'" >'+item.name+'&nbsp&nbsp';
+		var toAppend = '<input type="checkbox" class="server" name="servers" id="'+item.id+'" ><label style="color:white">'+item.name+'</label>&nbsp&nbsp';
 		//console.log("to append :"+toAppend);
 		$("#serverlist").append(toAppend);
 	});
@@ -152,6 +152,12 @@ $(document).ready(function() {
 					type : 'POST',
 					dataType : "json",
 					data : JSON.stringify(jsonString),
+					beforeSend: function() {
+					     $('#loader').show();
+					},
+					complete: function(){
+					     $('#loader').hide();
+					},
 					success : function(data) {
 						console.log("File is not modified. So saving file");
 						$.ajax({
@@ -186,6 +192,12 @@ $(document).ready(function() {
 									type : 'POST',
 									dataType : "json",
 									data : JSON.stringify(jsonString),
+									beforeSend: function() {
+									     $('#loader').show();
+									},
+									complete: function(){
+									     $('#loader').hide();
+									},
 									success : function(data) {
 										console.log("Savefile :", data);
 										alert("File Successfully Saved");
@@ -239,70 +251,86 @@ $(document).ready(function() {
 			isRestart: "true",
 		};
 
-		
-		$.ajax({
-			headers: { 
-		    	'Content-Type': 'application/json' 
-		    },
-			url : 'checkmodify',
-			type : 'POST',
-			dataType : "json",
-			data : JSON.stringify(jsonString),
-			success : function(data) {
-				//console.log("File is not modified. So saving file");
-				$.ajax({
-					headers: { 
-				    	'Content-Type': 'application/json' 
-				    },
-					url : 'savefile',
-					type : 'POST',
-					dataType : "json",
-					data : JSON.stringify(jsonString),
-					success : function(data) {
-						console.log("Savefile :", data);
-						alert("File Successfully Saved");
-						window.close();
-					},
-					error : function(e) {
-						console.log(e);
-						alert("error during save file");
-					}
-				});
-			},
-			error : function(e) {
-				console.log(e);
-				if(e.responseText == "modified"){
-					console.log("File has been modified. Ask for user preference.");
-					if (confirm('File has been modifield. Do you still want to save it anyway?')){
-						$.ajax({
-							headers: { 
-						    	'Content-Type': 'application/json' 
-						    },
-							url : 'savefile',
-							type : 'POST',
-							dataType : "json",
-							data : JSON.stringify(jsonString),
-							success : function(data) {
-								console.log("Savefile :", data);
-								alert("File Successfully Saved and server has been restarted");
-								window.close();
-							},
-							error : function(e) {
-								if(e.responseText == "modified"){
-									
+		if(serverIds.length == 0){
+			alert("Please select at least one server");
+		}else{
+			$.ajax({
+				headers: { 
+			    	'Content-Type': 'application/json' 
+			    },
+				url : 'checkmodify',
+				type : 'POST',
+				dataType : "json",
+				data : JSON.stringify(jsonString),
+				success : function(data) {
+					//console.log("File is not modified. So saving file");
+					$.ajax({
+						headers: { 
+					    	'Content-Type': 'application/json' 
+					    },
+						url : 'savefile',
+						type : 'POST',
+						dataType : "json",
+						data : JSON.stringify(jsonString),
+						beforeSend: function() {
+						     $('#loader').show();
+						},
+						complete: function(){
+						     $('#loader').hide();
+						},
+						success : function(data) {
+							console.log("Savefile :", data);
+							alert("File Successfully Saved and server has been restarted");
+							window.close();
+						},
+						error : function(e) {
+							console.log(e);
+							alert("error during save file");
+						}
+					});
+				},
+				error : function(e) {
+					console.log(e);
+					if(e.responseText == "modified"){
+						console.log("File has been modified. Ask for user preference.");
+						if (confirm('File has been modifield. Do you still want to save it anyway?')){
+							$.ajax({
+								headers: { 
+							    	'Content-Type': 'application/json' 
+							    },
+								url : 'savefile',
+								type : 'POST',
+								dataType : "json",
+								data : JSON.stringify(jsonString),
+								beforeSend: function() {
+								     $('#loader').show();
+								},
+								complete: function(){
+								     $('#loader').hide();
+								},
+								success : function(data) {
+									console.log("Savefile :", data);
+									alert("File Successfully Saved and server has been restarted");
+									window.close();
+								},
+								error : function(e) {
+									if(e.responseText == "modified"){
+										
+									}
+									console.log(e);
+									alert("error during saving after user confirmation");
 								}
-								console.log(e);
-								alert("error during saving after user confirmation");
-							}
-						});
+							});
+						}
+					}else{
+						alert("error during check modification");
 					}
-				}else{
-					alert("error during check modification");
+					
+					
 				}
-				
-				
-			}
-		});
+			});
+		}
+		
 		
 		console.log(jsonString);
 		

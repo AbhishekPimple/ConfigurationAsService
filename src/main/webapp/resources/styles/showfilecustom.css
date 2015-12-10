@@ -4,13 +4,22 @@ html {
 }
 body {
 	background-color: #2b2b2b;
-	color: #ffffff;
 }
 .servertab, .filestab, .projecttab, .workbenchtab {
 	display: block;
 	margin: 30px auto 10px;
 	width: 64px;
 	height: 8px;
+}
+
+#loader {
+	position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -50px;
+    margin-left: -50px;
+    width: 100px;
+    height: 100px;
 }
 
 textarea {

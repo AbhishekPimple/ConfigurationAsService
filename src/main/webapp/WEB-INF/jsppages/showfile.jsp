@@ -50,9 +50,12 @@
 			</c:forEach>
 		</c:if>
 	</div> --%>
+	<div id='loader' class="loaderdiv">
+		<img src="resources/images/ajax-loader.gif"/>
+	</div>
 	<div id="savefile">
-		<label for="selectserver"><b>Push this file to server</b></label><br>
-		<input type="checkbox" id="checkAll"/> Select all<br>
+		<label style="color: white" for="selectserver"><b>Push this file to server</b></label><br>
+		<input type="checkbox" id="checkAll"/> <label style="color:white"> Select all</label><br>
 		<div id="serverlist">
 			
 		</div>

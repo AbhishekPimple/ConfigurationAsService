@@ -4,7 +4,7 @@ html {
 }
 
 body {
-	background-image: url("../../resources/images/Grey-background.jpg");
+	background-color: #2b2b2b;
 	background-position: center top;
     background-size: 100% auto;
     background-repeat: no-repeat;

@@ -106,7 +106,8 @@ public class FileServiceImpl implements FileService {
 			String cmd = "sh " + scriptHome + SCRIPT_FILE + " " + scriptHome + " " + fileData.get(USERNAME) + " "
 					+ fileData.get(HOSTNAME) + " " + fileData.get(PASSWD) + " pull" + " "
 					+ fileData.get("configfilepath") + " " + propertyHome;
-
+			
+			LOGGER.log(Level.ALL,"Get file Command is "+cmd);
 			Process p = Runtime.getRuntime().exec(cmd);
 			p.waitFor();
 
@@ -191,7 +192,7 @@ public class FileServiceImpl implements FileService {
 					String cmd = "sh " + scriptHome + SCRIPT_FILE + " " + scriptHome + " " + serverData.get(USERNAME)
 							+ " " + serverData.get(HOSTNAME) + " " + serverData.get(PASSWD) + " push" + " "
 							+ propertyHome + oldFileName + " " + remotePath;
-
+					LOGGER.log(Level.ALL,"Save file Command is "+cmd);
 					Process p = Runtime.getRuntime().exec(cmd);
 
 					p.waitFor();
@@ -214,7 +215,7 @@ public class FileServiceImpl implements FileService {
 					String cmd = "sh " + scriptHome + SCRIPT_FILE + " " + scriptHome + " " + serverData.get(USERNAME)
 							+ " " + serverData.get(HOSTNAME) + " " + serverData.get(PASSWD) + " push" + " "
 							+ propertyHome + oldFileName + " " + remotePath;
-
+					
 					multiPushwriter.write(cmd + "\n");
 
 					/*
@@ -235,8 +236,8 @@ public class FileServiceImpl implements FileService {
 				multiPushwriter.close();
 				String multipleServerLaunch = "sh " + scriptHome + "multipleCmdLauncher.sh " + propertyHome
 						+ "multiplepush.txt";
-
-				System.out.println("Multiple launcher command is :" + multipleServerLaunch);
+				LOGGER.log(Level.ALL,"Multiple push file Command is "+multipleServerLaunch);
+				
 				Process p = Runtime.getRuntime().exec(multipleServerLaunch);
 
 				p.waitFor();
@@ -270,7 +271,7 @@ public class FileServiceImpl implements FileService {
 				+ serverData.get("username") + " " + serverData.get("hostname") + " " + serverData.get("password")
 				+ " restart " + serverData.get("restartcommand");
 
-		System.out.println("Final Restart Command is :" + restartCommand);
+		LOGGER.log(Level.ALL,"Restart server Command is "+restartCommand);
 		try {
 			Process processRestart = Runtime.getRuntime().exec(restartCommand);// new
 																				// ProcessBuilder(restartCommand,
@@ -357,7 +358,7 @@ public class FileServiceImpl implements FileService {
 				String checkCommand = "sh " + scriptHome + SCRIPT_FILE + " " + scriptHome + " "
 						+ serverData.get(USERNAME) + " " + serverData.get(HOSTNAME) + " " + serverData.get(PASSWD)
 						+ " getModTime" + " " + remotePathCheck;
-
+				LOGGER.log(Level.ALL,"CheckModified  Command is "+checkCommand);
 				Process checkProc = Runtime.getRuntime().exec(checkCommand);
 				checkProc.waitFor();
 
